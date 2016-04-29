@@ -1,20 +1,20 @@
 # Docforia 0.1
 A semistructured Multilayer Document Model
 
-**This is a early release, the full release will be done in coming week. It is the text import/export feature that 
-I am working on is not yet ready for release.**
+**This is an early release, the full release will be done in coming week. It is the text import/export feature that 
+I am working that is not yet ready for release.**
 
 ## What?
 This is a model that stores annotations in NLP (Natural Language Processing) applications. It is based on the idea 
 of having layers of annotations such as Token, Sentence, Paragraph, etc. Being able to add properties, link annotations
 and more.
 
-The datastructure is similiar to a typed property graph with the added feature of concept of ranges in a text.
+The datastructure is similiar to a typed property graph with the added concept of ranges in a text.
 
 The model provides an API for storage and query.
 
 ## Why?
-We needed a way to store multiple layers of flattend information and be able to query and extract that information.
+We needed a way to store multiple layers of flattend information and be able to query and extract that information. We could not find one that matched our requirements so we built one.
 
 ## How?
 Example usage
