@@ -23,6 +23,7 @@ import se.lth.cs.docforia.NodeRef;
 import se.lth.cs.docforia.NodeStore;
 import se.lth.cs.docforia.data.DataRef;
 import se.lth.cs.docforia.data.StringRef;
+import se.lth.cs.docforia.util.AnnotationIndex;
 
 import java.util.Map;
 
@@ -38,6 +39,7 @@ public class MemoryNode extends NodeStore implements NodeRef {
 
     protected int start = Integer.MIN_VALUE;
     protected int end = Integer.MIN_VALUE;
+    protected AnnotationIndex<MemoryNode>.Entry entry = null;
 
     public MemoryNode(MemoryNodeCollection storage) {
         this.storage = storage;

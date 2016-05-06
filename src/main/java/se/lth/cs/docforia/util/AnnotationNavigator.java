@@ -1,4 +1,4 @@
-package se.lth.cs.docforia;
+package se.lth.cs.docforia.util;
 /*
  * Copyright 2016 Marcus Klang
  *
@@ -18,12 +18,12 @@ package se.lth.cs.docforia;
 /**
  * Node navigator abstraction for annotations in a particular layer
  */
-public interface DocumentNodeNavigator {
+public interface AnnotationNavigator<T> {
     /**
      * Get the current annotation
      * @return Current node reference or <code>null</code> if there is none.
      */
-    NodeRef current();
+    T current();
 
     /**
      * Move to the next annotation
@@ -74,3 +74,4 @@ public interface DocumentNodeNavigator {
     int end();
 
 }
+

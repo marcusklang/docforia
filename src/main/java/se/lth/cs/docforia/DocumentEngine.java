@@ -16,6 +16,7 @@ package se.lth.cs.docforia;
  */
 
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
+import se.lth.cs.docforia.util.AnnotationNavigator;
 import se.lth.cs.docforia.util.DocumentIterable;
 import se.lth.cs.docforia.util.DocumentIterables;
 import se.lth.cs.docforia.util.FilteredDocumentIterable;
@@ -496,6 +497,7 @@ public abstract class DocumentEngine {
 	/**
 	 * Get all annotations (nodes with start, end) that is covered by (from, to)
 	 * @param nodeLayer raw layer name
+     * @param nodeVariant variant name
 	 * @param from cover start
 	 * @param to cover end
 	 * @return iterable of all nodes covered by range (from, to)
@@ -508,13 +510,9 @@ public abstract class DocumentEngine {
 			
 			@Override
 			protected boolean accept(NodeRef value) {
-				NodeStore store = value.get();
-				if(value.get().isAnnotation()) {
-					return range.getStart() <= store.getStart() && range.getEnd() >= store.getEnd();
-				}
-				else
-					return false;
-			}
+                NodeStore store = value.get();
+                return value.get().isAnnotation() && range.getStart() <= store.getStart() && range.getEnd() >= store.getEnd();
+            }
 			
 			@Override
 			public String toString() {
@@ -522,6 +520,33 @@ public abstract class DocumentEngine {
 			}
 		};
 	}
+
+    /**
+     * Get all overlapping annotations
+     * @param nodeLayer   raw layer name
+     * @param nodeVariant variant name
+     * @param from overlap start
+     * @param to overlap end
+     * @return
+     */
+    public DocumentIterable<NodeRef> overlappingAnnotations(final String nodeLayer, final String nodeVariant, final int from, final int to) {
+        final Iterable<NodeRef> nodes = nodes(nodeLayer, nodeVariant);
+        return new FilteredDocumentIterable<NodeRef>(nodes) {
+
+            private Range range = new MutableRange(from, to);
+
+            @Override
+            protected boolean accept(NodeRef value) {
+                NodeStore store = value.get();
+                return value.get().isAnnotation() && store.getEnd() > range.getStart() && store.getStart() < range.getEnd();
+            }
+
+            @Override
+            public String toString() {
+                return "FilteredIterable<" + nodeLayer + ">(overlap from: " + from + ", overlap to: "+ to +", iterable: " + nodes.toString() + ")";
+            }
+        };
+    }
 
 	/**
 	 * Get all annotations (nodes with start, end) that is covering (from, to)
@@ -531,18 +556,23 @@ public abstract class DocumentEngine {
 	 * @param to   range end
 	 * @return
 	 */
-	public NodeRef coveringAnnotation(final String nodeLayer, final String nodeVariant, final int from, final int to) {
-		DocumentNodeNavigator annotations = annotations(nodeLayer, nodeVariant);
-		if(!annotations.nextFloor(from))
-			return null;
-		else {
-			NodeRef current = annotations.current();
+	public DocumentIterable<NodeRef> coveringAnnotation(final String nodeLayer, final String nodeVariant, final int from, final int to) {
+        final Iterable<NodeRef> nodes = overlappingAnnotations(nodeLayer, nodeVariant, from, to);
+        return new FilteredDocumentIterable<NodeRef>(nodes) {
 
-			if(current.get().getStart() <= from && current.get().getEnd() >= from)
-				return current;
-			else
-				return null;
-		}
+            private Range range = new MutableRange(from, to);
+
+            @Override
+            protected boolean accept(NodeRef value) {
+                NodeStore store = value.get();
+                return value.get().isAnnotation() && value.get().getStart() <= from && value.get().getEnd() >= to;
+            }
+
+            @Override
+            public String toString() {
+                return "FilteredIterable<" + nodeLayer + ">(overlap from: " + from + ", overlap to: "+ to +", iterable: " + nodes.toString() + ")";
+            }
+        };
 	}
 
 	/**
@@ -689,12 +719,39 @@ public abstract class DocumentEngine {
 		};
 	}
 
-    public DocumentNodeNavigator annotations(final String nodeLayer, final Optional<String> nodeVariant) {
+    /**
+     * Returns a navigator that is forwarded to the position of given node ref
+     * @param ref the node ref to get a navigator around, must be an annotation.
+     */
+    public AnnotationNavigator<NodeRef> annotations(NodeRef ref) {
+        if(!ref.get().isAnnotation())
+            throw new IllegalArgumentException("ref is not an annotation!");
+
+        AnnotationNavigator<NodeRef> navigator = annotations(ref.layer().getLayer(), ref.layer().getVariant());
+        while(navigator.next()) {
+            if(navigator.current().equals(ref))
+                return navigator;
+        }
+
+        return navigator;
+    }
+
+    /**
+     * Get a navigator for a layer
+     * @param nodeLayer   the node layer
+     * @param nodeVariant the variant or Optional.empty() if default
+     */
+    public AnnotationNavigator<NodeRef> annotations(final String nodeLayer, final Optional<String> nodeVariant) {
         return annotations(nodeLayer, nodeVariant.isPresent() ? nodeVariant.get() : null);
     }
 
-	public DocumentNodeNavigator annotations(final String nodeLayer, final String nodeVariant) {
-		return new DocumentNodeNavigator() {
+    /**
+     * Get a navigator for a layer
+     * @param nodeLayer   the node layer
+     * @param nodeVariant the variant or null if default
+     */
+	public AnnotationNavigator<NodeRef> annotations(final String nodeLayer, final String nodeVariant) {
+		return new AnnotationNavigator<NodeRef>() {
 			private Iterator<NodeRef> iter = nodes(nodeLayer, nodeVariant).iterator();
 			private NodeRef current = null;
 			private boolean reachedEnd = false;

@@ -15,11 +15,15 @@ package se.lth.cs.docforia.query.predicates;
  * limitations under the License.
  */
 
-import se.lth.cs.docforia.*;
+import se.lth.cs.docforia.Document;
+import se.lth.cs.docforia.NodeRef;
+import se.lth.cs.docforia.NodeStore;
+import se.lth.cs.docforia.Range;
 import se.lth.cs.docforia.query.NodeVar;
 import se.lth.cs.docforia.query.Predicate;
 import se.lth.cs.docforia.query.Proposition;
 import se.lth.cs.docforia.query.PropositionIterator;
+import se.lth.cs.docforia.util.AnnotationNavigator;
 import se.lth.cs.docforia.util.Annotations;
 
 import java.util.ArrayDeque;
@@ -41,7 +45,7 @@ public class NodeInWindowPredicate extends Predicate {
         super(doc, target);
         nodes = new HashSet<>();
         ordered = new ArrayDeque<>();
-        DocumentNodeNavigator annotations = doc.engine().annotations(layer, variant);
+        AnnotationNavigator<NodeRef> annotations = doc.engine().annotations(layer, variant);
 
         if(annotations.next(range.getStart())) {
             int start = -1;

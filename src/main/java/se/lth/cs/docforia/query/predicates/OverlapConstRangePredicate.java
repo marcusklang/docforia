@@ -20,18 +20,18 @@ import se.lth.cs.docforia.NodeStore;
 import se.lth.cs.docforia.query.NodeVar;
 import se.lth.cs.docforia.query.Predicate;
 import se.lth.cs.docforia.query.Proposition;
-import se.lth.cs.docforia.query.filter.IntersectionFilter;
+import se.lth.cs.docforia.query.filter.OverlapFilter;
 
 /**
  * Range intersect predicate
  */
-public class IntersectConstRangePredicate extends Predicate {
+public class OverlapConstRangePredicate extends Predicate {
     private final int start;
     private final int end;
 
-    public IntersectConstRangePredicate(Document doc, NodeVar var, int start, int end) {
+    public OverlapConstRangePredicate(Document doc, NodeVar var, int start, int end) {
         super(doc, var);
-        this.filters[0] = new IntersectionFilter(doc.engine(), var.getLayer(), var.getVariant(), start, end);
+        this.filters[0] = new OverlapFilter(doc.engine(), var.getLayer(), var.getVariant(), start, end);
         this.start = start;
         this.end = end;
     }

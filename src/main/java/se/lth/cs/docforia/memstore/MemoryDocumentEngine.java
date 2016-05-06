@@ -17,10 +17,7 @@ package se.lth.cs.docforia.memstore;
 
 import it.unimi.dsi.fastutil.objects.ObjectBidirectionalIterator;
 import se.lth.cs.docforia.*;
-import se.lth.cs.docforia.util.DocumentIterable;
-import se.lth.cs.docforia.util.DocumentIterableBase;
-import se.lth.cs.docforia.util.DocumentIterables;
-import se.lth.cs.docforia.util.TakeWhileDocumentIterable;
+import se.lth.cs.docforia.util.*;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -246,57 +243,102 @@ public class MemoryDocumentEngine extends DocumentEngine {
     }
 
     @Override
-    public DocumentNodeNavigator annotations(String nodeLayer, String nodeVariant) {
-        MemoryNodeCollection nodeRefs = store.nodes.get(new MemoryNodeCollection.Key(nodeLayer, nodeVariant));
-        if(nodeRefs == null || nodeRefs.nodes.isEmpty() || nodeRefs.nodes.lastIntKey() == -1)
-            return new DocumentNodeNavigator() {
+    public DocumentIterable<NodeRef> coveredAnnotation(String nodeLayer, String nodeVariant, int from, int to) {
+        final MemoryNodeCollection.Key key = new MemoryNodeCollection.Key(nodeLayer, nodeVariant);
+        MemoryNodeCollection collection = store.nodes.get(key);
+        if(collection == null)
+            return DocumentIterables.wrap(Collections.emptyList());
+        else
+            return new DocumentIterableBase<NodeRef>() {
                 @Override
-                public NodeRef current() {
-                    return null;
-                }
-
-                @Override
-                public boolean next() {
-                    return false;
-                }
-
-                @Override
-                public boolean nextFloor(int start) {
-                    return false;
-                }
-
-                @Override
-                public boolean hasReachedEnd() {
-                    return true;
-                }
-
-                @Override
-                public boolean prev() {
-                    return false;
-                }
-
-                @Override
-                public void reset() {
-
-                }
-
-                @Override
-                public boolean next(int start) {
-                    return false;
-                }
-
-                @Override
-                public int start() {
-                    return 0;
-                }
-
-                @Override
-                public int end() {
-                    return 0;
+                public Iterator<NodeRef> iterator() {
+                    return (Iterator)collection.annotations.cover(from, to);
                 }
             };
+    }
+
+    @Override
+    public DocumentIterable<NodeRef> overlappingAnnotations(String nodeLayer, String nodeVariant, int from, int to) {
+        final MemoryNodeCollection.Key key = new MemoryNodeCollection.Key(nodeLayer, nodeVariant);
+        MemoryNodeCollection collection = store.nodes.get(key);
+        if(collection == null)
+            return DocumentIterables.wrap(Collections.emptyList());
+        else
+            return new DocumentIterableBase<NodeRef>() {
+                @Override
+                public Iterator<NodeRef> iterator() {
+                    return (Iterator)collection.annotations.overlap(from, to);
+                }
+            };
+    }
+
+    @Override
+    public AnnotationNavigator<NodeRef> annotations(NodeRef ref) {
+        if(!ref.get().isAnnotation())
+            throw new IllegalArgumentException("ref is not an annotation!");
+
+        MemoryNode node = (MemoryNode) ref;
+        MemoryNodeCollection nodeRefs = node.storage;
+        if(nodeRefs == null)
+            return emptyNavigator;
+        else
+            return (AnnotationNavigator)nodeRefs.annotations.navigator(node.entry);
+    }
+
+    private static final AnnotationNavigator<NodeRef> emptyNavigator = new AnnotationNavigator<NodeRef>() {
+        @Override
+        public NodeRef current() {
+            return null;
+        }
+
+        @Override
+        public boolean next() {
+            return false;
+        }
+
+        @Override
+        public boolean nextFloor(int start) {
+            return false;
+        }
+
+        @Override
+        public boolean hasReachedEnd() {
+            return true;
+        }
+
+        @Override
+        public boolean prev() {
+            return false;
+        }
+
+        @Override
+        public void reset() {
+
+        }
+
+        @Override
+        public boolean next(int start) {
+            return false;
+        }
+
+        @Override
+        public int start() {
+            return 0;
+        }
+
+        @Override
+        public int end() {
+            return 0;
+        }
+    };
+
+    @Override
+    public AnnotationNavigator<NodeRef> annotations(String nodeLayer, String nodeVariant) {
+        MemoryNodeCollection nodeRefs = store.nodes.get(new MemoryNodeCollection.Key(nodeLayer, nodeVariant));
+        if(nodeRefs == null)
+            return emptyNavigator;
         else {
-            return nodeRefs.annotationNavigator();
+            return (AnnotationNavigator) nodeRefs.annotations.navigator();
         }
     }
 
@@ -315,7 +357,7 @@ public class MemoryDocumentEngine extends DocumentEngine {
                             while(iterator.hasNext()) {
                                 MemoryNodeCollection.Key nextkey = iterator.next();
                                 if(nextkey.layer.equals(nodeLayer)) {
-                                    if(store.nodes.get(nextkey).nodes.size() == 0)
+                                    if(store.nodes.get(nextkey).size() == 0)
                                         continue;
 
                                     if(nextkey.variant != null) {
@@ -376,7 +418,7 @@ public class MemoryDocumentEngine extends DocumentEngine {
                             while(iterator.hasNext()) {
                                 MemoryNodeCollection.Key nextkey = iterator.next();
                                 if(nextkey.layer.equals(nodeLayer)) {
-                                    if(store.nodes.get(nextkey).nodes.size() == 0)
+                                    if(store.nodes.get(nextkey).size() == 0)
                                         continue;
 
                                     if(nextkey.variant == null)

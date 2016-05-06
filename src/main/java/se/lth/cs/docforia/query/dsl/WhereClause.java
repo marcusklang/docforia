@@ -121,7 +121,7 @@ public class WhereClause extends CommonClause {
             if(!(children instanceof NodeVar))
                 throw new QueryException("var in where clause is not a NodeVar: " + children.toString());
 
-            parent.predicates.add(new IntersectConstRangePredicate(parent.doc, (NodeVar)children, from, to));
+            parent.predicates.add(new OverlapConstRangePredicate(parent.doc, (NodeVar)children, from, to));
         }
 
         return this;

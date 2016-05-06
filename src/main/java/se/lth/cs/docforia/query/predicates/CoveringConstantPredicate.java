@@ -16,9 +16,7 @@ package se.lth.cs.docforia.query.predicates;
  */
 
 import se.lth.cs.docforia.Document;
-import se.lth.cs.docforia.NodeRef;
 import se.lth.cs.docforia.NodeStore;
-import se.lth.cs.docforia.StoreRef;
 import se.lth.cs.docforia.query.NodeVar;
 import se.lth.cs.docforia.query.Predicate;
 import se.lth.cs.docforia.query.Proposition;
@@ -44,11 +42,7 @@ public class CoveringConstantPredicate extends Predicate {
 
     @Override
     protected PropositionIterator suggest(Proposition proposition) {
-        NodeRef nodeRef = doc.engine().coveringAnnotation(vars[0].getLayer(), vars[0].getVariant(), child_from, child_to);
-        if(nodeRef == null)
-            return EmptyPropositionIterator.instance();
-        else
-            return new SinglePropositionIterator(vars, new StoreRef[] {nodeRef});
+        return new StoreRefPropositionIterator(vars[0], doc.engine().coveringAnnotation(vars[0].getLayer(), vars[0].getVariant(), child_from, child_to));
     }
 
     public boolean coveredBy(int child_start, int child_end, int parent_start, int parent_end) {

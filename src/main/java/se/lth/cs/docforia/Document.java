@@ -21,6 +21,7 @@ import se.lth.cs.docforia.data.*;
 import se.lth.cs.docforia.query.Var;
 import se.lth.cs.docforia.query.dsl.CommonClause;
 import se.lth.cs.docforia.query.dsl.QueryClause;
+import se.lth.cs.docforia.util.AnnotationNavigator;
 import se.lth.cs.docforia.util.DocumentIterable;
 import se.lth.cs.docforia.util.DocumentIterables;
 import se.lth.cs.docforia.util.FilteredMappedDocumentIterable;
@@ -2033,9 +2034,11 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 			DocumentEngine engine = engine();
 			List<NodeRef> removalList = new ArrayList<>();
 
+			DocumentTransaction trans = begin();
+
 			for (String layer : engine().nodeLayers().toList()) {
 				for (Optional<String> variant : engine().nodeLayerAllVariants(layer).toList()) {
-					DocumentNodeNavigator annotations = engine().annotations(layer, variant);
+					AnnotationNavigator<NodeRef> annotations = engine().annotations(layer, variant);
 					List<NodeRef> annotationList = new ArrayList<>();
 
 					int deltaGlobal = 0;

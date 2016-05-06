@@ -18,8 +18,6 @@ package se.lth.cs.docforia.query.filter;
 import se.lth.cs.docforia.DocumentEngine;
 import se.lth.cs.docforia.NodeRef;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 
 /**
@@ -32,6 +30,7 @@ public class CoveringFilter extends NodeFilter {
     private final String variant;
     private final int from;
     private final int to;
+    private final Iterable<NodeRef> covering;
 
     public CoveringFilter(DocumentEngine engine, String type, String variant, int from, int to) {
         this.engine = engine;
@@ -44,16 +43,12 @@ public class CoveringFilter extends NodeFilter {
         }
         this.from = from;
         this.to = to;
+        this.covering = engine.coveringAnnotation(type, variant, from, to);
     }
 
     @Override
     public Iterator<NodeRef> newIterator() {
-        NodeRef nodeRef = engine.coveringAnnotation(type, variant, from, to);
-
-        if(nodeRef == null)
-            return Collections.emptyIterator();
-        else
-            return Arrays.asList(nodeRef).iterator();
+        return covering.iterator();
     }
 
 }

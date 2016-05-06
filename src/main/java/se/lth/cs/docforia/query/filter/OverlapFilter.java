@@ -21,33 +21,31 @@ import se.lth.cs.docforia.NodeRef;
 import java.util.Iterator;
 
 /**
- * Covered by filter
+ * Intersection filter
  */
-public class CoveredByFilter extends NodeFilter {
-
+public class OverlapFilter extends NodeFilter {
     private final DocumentEngine engine;
-    private Iterable<NodeRef> covered;
-    private final String type;
+    private final Iterable<NodeRef> overlaps;
+    private final String layer;
     private final String variant;
     private final int from;
     private final int to;
 
-    public CoveredByFilter(DocumentEngine engine, String type, String variant, int from, int to) {
+    public OverlapFilter(DocumentEngine engine, String layer, String variant, int from, int to) {
         this.engine = engine;
-        this.type = type;
+        this.layer = layer;
         if(variant == null) {
-            this.variant = engine.store().getDefaultNodeVariants().get(type);
-        }
-        else {
+            this.variant = engine.store().getDefaultNodeVariants().get(this.layer);
+        } else {
             this.variant = variant;
         }
+        this.overlaps = engine.overlappingAnnotations(layer, variant, from, to);
         this.from = from;
         this.to = to;
-        this.covered = engine.coveredAnnotation(type, variant, from, to);
     }
 
     @Override
     public Iterator<NodeRef> newIterator() {
-        return covered.iterator();
+        return overlaps.iterator();
     }
 }

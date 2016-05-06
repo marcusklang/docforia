@@ -15,8 +15,14 @@ package se.lth.cs.docforia.query.predicates;
  * limitations under the License.
  */
 
-import se.lth.cs.docforia.*;
-import se.lth.cs.docforia.query.*;
+import se.lth.cs.docforia.Document;
+import se.lth.cs.docforia.NodeRef;
+import se.lth.cs.docforia.NodeStore;
+import se.lth.cs.docforia.query.NodeVar;
+import se.lth.cs.docforia.query.Predicate;
+import se.lth.cs.docforia.query.Proposition;
+import se.lth.cs.docforia.query.PropositionIterator;
+import se.lth.cs.docforia.util.AnnotationNavigator;
 
 /**
  * Covered by predicate
@@ -65,18 +71,14 @@ public class CoveredByPredicate extends Predicate {
                 String type = vars[PARENT].getLayer();
                 String variant = vars[PARENT].getVariant();
 
-                NodeRef parent = doc.engine().coveringAnnotation(type, variant, start, end);
-                if(parent == null)
-                    return EmptyPropositionIterator.instance();
-                else
-                    return new SinglePropositionIterator(new Var[] {vars[PARENT]}, new StoreRef[]{parent});
+                return new StoreRefPropositionIterator(vars[PARENT], doc.engine().coveringAnnotation(type, variant, start, end));
             }
             else
                 return EmptyPropositionIterator.instance();
         }
         else {
-            final DocumentNodeNavigator parentNavigator = doc.engine().annotations(vars[PARENT].getLayer(), vars[PARENT].getVariant());
-            final DocumentNodeNavigator childNavigator = doc.engine().annotations(vars[CHILD].getLayer(), vars[CHILD].getVariant());
+            final AnnotationNavigator<NodeRef> parentNavigator = doc.engine().annotations(vars[PARENT].getLayer(), vars[PARENT].getVariant());
+            final AnnotationNavigator<NodeRef> childNavigator = doc.engine().annotations(vars[CHILD].getLayer(), vars[CHILD].getVariant());
 
             if(!parentNavigator.next())
                 return EmptyPropositionIterator.instance();

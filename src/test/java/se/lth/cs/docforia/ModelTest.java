@@ -2138,6 +2138,8 @@ public abstract class ModelTest {
         doc.replace(Pattern.compile("\\.+"), ".", true);
         assertEquals("0123  6789.", doc.text());
 
+        List<Proposition> props = doc.select(T).query().toList();
+
         assertEquals(3, doc.select(T).query().count());
         assertEquals(1, doc.select(S).query().count());
 
