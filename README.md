@@ -17,8 +17,9 @@ The model provides an API for storage and query.
 We needed a way to store multiple layers of flattend information and be able to query and extract that information. We could not find one that matched our requirements so we built one.
 
 ## How?
-Example usage
+[Full documentation](http://marcusklang.github.io/docforia/apidocs/)
 
+Example usage
 ```java
  Document doc = new MemoryDocument("Greetings from Lund, Sweden!");
  //                                 01234567890123456789012345678
