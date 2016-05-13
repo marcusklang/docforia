@@ -15,11 +15,11 @@ package se.lth.cs.docforia.query.predicates;
  * limitations under the License.
  */
 
-import se.lth.cs.docforia.Document;
 import se.lth.cs.docforia.NodeStore;
 import se.lth.cs.docforia.query.NodeVar;
 import se.lth.cs.docforia.query.Predicate;
 import se.lth.cs.docforia.query.Proposition;
+import se.lth.cs.docforia.query.QueryContext;
 import se.lth.cs.docforia.query.filter.OverlapFilter;
 
 /**
@@ -29,9 +29,9 @@ public class OverlapConstRangePredicate extends Predicate {
     private final int start;
     private final int end;
 
-    public OverlapConstRangePredicate(Document doc, NodeVar var, int start, int end) {
-        super(doc, var);
-        this.filters[0] = new OverlapFilter(doc.engine(), var.getLayer(), var.getVariant(), start, end);
+    public OverlapConstRangePredicate(QueryContext context, NodeVar var, int start, int end) {
+        super(context, var);
+        this.filters[0] = new OverlapFilter(context.doc.engine(), var.getLayer(), var.getVariant(), start, end);
         this.start = start;
         this.end = end;
     }

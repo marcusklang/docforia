@@ -17,10 +17,7 @@ package se.lth.cs.docforia.query.predicates;
 
 import se.lth.cs.docforia.EdgeRef;
 import se.lth.cs.docforia.NodeRef;
-import se.lth.cs.docforia.query.NodeVar;
-import se.lth.cs.docforia.query.Proposition;
-import se.lth.cs.docforia.query.PropositionIterator;
-import se.lth.cs.docforia.query.Var;
+import se.lth.cs.docforia.query.*;
 
 import java.util.Iterator;
 import java.util.Objects;
@@ -33,11 +30,15 @@ public class EdgeRefPropositionIterator implements PropositionIterator {
     private final Iterator<EdgeRef> iter;
     private final NodeVar head;
     private final NodeVar tail;
+    private final int headIndex;
+    private final int tailIndex;
 
-    public EdgeRefPropositionIterator(Var[] var, Iterator<EdgeRef> iter) {
-        this.edge = var[2].getIndex();
-        this.head = (NodeVar)var[1];
+    public EdgeRefPropositionIterator(QueryContext context, Var[]var, Iterator<EdgeRef> iter) {
         this.tail = (NodeVar)var[0];
+        this.tailIndex = context.indexOf(var[0]);
+        this.head = (NodeVar)var[1];
+        this.headIndex = context.indexOf(var[1]);
+        this.edge = context.indexOf(var[2]);
         this.iter = iter;
     }
 
@@ -56,9 +57,9 @@ public class EdgeRefPropositionIterator implements PropositionIterator {
                     && Objects.equals(this.tail.getVariant(), tail.get().getVariant()))
             {
 
-                proposition.proposition[this.edge] = edge;
-                proposition.proposition[this.head.getIndex()] = head;
-                proposition.proposition[this.tail.getIndex()] = tail;
+                proposition.data[this.edge] = edge;
+                proposition.data[this.headIndex] = head;
+                proposition.data[this.tailIndex] = tail;
                 return true;
             }
         }

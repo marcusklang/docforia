@@ -16,7 +16,7 @@ package se.lth.cs.docforia;
  */
 
 /** Node Reference */
-public interface NodeRef extends StoreRef {
+public interface NodeRef extends StoreRef, Range {
 	/**
 	 * Gets/Retrieves the underlying store
      */
@@ -26,4 +26,24 @@ public interface NodeRef extends StoreRef {
 	 * Layer this node belongs to.
      */
 	LayerRef layer();
+
+	@Override
+	default int length() {
+		return getEnd()-getStart();
+	}
+
+	@Override
+	default int getStart() {
+		return get().getStart();
+	}
+
+	@Override
+	default int getEnd() {
+		return get().getEnd();
+	}
+
+	@Override
+	default float getMidpoint() {
+		return (getEnd()-getStart())/2.0f + getStart();
+	}
 }

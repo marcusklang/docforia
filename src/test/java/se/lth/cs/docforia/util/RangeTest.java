@@ -254,7 +254,7 @@ public class RangeTest {
 
         Iterator<AnnotationIndex<String>.Entry> overlap2 = test.coverEntries(2, 12);
         while(overlap2.hasNext()) {
-            System.out.println(overlap2.next());
+            overlap2.next();
         }
     }
 

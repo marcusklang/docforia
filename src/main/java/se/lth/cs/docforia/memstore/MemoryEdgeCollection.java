@@ -16,8 +16,10 @@ package se.lth.cs.docforia.memstore;
  */
 
 import it.unimi.dsi.fastutil.objects.ReferenceLinkedOpenHashSet;
+import se.lth.cs.docforia.DocumentEdgeLayer;
 import se.lth.cs.docforia.EdgeRef;
 import se.lth.cs.docforia.LayerRef;
+import se.lth.cs.docforia.NodeRef;
 import se.lth.cs.docforia.util.DocumentIterable;
 import se.lth.cs.docforia.util.DocumentIterableBase;
 
@@ -27,7 +29,7 @@ import java.util.Objects;
 /**
  * Memory Edge Collection
  */
-public class MemoryEdgeCollection extends DocumentIterableBase<EdgeRef> implements DocumentIterable<EdgeRef> {
+public class MemoryEdgeCollection extends DocumentIterableBase<EdgeRef> implements DocumentIterable<EdgeRef>, DocumentEdgeLayer {
     public final MemoryDocumentStore doc;
     public final Key key;
     public final ReferenceLinkedOpenHashSet<MemoryEdge> edges = new ReferenceLinkedOpenHashSet<>();
@@ -111,6 +113,18 @@ public class MemoryEdgeCollection extends DocumentIterableBase<EdgeRef> implemen
         return (Iterator<EdgeRef>)((Iterable<? extends EdgeRef>)edges).iterator(); //Performance reason!
     }
 
+    @Override
+    public LayerRef layer() {
+        return key;
+    }
+
+    @Override
+    public MemoryEdge create(NodeRef tail, NodeRef head) {
+        MemoryEdge edge = new MemoryEdge(this);
+        edge.connect(tail, head);
+        return add(edge);
+    }
+
     public MemoryEdge create() {
         MemoryEdge edge = new MemoryEdge(this);
         return add(edge);
@@ -120,6 +134,11 @@ public class MemoryEdgeCollection extends DocumentIterableBase<EdgeRef> implemen
         e.storage = this;
         edges.add(e);
         return e;
+    }
+
+    @Override
+    public int size() {
+        return edges.size();
     }
 
     public void remove(MemoryEdge edge) {
@@ -147,5 +166,10 @@ public class MemoryEdgeCollection extends DocumentIterableBase<EdgeRef> implemen
                 doc.edges.remove(this.key);
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return size() + " edges in edge layer " + key.layer;
     }
 }

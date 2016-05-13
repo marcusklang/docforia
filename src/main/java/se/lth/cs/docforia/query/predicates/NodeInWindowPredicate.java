@@ -15,14 +15,10 @@ package se.lth.cs.docforia.query.predicates;
  * limitations under the License.
  */
 
-import se.lth.cs.docforia.Document;
 import se.lth.cs.docforia.NodeRef;
 import se.lth.cs.docforia.NodeStore;
 import se.lth.cs.docforia.Range;
-import se.lth.cs.docforia.query.NodeVar;
-import se.lth.cs.docforia.query.Predicate;
-import se.lth.cs.docforia.query.Proposition;
-import se.lth.cs.docforia.query.PropositionIterator;
+import se.lth.cs.docforia.query.*;
 import se.lth.cs.docforia.util.AnnotationNavigator;
 import se.lth.cs.docforia.util.Annotations;
 
@@ -41,11 +37,11 @@ public class NodeInWindowPredicate extends Predicate {
     private final int minStart;
     private final int maxEnd;
 
-    public NodeInWindowPredicate(Document doc, NodeVar target, String layer, String variant, Range range, int pre, int post, boolean flexible) {
-        super(doc, target);
+    public NodeInWindowPredicate(QueryContext context, NodeVar target, String layer, String variant, Range range, int pre, int post, boolean flexible) {
+        super(context, target);
         nodes = new HashSet<>();
         ordered = new ArrayDeque<>();
-        AnnotationNavigator<NodeRef> annotations = doc.engine().annotations(layer, variant);
+        AnnotationNavigator<NodeRef> annotations = context.doc.engine().annotations(layer, variant);
 
         if(annotations.next(range.getStart())) {
             int start = -1;
@@ -119,9 +115,9 @@ public class NodeInWindowPredicate extends Predicate {
     }
 
     @Override
-    protected PropositionIterator suggest(Proposition proposition) {
-        if(constant[0])
-            return super.suggest(proposition);
+    protected PropositionIterator suggest(final PredicateState state, Proposition proposition) {
+        if(state.constant[0])
+            return super.suggest(state, proposition);
         else
             return new PropositionIterator() {
                 private Iterator<NodeRef> iter = ordered.iterator();
@@ -131,7 +127,7 @@ public class NodeInWindowPredicate extends Predicate {
                     if(!iter.hasNext())
                         return false;
 
-                    proposition.proposition[vars[0].getIndex()] = iter.next();
+                    proposition.data[varIndex[0]] = iter.next();
                     return true;
                 }
             };
@@ -147,6 +143,6 @@ public class NodeInWindowPredicate extends Predicate {
 
     @Override
     public boolean eval(Proposition proposition) {
-        return nodes.contains(proposition.proposition[vars[0].getIndex()]);
+        return nodes.contains((NodeRef)proposition.data[varIndex[0]]);
     }
 }

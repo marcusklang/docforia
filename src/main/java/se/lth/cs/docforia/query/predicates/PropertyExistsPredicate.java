@@ -15,9 +15,9 @@ package se.lth.cs.docforia.query.predicates;
  * limitations under the License.
  */
 
-import se.lth.cs.docforia.Document;
 import se.lth.cs.docforia.query.Predicate;
 import se.lth.cs.docforia.query.Proposition;
+import se.lth.cs.docforia.query.QueryContext;
 import se.lth.cs.docforia.query.Var;
 
 /**
@@ -26,8 +26,8 @@ import se.lth.cs.docforia.query.Var;
 public class PropertyExistsPredicate extends Predicate {
     private final String property;
 
-    public PropertyExistsPredicate(Document doc, Var var, String property) {
-        super(doc, var);
+    public PropertyExistsPredicate(QueryContext context, Var var, String property) {
+        super(context, var);
         this.property = property;
     }
 

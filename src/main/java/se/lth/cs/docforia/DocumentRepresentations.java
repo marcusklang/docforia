@@ -33,11 +33,19 @@ public class DocumentRepresentations {
 	private boolean throwOnFactoryFailure = false;
 
 	public DocumentRepresentations(Document doc) {
-		this.doc = doc;
+        this(doc, true);
 	}
 
-	protected final Reference2ObjectOpenHashMap<NodeRef,Node> indexNodeRef = new Reference2ObjectOpenHashMap<NodeRef,Node>();
-	protected final Reference2ObjectOpenHashMap<EdgeRef,Edge> indexEdgeRef = new Reference2ObjectOpenHashMap<EdgeRef,Edge>();
+	protected DocumentRepresentations(Document doc, boolean initializeMaps) {
+		this.doc = doc;
+        if(initializeMaps) {
+            indexNodeRef = new Reference2ObjectOpenHashMap<NodeRef,Node>();
+            indexEdgeRef = new Reference2ObjectOpenHashMap<EdgeRef,Edge>();
+        }
+	}
+
+	protected Reference2ObjectOpenHashMap<NodeRef,Node> indexNodeRef;
+	protected Reference2ObjectOpenHashMap<EdgeRef,Edge> indexEdgeRef;
 
     protected void resetRepresentations() {
         for (Map.Entry<EdgeRef, Edge> entry : indexEdgeRef.entrySet()) {

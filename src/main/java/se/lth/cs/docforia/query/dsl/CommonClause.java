@@ -21,9 +21,9 @@ import se.lth.cs.docforia.query.*;
 import se.lth.cs.docforia.query.predicates.EdgePredicate;
 import se.lth.cs.docforia.query.predicates.NodePredicate;
 import se.lth.cs.docforia.query.predicates.NonePredicate;
-import se.lth.cs.docforia.util.DocumentIterable;
 
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * Base Clause
@@ -35,20 +35,6 @@ public abstract class CommonClause {
         return root().where(vars);
     }
 
-    /** Specify ordering on vars, will propagate into grouped queries. */
-    public QueryClause orderByRange(NodeVar...vars) {
-        return root().orderByRange(vars);
-    }
-
-    public GroupQueryClause groupBy(Var...vars) {
-        for(Var var : vars) {
-            if (!root().selectVars.contains(var))
-                throw new IllegalArgumentException(var.toString() + " is not selected!");
-        }
-
-        return new GroupQueryClause(root(), vars);
-    }
-
     /**
      * Custom predicate bound on var
      * @param var  the typed node var
@@ -56,7 +42,8 @@ public abstract class CommonClause {
      * @param <T>  the node type
      */
     public <T extends Node> QueryClause where(NodeTVar<T> var, Function<T,Boolean> pred) {
-        root().predicates.add(new NodePredicate<T>(root().doc, var, pred));
+        root().select(var);
+        root().predicates.add(new NodePredicate<T>(root().context, var, pred));
 
         return root();
     }
@@ -68,7 +55,8 @@ public abstract class CommonClause {
      * @param <T>  the node type
      */
     public <T extends Edge> QueryClause where(EdgeTVar<T> var, Function<T,Boolean> pred) {
-        root().predicates.add(new EdgePredicate<T>(root().doc,var,pred));
+        root().select(var);
+        root().predicates.add(new EdgePredicate<T>(root().context,var,pred));
 
         return root();
     }
@@ -79,7 +67,8 @@ public abstract class CommonClause {
      * @param pred the predicate
      */
     public QueryClause where(NodeVar var, Function<Node,Boolean> pred) {
-        root().predicates.add(new NodePredicate<Node>(root().doc,var,pred));
+        root().select(var);
+        root().predicates.add(new NodePredicate<Node>(root().context,var,pred));
 
         return root();
     }
@@ -90,41 +79,27 @@ public abstract class CommonClause {
      * @param pred the predicate
      */
     public QueryClause where(EdgeVar var, Function<Edge,Boolean> pred) {
-        root().predicates.add(new EdgePredicate<Edge>(root().doc,var,pred));
+        root().select(var);
+        root().predicates.add(new EdgePredicate<Edge>(root().context,var,pred));
 
         return root();
     }
 
     protected void emptyResult() {
-        root().predicates.add(0, new NonePredicate(root().doc));
+        root().predicates.add(0, new NonePredicate(root().context));
     }
 
     /**
-     * Query the document model
-     * @return iterable of results
+     * Compile the query and get a stream
      */
-    public DocumentIterable<Proposition> query() {
-        return root().query();
+    public Stream<Proposition> stream() {
+        return root().stream();
     }
 
     /**
-     * Query the document model
-     * @param n expected number of results, will stop evaluating once n is reached.
-     * @return iterable of results
+     * Compile the query
      */
-    public DocumentIterable<Proposition> query(int n) {
-        return root().query(n);
+    public CompiledQuery compile() {
+        return root().compile();
     }
-
-    /**
-     * Query the document model with computation complexity awareness
-     * <b>Remarks:</b> It will always throw combinatoric for unbounded vars that always generate O(N^k) queries, where k >= 2.
-     *
-     * @param enableCombinatoricExplosionException defaults to false, set to true to let the query engine
-     *                                             throw excepetions in case of excessive complexitiy => above or equal to N^2.
-     */
-    //TODO: Implement this!
-    /*public DocumentIterable<Proposition> query(boolean enableCombinatoricExplosionException) {
-        return root().query();
-    }*/
 }

@@ -15,9 +15,9 @@ package se.lth.cs.docforia.query.predicates;
  * limitations under the License.
  */
 
-import se.lth.cs.docforia.Document;
 import se.lth.cs.docforia.query.Predicate;
 import se.lth.cs.docforia.query.Proposition;
+import se.lth.cs.docforia.query.QueryContext;
 import se.lth.cs.docforia.query.Var;
 
 /**
@@ -27,8 +27,8 @@ public class PropertyEqualsPredicate  extends Predicate {
     private final String property;
     private final String value;
 
-    public PropertyEqualsPredicate(Document doc, Var var, String property, String value) {
-        super(doc, var);
+    public PropertyEqualsPredicate(QueryContext context, Var var, String property, String value) {
+        super(context, var);
         this.property = property;
         this.value = value;
     }

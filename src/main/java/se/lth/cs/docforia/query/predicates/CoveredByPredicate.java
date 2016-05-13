@@ -15,13 +15,9 @@ package se.lth.cs.docforia.query.predicates;
  * limitations under the License.
  */
 
-import se.lth.cs.docforia.Document;
 import se.lth.cs.docforia.NodeRef;
 import se.lth.cs.docforia.NodeStore;
-import se.lth.cs.docforia.query.NodeVar;
-import se.lth.cs.docforia.query.Predicate;
-import se.lth.cs.docforia.query.Proposition;
-import se.lth.cs.docforia.query.PropositionIterator;
+import se.lth.cs.docforia.query.*;
 import se.lth.cs.docforia.util.AnnotationNavigator;
 
 /**
@@ -29,26 +25,26 @@ import se.lth.cs.docforia.util.AnnotationNavigator;
  */
 public class CoveredByPredicate extends Predicate {
 
-    public CoveredByPredicate(Document doc, NodeVar child, NodeVar parent) {
-        super(doc, parent, child);
+    public CoveredByPredicate(QueryContext context, NodeVar child, NodeVar parent) {
+        super(context, parent, child);
     }
 
     private static final int PARENT = 0;
     private static final int CHILD = 1;
 
     @Override
-    protected PropositionIterator suggest(Proposition proposition) {
+    protected PropositionIterator suggest(final PredicateState state, final Proposition proposition) {
         //4 cases:
         // * Parent and child constant
         // * Child constant
         // * Parent constant
         // * None constant
 
-        if(constant[PARENT] && constant[CHILD]) {
+        if(state.constant[PARENT] && state.constant[CHILD]) {
             throw new RuntimeException("Incorrect behaviour, this case is never supposed to be called!");
         }
-        else if(constant[PARENT] && !constant[CHILD]) {
-            NodeRef parent = (NodeRef) ref(proposition, vars[PARENT]);
+        else if(state.constant[PARENT] && !state.constant[CHILD]) {
+            NodeRef parent = (NodeRef) proposition.data[varIndex[PARENT]];
             if(parent.get().isAnnotation()) {
                 int start = parent.get().getStart();
                 int end = parent.get().getEnd();
@@ -56,29 +52,30 @@ public class CoveredByPredicate extends Predicate {
                 String variant = vars[CHILD].getVariant();
 
                 return new StoreRefPropositionIterator(
+                        context,
                         vars[CHILD],
-                        doc.engine().coveredAnnotation(type, variant, start, end)
+                        context.doc.engine().coveredAnnotation(type, variant, start, end)
                 );
             }
             else
                 return EmptyPropositionIterator.instance();
         }
-        else if(constant[CHILD] && !constant[PARENT]) {
-            NodeRef child = noderef(proposition, (NodeVar)vars[CHILD]);
+        else if(state.constant[CHILD] && !state.constant[PARENT]) {
+            NodeRef child = (NodeRef)proposition.data[varIndex[CHILD]];
             if(child.get().isAnnotation()) {
                 int start = child.get().getStart();
                 int end = child.get().getEnd();
                 String type = vars[PARENT].getLayer();
                 String variant = vars[PARENT].getVariant();
 
-                return new StoreRefPropositionIterator(vars[PARENT], doc.engine().coveringAnnotation(type, variant, start, end));
+                return new StoreRefPropositionIterator(context, vars[PARENT], context.doc.engine().coveringAnnotation(type, variant, start, end));
             }
             else
                 return EmptyPropositionIterator.instance();
         }
         else {
-            final AnnotationNavigator<NodeRef> parentNavigator = doc.engine().annotations(vars[PARENT].getLayer(), vars[PARENT].getVariant());
-            final AnnotationNavigator<NodeRef> childNavigator = doc.engine().annotations(vars[CHILD].getLayer(), vars[CHILD].getVariant());
+            final AnnotationNavigator<NodeRef> parentNavigator = context.doc.engine().annotations(vars[PARENT].getLayer(), vars[PARENT].getVariant());
+            final AnnotationNavigator<NodeRef> childNavigator = context.doc.engine().annotations(vars[CHILD].getLayer(), vars[CHILD].getVariant());
 
             if(!parentNavigator.next())
                 return EmptyPropositionIterator.instance();
@@ -122,8 +119,8 @@ public class CoveredByPredicate extends Predicate {
                     if(parentNavigator.hasReachedEnd() || childNavigator.hasReachedEnd())
                         return false;
 
-                    prop.proposition[vars[PARENT].getIndex()] = parentNavigator.current();
-                    prop.proposition[vars[CHILD].getIndex()] = childNavigator.current();
+                    prop.data[varIndex[PARENT]] = parentNavigator.current();
+                    prop.data[varIndex[CHILD]] = childNavigator.current();
                     return true;
                 };
             }
@@ -137,12 +134,11 @@ public class CoveredByPredicate extends Predicate {
 
     @Override
     public boolean eval(Proposition proposition) {
-        NodeStore child = proposition.noderef(vars[CHILD]).get();
-        NodeStore parent = proposition.noderef(vars[PARENT]).get();
+        NodeStore child = ((NodeRef)proposition.data[varIndex[CHILD]]).get();
+        NodeStore parent = ((NodeRef)proposition.data[varIndex[PARENT]]).get();
 
         return !(!child.isAnnotation() || !parent.isAnnotation())
-                && coveredBy(doc.transform(child.getStart()),  doc.transform(child.getEnd()),
-                             doc.transform(parent.getStart()), doc.transform(parent.getEnd()));
-
+                && coveredBy(context.doc.transform(child.getStart()),  context.doc.transform(child.getEnd()),
+                             context.doc.transform(parent.getStart()), context.doc.transform(parent.getEnd()));
     }
 }

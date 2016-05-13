@@ -15,14 +15,8 @@ package se.lth.cs.docforia.query.dsl;
  * limitations under the License.
  */
 
-import se.lth.cs.docforia.StoreRef;
-import se.lth.cs.docforia.query.GroupProposition;
 import se.lth.cs.docforia.query.Proposition;
 import se.lth.cs.docforia.query.Var;
-import se.lth.cs.docforia.util.DocumentIterable;
-import se.lth.cs.docforia.util.DocumentIterables;
-
-import java.util.*;
 
 /**
  * Group Query Clause
@@ -37,14 +31,14 @@ public class GroupQueryClause {
     }
 
     protected static class Group {
-        protected StoreRef[] key;
+        protected Proposition key;
 
-        public Group(StoreRef[] key) {
+        public Group(Proposition key) {
             this.key = key;
         }
 
         public Group copy() {
-            return new Group(Arrays.copyOf(key,key.length));
+            return new Group(key.copy());
         }
 
         @Override
@@ -53,7 +47,7 @@ public class GroupQueryClause {
                 return false;
 
             if(obj instanceof Group) {
-                return Arrays.deepEquals(key, ((Group)obj).key);
+                return key.equals(((Group) obj).key);
             }
             else
                 return false;
@@ -61,21 +55,15 @@ public class GroupQueryClause {
 
         @Override
         public int hashCode() {
-            return Arrays.deepHashCode(key);
+            return key.hashCode();
         }
     }
-
-    protected void groupOf(Group grp, Proposition prop) {
-        for (int i = 0; i < groupBy.length; i++) {
-            grp.key[i] = prop.proposition[groupBy[i].getIndex()];
-        }
-    }
-
+/*
     public DocumentIterable<GroupProposition> query() {
         HashMap<Group,List<Proposition>> groups = new HashMap<Group, List<Proposition>>();
         List<Proposition> result = parent.result(-1);
 
-        Group grp = new Group(new StoreRef[groupBy.length]);
+        Group grp = new Group();
 
         for (Proposition proposition : result) {
             groupOf(grp, proposition);
@@ -102,5 +90,5 @@ public class GroupQueryClause {
         }
 
         return DocumentIterables.wrap(grouplist);
-    }
+    }*/
 }

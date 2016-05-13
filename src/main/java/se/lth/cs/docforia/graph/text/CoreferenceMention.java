@@ -23,6 +23,17 @@ import se.lth.cs.docforia.query.NodeTVar;
  * Coreference mention annotation
  */
 public class CoreferenceMention extends Node<CoreferenceMention> {
+    public static final String PROPERTY_ID = "id";
+
+    public CoreferenceMention setChain(String id) {
+        putProperty(PROPERTY_ID, id);
+        return this;
+    }
+
+    public String getChain() {
+        return getProperty(PROPERTY_ID);
+    }
+
     public CoreferenceMention() {
         super();
     }

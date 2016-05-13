@@ -15,12 +15,8 @@ package se.lth.cs.docforia.query.predicates;
  * limitations under the License.
  */
 
-import se.lth.cs.docforia.Document;
 import se.lth.cs.docforia.NodeStore;
-import se.lth.cs.docforia.query.NodeVar;
-import se.lth.cs.docforia.query.Predicate;
-import se.lth.cs.docforia.query.Proposition;
-import se.lth.cs.docforia.query.PropositionIterator;
+import se.lth.cs.docforia.query.*;
 import se.lth.cs.docforia.query.filter.CoveringFilter;
 
 /**
@@ -31,18 +27,18 @@ public class CoveringConstantPredicate extends Predicate {
     private final int child_from;
     private final int child_to;
 
-    public CoveringConstantPredicate(Document doc, NodeVar parent, int from, int to) {
-        super(doc, parent);
+    public CoveringConstantPredicate(QueryContext context, NodeVar parent, int from, int to) {
+        super(context, parent);
         NodeVar nodeVar = parent;
-        filters[0] = new CoveringFilter(doc.engine(), nodeVar.getLayer(), nodeVar.getVariant(), from, to);
+        filters[0] = new CoveringFilter(context.doc.engine(), nodeVar.getLayer(), nodeVar.getVariant(), from, to);
 
         this.child_from = from;
         this.child_to = to;
     }
 
     @Override
-    protected PropositionIterator suggest(Proposition proposition) {
-        return new StoreRefPropositionIterator(vars[0], doc.engine().coveringAnnotation(vars[0].getLayer(), vars[0].getVariant(), child_from, child_to));
+    protected PropositionIterator suggest(PredicateState state, Proposition proposition) {
+        return new StoreRefPropositionIterator(context, vars[0], context.doc.engine().coveringAnnotation(vars[0].getLayer(), vars[0].getVariant(), child_from, child_to));
     }
 
     public boolean coveredBy(int child_start, int child_end, int parent_start, int parent_end) {
@@ -53,9 +49,7 @@ public class CoveringConstantPredicate extends Predicate {
     public boolean eval(Proposition proposition) {
         NodeStore child = proposition.noderef(vars[0]).get();
 
-        if(!child.isAnnotation())
-            return false;
+        return child.isAnnotation() && coveredBy(child_from, child_to, child.getStart(), child.getEnd());
 
-        return coveredBy(child_from, child_to, child.getStart(), child.getEnd());
     }
 }

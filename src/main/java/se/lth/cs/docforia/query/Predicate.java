@@ -15,9 +15,6 @@ package se.lth.cs.docforia.query;
  * limitations under the License.
  */
 
-import se.lth.cs.docforia.Document;
-import se.lth.cs.docforia.NodeRef;
-import se.lth.cs.docforia.StoreRef;
 import se.lth.cs.docforia.query.filter.BasicEdgeFilter;
 import se.lth.cs.docforia.query.filter.BasicNodeFilter;
 import se.lth.cs.docforia.query.filter.Filter;
@@ -27,36 +24,31 @@ import se.lth.cs.docforia.query.filter.Filter;
  */
 public abstract class Predicate
 {
-    protected final Document doc;
+    protected final QueryContext context;
     protected final Var[] vars;
+    protected final int[] varIndex;
     protected final Filter[] filters;
+/*
     protected final boolean[] constant;
+    protected PropositionIterator iterator;
+    private boolean evaluated = false;*/
 
-    protected static StoreRef ref(Proposition prop, Var var) {
-        return prop.proposition[var.getIndex()];
-    }
-
-    protected static NodeRef noderef(Proposition prop, NodeVar var) {
-        return (NodeRef)prop.proposition[var.getIndex()];
-    }
-
-    protected static NodeRef edgeref(Proposition prop, EdgeVar var) {
-        return (NodeRef)prop.proposition[var.getIndex()];
-    }
-
-    public Predicate(Document doc, Var...vars) {
-        this.doc = doc;
+    public Predicate(QueryContext queryContext, Var...vars) {
+        this.context = queryContext;
         this.vars = vars;
-        this.constant = new boolean[vars.length];
+        //this.constant = new boolean[vars.length];
         this.filters = new Filter[vars.length];
+        this.varIndex = new int[vars.length];
 
         for (int i = 0; i < vars.length; i++) {
             if(vars[i] instanceof NodeVar)
-                filters[i] = new BasicNodeFilter(doc.engine(), ((NodeVar)vars[i]).type, ((NodeVar)vars[i]).variant);
+                filters[i] = new BasicNodeFilter(context.doc.engine(), ((NodeVar)vars[i]).type, ((NodeVar)vars[i]).variant);
             else if(vars[i] instanceof EdgeVar)
-                filters[i] = new BasicEdgeFilter(doc.engine(), ((EdgeVar)vars[i]).type, ((EdgeVar)vars[i]).variant);
+                filters[i] = new BasicEdgeFilter(context.doc.engine(), ((EdgeVar)vars[i]).type, ((EdgeVar)vars[i]).variant);
             else
                 throw new UnsupportedOperationException("Unsupported variable!");
+
+            varIndex[i] = context.var2index.getInt(vars[i]);
         }
     }
 
@@ -64,38 +56,38 @@ public abstract class Predicate
         return vars;
     }
 
-    protected PropositionIterator iterator;
-
-    protected PropositionIterator suggest(Proposition proposition) {
-        return new CombinationIterator(vars, filters, constant);
+    public PredicateState createState() {
+        return new PredicateState(new boolean[vars.length], null, false);
     }
 
-    public final void enter(Proposition proposition) {
+    protected PropositionIterator suggest(PredicateState state, Proposition proposition) {
+        return new CombinationIterator(context, vars, filters, state.constant);
+    }
+
+    public final void enter(PredicateState state, Proposition proposition) {
         int constants = 0;
         for (int i = 0; i < vars.length; i++) {
-            constant[i] = proposition.proposition[vars[i].index] != null;
-            constants += constant[i] ? 1 : 0;
+            state.constant[i] = proposition.data[varIndex[i]] != null;
+            constants += state.constant[i] ? 1 : 0;
         }
 
         if(constants == vars.length)
             return;
 
-        iterator = suggest(proposition);
+        state.iterator = suggest(state, proposition);
     }
 
-    private boolean evaluated = false;
-
-    public final boolean next(Proposition proposition) {
-        if(iterator == null) { //special case: all are constants, return one result if true
-            if(evaluated)
+    public final boolean next(PredicateState state, Proposition proposition) {
+        if(state.iterator == null) { //special case: all are constants, return one result if true
+            if(state.evaluated)
                 return false;
             else {
-                evaluated = true;
+                state.evaluated = true;
                 return eval(proposition);
             }
         }
 
-        while(iterator.next(proposition)) {
+        while(state.iterator.next(proposition)) {
             if(eval(proposition))
                 return true;
         }
@@ -103,13 +95,13 @@ public abstract class Predicate
         return false;
     }
 
-    public final void exit(Proposition proposition) {
+    public final void exit(PredicateState state, Proposition proposition) {
         for (int i = 0; i < vars.length; i++) {
-            if(!constant[i]) {
-                proposition.proposition[vars[i].index] = null;
+            if(!state.constant[i]) {
+                proposition.data[varIndex[i]] = null;
             }
         }
-        evaluated = false;
+        state.evaluated = false;
     }
 
     public abstract boolean eval(Proposition proposition);

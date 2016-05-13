@@ -17,15 +17,12 @@ package se.lth.cs.docforia.util;
 
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 
-import java.util.ArrayDeque;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * AVL tree based range index implementation, supporting overlapping and duplicated ranges
  */
-public class AnnotationIndex<T> implements Iterable<T> {
+public class AnnotationIndex<T> implements Collection<T> {
     public class Entry implements Comparable<Entry> {
         private int start;
         private int end;
@@ -86,6 +83,114 @@ public class AnnotationIndex<T> implements Iterable<T> {
 
     protected Entry root = null;
     protected int size = 0;
+
+    /**
+     * Checks if this index contains the given value, SLOW!
+     */
+    @Override
+    public boolean contains(Object o) {
+        for (T t : this) {
+            if(t.equals(o))
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Object[] toArray() {
+        Object[] data = new Object[size];
+        int i = 0;
+        for (T t : this) {
+            data[i++] = t;
+        }
+
+        return data;
+    }
+
+    @Override
+    public <T1> T1[] toArray(T1[] a) {
+        if(a.length < size)
+            return (T1[])toArray();
+        else
+        {
+            int i = 0;
+            for (T t : this) {
+                a[i++] = (T1)t;
+            }
+
+            return a;
+        }
+    }
+
+    @Override
+    public boolean add(T t) {
+        throw new UnsupportedOperationException("This collection requires a start, end");
+    }
+
+    @Override
+    public boolean remove(Object o) {
+        for (Entry entry : entries()) {
+            if(entry.item.equals(o))
+            {
+                remove(entry);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        if(c.size() == 0)
+            return true;
+        else if(c.size() == 1)
+            return contains(c.iterator().next());
+        else
+        {
+            int count = 0;
+            for (T t : this) {
+                if(c.contains(t)) {
+                    count++;
+                    if(count == c.size())
+                        return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends T> c) {
+        throw new UnsupportedOperationException("Has to have start, end");
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        ArrayList<Entry> removalList = new ArrayList<>();
+        for (Entry entry : entries()) {
+            if(c.contains(entry.item))
+            {
+                removalList.add(entry);
+                return true;
+            }
+        }
+
+        for (Entry entry : removalList) {
+            remove(entry);
+        }
+
+        if(removalList.size() == c.size())
+            return true;
+        else
+            return false;
+    }
+
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        throw new UnsupportedOperationException();
+    }
 
     protected int balance(Entry node) {
         if(node == null)

@@ -17,10 +17,7 @@ package se.lth.cs.docforia.memstore;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
-import se.lth.cs.docforia.LayerRef;
-import se.lth.cs.docforia.Node;
-import se.lth.cs.docforia.NodeRef;
-import se.lth.cs.docforia.NodeStore;
+import se.lth.cs.docforia.*;
 import se.lth.cs.docforia.data.DataRef;
 import se.lth.cs.docforia.data.StringRef;
 import se.lth.cs.docforia.util.AnnotationIndex;
@@ -43,6 +40,11 @@ public class MemoryNode extends NodeStore implements NodeRef {
 
     public MemoryNode(MemoryNodeCollection storage) {
         this.storage = storage;
+    }
+
+    @Override
+    public Document parent() {
+        return storage.doc.doc;
     }
 
     @Override
@@ -155,6 +157,14 @@ public class MemoryNode extends NodeStore implements NodeRef {
 
     @Override
     public String toString() {
-        return storage.key.toString() + (start != -1 ? " = {" + storage.doc.getText().substring(start,end) + "}" : "");
+        String header = layer().getLayer() + (layer().getVariant() != null ? ", " + layer().getVariant() : "");
+        if(isAnnotation()) {
+            return header + " : Annotation {" + storage.doc.getText().substring(start,end) + "}";
+        } else {
+            StringBuilder sb = new StringBuilder();
+            sb.append(header).append(" : Node ");
+            sb.append(super.toString());
+            return sb.toString();
+        }
     }
 }

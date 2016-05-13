@@ -54,7 +54,7 @@ public class WhereClause extends CommonClause {
      * Eval proposition.
      */
     public WhereClause predicate(final Function<Proposition,Boolean> pred) {
-        parent.predicates.add(new Predicate(parent.doc, vars) {
+        parent.predicates.add(new Predicate(parent.context, vars) {
             @Override
             public boolean eval(Proposition proposition) {
                 return pred.apply(proposition);
@@ -72,7 +72,7 @@ public class WhereClause extends CommonClause {
             if(!(children instanceof NodeVar))
                 throw new QueryException("var in where clause is not a NodeVar: " + children.toString());
 
-            parent.predicates.add(new CoveredByConstantPredicate(parent.doc, (NodeVar)children, from, to));
+            parent.predicates.add(new CoveredByConstantPredicate(parent.context, (NodeVar)children, from, to));
         }
 
         return this;
@@ -85,7 +85,7 @@ public class WhereClause extends CommonClause {
             if(!(childNode instanceof NodeVar))
                 throw new QueryException("var in where clause is not a NodeVar: " + childNode.toString());
 
-            parent.predicates.add(new CoveredByPredicate(parent.doc, (NodeVar)childNode, parentNode));
+            parent.predicates.add(new CoveredByPredicate(parent.context, (NodeVar)childNode, parentNode));
         }
 
         return this;
@@ -96,7 +96,7 @@ public class WhereClause extends CommonClause {
             if(!(children instanceof NodeVar))
                 throw new QueryException("var in where clause is not a NodeVar: " + children.toString());
 
-            parent.predicates.add(new CoveringConstantPredicate(parent.doc, (NodeVar)children, from, to));
+            parent.predicates.add(new CoveringConstantPredicate(parent.context, (NodeVar)children, from, to));
         }
 
         return this;
@@ -110,7 +110,7 @@ public class WhereClause extends CommonClause {
         parent.select(childNode);
 
         for(Var parentNode : vars) {
-            parent.predicates.add(new CoveredByPredicate(parent.doc, childNode, (NodeVar)parentNode));
+            parent.predicates.add(new CoveredByPredicate(parent.context, childNode, (NodeVar)parentNode));
         }
 
         return this;
@@ -121,7 +121,7 @@ public class WhereClause extends CommonClause {
             if(!(children instanceof NodeVar))
                 throw new QueryException("var in where clause is not a NodeVar: " + children.toString());
 
-            parent.predicates.add(new OverlapConstRangePredicate(parent.doc, (NodeVar)children, from, to));
+            parent.predicates.add(new OverlapConstRangePredicate(parent.context, (NodeVar)children, from, to));
         }
 
         return this;
@@ -175,7 +175,7 @@ public class WhereClause extends CommonClause {
             if(!(childNode instanceof NodeVar))
                 throw new QueryException("var in where clause is not a NodeVar: " + childNode.toString());
 
-            NodeInWindowPredicate pred = new NodeInWindowPredicate(parent.doc, (NodeVar) childNode, childNode.getLayer(), childNode.getVariant(), node, pre, post, flexible);
+            NodeInWindowPredicate pred = new NodeInWindowPredicate(parent.context, (NodeVar) childNode, childNode.getLayer(), childNode.getVariant(), node, pre, post, flexible);
             if(pred.getStart() != -1 && pred.getEnd() != -1 && parent.predicates.size() > 0)
                 coveredBy(pred.getStart(), pred.getEnd());
 
@@ -199,7 +199,7 @@ public class WhereClause extends CommonClause {
                 nodeRefs.add(node.getRef());
             }
 
-            ConstantNodeCandidates candidates = new ConstantNodeCandidates(parent.doc, (NodeVar)childNode, nodeRefs);
+            ConstantNodeCandidates candidates = new ConstantNodeCandidates(parent.context, (NodeVar)childNode, nodeRefs);
             parent.predicates.add(candidates);
         }
         return this;
@@ -215,7 +215,7 @@ public class WhereClause extends CommonClause {
                 edgeRefs.add(edge.getRef());
             }
 
-            ConstantEdgeCandidates candidates = new ConstantEdgeCandidates(parent.doc, (EdgeVar)childEdge, edgeRefs);
+            ConstantEdgeCandidates candidates = new ConstantEdgeCandidates(parent.context, (EdgeVar)childEdge, edgeRefs);
             parent.predicates.add(candidates);
         }
 
@@ -232,7 +232,7 @@ public class WhereClause extends CommonClause {
                 nodeRefs.add(node.getRef());
             }
 
-            ConstantNodeCandidates candidates = new ConstantNodeCandidates(parent.doc, (NodeVar)childNode, nodeRefs);
+            ConstantNodeCandidates candidates = new ConstantNodeCandidates(parent.context, (NodeVar)childNode, nodeRefs);
             parent.predicates.add(candidates);
         }
         return this;
@@ -248,7 +248,7 @@ public class WhereClause extends CommonClause {
                 edgeRefs.add(edge.getRef());
             }
 
-            ConstantEdgeCandidates candidates = new ConstantEdgeCandidates(parent.doc, (EdgeVar)childEdge, edgeRefs);
+            ConstantEdgeCandidates candidates = new ConstantEdgeCandidates(parent.context, (EdgeVar)childEdge, edgeRefs);
             parent.predicates.add(candidates);
         }
 
@@ -256,10 +256,12 @@ public class WhereClause extends CommonClause {
     }
 
     public EdgeClause hasEdge(EdgeVar edgeVar) {
+        root().select(edgeVar);
         return new EdgeClause(this, edgeVar, true);
     }
 
     public EdgeClause hasNotEdge(EdgeVar edgeVar) {
+        root().select(edgeVar);
         return new EdgeClause(this, edgeVar, false);
     }
 }

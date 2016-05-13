@@ -35,7 +35,7 @@ public class PropertyClause {
 
     public WhereClause exists() {
         for (Var var : parent.vars) {
-            parent.parent.predicates.add(new PropertyExistsPredicate(parent.parent.doc, var, property));
+            parent.parent.predicates.add(new PropertyExistsPredicate(parent.parent.context, var, property));
         }
 
         return parent;
@@ -43,7 +43,7 @@ public class PropertyClause {
 
     public WhereClause notExists() {
         for (Var var : parent.vars) {
-            parent.parent.predicates.add(new PropertyNotExistsPredicate(parent.parent.doc, var, property));
+            parent.parent.predicates.add(new PropertyNotExistsPredicate(parent.parent.context, var, property));
         }
 
         return parent;
@@ -51,7 +51,7 @@ public class PropertyClause {
 
     public WhereClause equals(String value) {
         for (Var var : parent.vars) {
-            parent.parent.predicates.add(new PropertyEqualsPredicate(parent.parent.doc, var, property, value));
+            parent.parent.predicates.add(new PropertyEqualsPredicate(parent.parent.context, var, property, value));
         }
 
         return parent;
@@ -59,7 +59,7 @@ public class PropertyClause {
 
     public WhereClause notEquals(String value) {
         for (Var var : parent.vars) {
-            parent.parent.predicates.add(new PropertyNotEqualsPredicate(parent.parent.doc, var, property, value));
+            parent.parent.predicates.add(new PropertyNotEqualsPredicate(parent.parent.context, var, property, value));
         }
 
         return parent;
@@ -67,7 +67,7 @@ public class PropertyClause {
 
     public WhereClause equalsAny(String...values) {
         for (Var var : parent.vars) {
-            parent.parent.predicates.add(new PropertyEqualsAnyPredicate(parent.parent.doc, var, property, values));
+            parent.parent.predicates.add(new PropertyEqualsAnyPredicate(parent.parent.context, var, property, values));
         }
 
         return parent;
@@ -75,7 +75,7 @@ public class PropertyClause {
 
     public WhereClause predicate(Function<DataRef,Boolean> pred) {
         for (Var var : parent.vars) {
-            parent.parent.predicates.add(new PropertyPredicate(parent.parent.doc, var, property, pred));
+            parent.parent.predicates.add(new PropertyPredicate(parent.parent.context, var, property, pred));
         }
 
         return parent;

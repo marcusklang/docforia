@@ -15,13 +15,9 @@ package se.lth.cs.docforia.query.predicates;
  * limitations under the License.
  */
 
-import se.lth.cs.docforia.Document;
 import se.lth.cs.docforia.NodeRef;
 import se.lth.cs.docforia.NodeStore;
-import se.lth.cs.docforia.query.NodeVar;
-import se.lth.cs.docforia.query.Predicate;
-import se.lth.cs.docforia.query.Proposition;
-import se.lth.cs.docforia.query.PropositionIterator;
+import se.lth.cs.docforia.query.*;
 import se.lth.cs.docforia.query.filter.CoveredByFilter;
 
 /**
@@ -32,16 +28,16 @@ public class CoveredByConstantPredicate extends Predicate {
     private final int parent_from;
     private final int parent_to;
 
-    public CoveredByConstantPredicate(Document doc, NodeVar child, int from, int to) {
-        super(doc, child);
-        filters[0] = new CoveredByFilter(doc.engine(), child.getLayer(), child.getVariant(), from, to);
+    public CoveredByConstantPredicate(QueryContext context, NodeVar child, int from, int to) {
+        super(context, child);
+        filters[0] = new CoveredByFilter(context.getDoc().engine(), child.getLayer(), child.getVariant(), from, to);
         this.parent_from = from;
         this.parent_to = to;
     }
 
     @Override
-    protected PropositionIterator suggest(Proposition proposition) {
-        return new StoreRefPropositionIterator(vars[0], doc.engine().coveredAnnotation(vars[0].getLayer(),vars[0].getVariant(),parent_from, parent_to));
+    protected PropositionIterator suggest(PredicateState state, Proposition proposition) {
+        return new StoreRefPropositionIterator(context, vars[0], context.getDoc().engine().coveredAnnotation(vars[0].getLayer(),vars[0].getVariant(),parent_from, parent_to));
     }
 
     public boolean coveredBy(int child_start, int child_end, int parent_start, int parent_end) {
@@ -57,6 +53,6 @@ public class CoveredByConstantPredicate extends Predicate {
 
         NodeStore store = child.get();
 
-        return coveredBy(doc.transform(store.getStart()), doc.transform(store.getEnd()), parent_from, parent_to);
+        return coveredBy(context.doc.transform(store.getStart()), context.doc.transform(store.getEnd()), parent_from, parent_to);
     }
 }

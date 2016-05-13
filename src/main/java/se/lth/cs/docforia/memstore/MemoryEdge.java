@@ -36,6 +36,11 @@ public class MemoryEdge extends EdgeStore implements EdgeRef {
     }
 
     @Override
+    public Document parent() {
+        return storage.doc.doc;
+    }
+
+    @Override
     public LayerRef layer() {
         return storage.key;
     }
@@ -77,10 +82,10 @@ public class MemoryEdge extends EdgeStore implements EdgeRef {
         MemoryNode tailnode = ((MemoryNode)tail);
         MemoryNode headnode = ((MemoryNode)head);
 
-        if(head != null)
+        if(this.head != null)
             ((MemoryNode) head).inlinks.remove(this);
 
-        if(tail != null)
+        if(this.tail != null)
             ((MemoryNode) tail).outlinks.remove(this);
 
         this.head = headnode;
@@ -148,5 +153,10 @@ public class MemoryEdge extends EdgeStore implements EdgeRef {
     @Override
     public String reference() {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(tail) + " -> " + String.valueOf(head) + " : " + super.toString();
     }
 }

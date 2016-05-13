@@ -69,7 +69,9 @@ public enum MemoryCoreNodeLayer {
 
     TABLE_OF_CONTENTS(23, TableOfContents.class, TableOfContents::new),
     AST_NODE(24, AstNode.class, AstNode::new),
-    AST_TEXT_NODE(25, AstTextNode.class, AstTextNode::new);
+    AST_TEXT_NODE(25, AstTextNode.class, AstTextNode::new),
+
+    PARSE_TREE_NODE(26, ParseTreeNode.class, ParseTreeNode::new);
 
     public final int id;
     public final String layer;

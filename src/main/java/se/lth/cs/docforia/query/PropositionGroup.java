@@ -25,34 +25,34 @@ import java.util.List;
 /**
  * Group result
  */
-public class GroupProposition implements Iterable<Proposition> {
+public class PropositionGroup implements Iterable<Proposition> {
 
-    private final Proposition group;
+    private final Proposition key;
     private final List<Proposition> children;
 
-    public GroupProposition(Proposition group, List<Proposition> children) {
-        this.group = group;
+    public PropositionGroup(Proposition key, List<Proposition> children) {
+        this.key = key;
         this.children = children;
     }
 
     public Proposition key() {
-        return group;
+        return key;
     }
 
     public <N extends Node> N key(NodeTVar<N> var) {
-        return group.get(var);
+        return key.get(var);
     }
 
     public <E extends Edge> E key(EdgeTVar<E> var) {
-        return group.get(var);
+        return key.get(var);
     }
 
     public <N extends Node> N key(NodeVar var) {
-        return (N)group.get(var);
+        return (N) key.get(var);
     }
 
     public <E extends Edge> E key(EdgeVar var) {
-        return (E)group.get(var);
+        return (E) key.get(var);
     }
 
     public int size() {
@@ -72,6 +72,7 @@ public class GroupProposition implements Iterable<Proposition> {
     }
 
     public <N extends Node> List<N> list(NodeTVar<N> var) {
+        //TODO: Implement a unmodifiable view
         ArrayList<N> instances = new ArrayList<>();
         for (Proposition child : children) {
             instances.add(child.get(var));
@@ -80,6 +81,7 @@ public class GroupProposition implements Iterable<Proposition> {
     }
 
     public <E extends Edge> List<E> list(EdgeTVar<E> var) {
+        //TODO: Implement a unmodifiable view
         ArrayList<E> instances = new ArrayList<>();
         for (Proposition child : children) {
             instances.add(child.get(var));

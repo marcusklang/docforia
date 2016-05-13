@@ -15,18 +15,18 @@ package se.lth.cs.docforia.query.predicates;
  * limitations under the License.
  */
 
-import se.lth.cs.docforia.Document;
 import se.lth.cs.docforia.query.EdgeVar;
 import se.lth.cs.docforia.query.NodeVar;
 import se.lth.cs.docforia.query.Proposition;
+import se.lth.cs.docforia.query.QueryContext;
 
 /**
  * Inverted edge exist predicate
  */
 public class EdgeNotExistsPredicate extends EdgeExistsPredicate {
 
-    public EdgeNotExistsPredicate(Document doc, NodeVar tail, NodeVar head, EdgeVar edgeVar) {
-        super(doc, tail, head, edgeVar);
+    public EdgeNotExistsPredicate(QueryContext context, NodeVar tail, NodeVar head, EdgeVar edgeVar) {
+        super(context, tail, head, edgeVar);
     }
 
     @Override

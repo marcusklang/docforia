@@ -15,21 +15,18 @@ package se.lth.cs.docforia.query.predicates;
  * limitations under the License.
  */
 
-import se.lth.cs.docforia.Document;
-import se.lth.cs.docforia.query.Predicate;
-import se.lth.cs.docforia.query.Proposition;
-import se.lth.cs.docforia.query.PropositionIterator;
+import se.lth.cs.docforia.query.*;
 
 /**
  * No result predicate
  */
 public class NonePredicate extends Predicate {
-    public NonePredicate(Document doc) {
-        super(doc);
+    public NonePredicate(QueryContext context) {
+        super(context);
     }
 
     @Override
-    protected PropositionIterator suggest(Proposition proposition) {
+    protected PropositionIterator suggest(PredicateState state, Proposition proposition) {
         return new PropositionIterator() {
             @Override
             public boolean next(Proposition proposition) {

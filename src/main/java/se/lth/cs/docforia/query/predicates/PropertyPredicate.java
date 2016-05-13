@@ -15,10 +15,10 @@ package se.lth.cs.docforia.query.predicates;
  * limitations under the License.
  */
 
-import se.lth.cs.docforia.Document;
 import se.lth.cs.docforia.data.DataRef;
 import se.lth.cs.docforia.query.Predicate;
 import se.lth.cs.docforia.query.Proposition;
+import se.lth.cs.docforia.query.QueryContext;
 import se.lth.cs.docforia.query.Var;
 
 import java.util.function.Function;
@@ -29,8 +29,8 @@ public class PropertyPredicate extends Predicate {
     private final String property;
     private final Function<DataRef,Boolean> pred;
 
-    public PropertyPredicate(Document doc, Var var, String property, Function<DataRef,Boolean> pred) {
-        super(doc, var);
+    public PropertyPredicate(QueryContext context, Var var, String property, Function<DataRef,Boolean> pred) {
+        super(context, var);
         this.property = property;
         this.pred = pred;
     }

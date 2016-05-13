@@ -15,11 +15,11 @@ package se.lth.cs.docforia.query.predicates;
  * limitations under the License.
  */
 
-import se.lth.cs.docforia.Document;
 import se.lth.cs.docforia.Edge;
 import se.lth.cs.docforia.query.EdgeVar;
 import se.lth.cs.docforia.query.Predicate;
 import se.lth.cs.docforia.query.Proposition;
+import se.lth.cs.docforia.query.QueryContext;
 
 import java.util.function.Function;
 
@@ -29,8 +29,8 @@ import java.util.function.Function;
 public class EdgePredicate<E extends Edge> extends Predicate {
     private final Function<E,Boolean> edgePred;
 
-    public EdgePredicate(Document doc, EdgeVar nodeVar, Function<E, Boolean> edgePred) {
-        super(doc, nodeVar);
+    public EdgePredicate(QueryContext context, EdgeVar nodeVar, Function<E, Boolean> edgePred) {
+        super(context, nodeVar);
         this.edgePred = edgePred;
     }
 

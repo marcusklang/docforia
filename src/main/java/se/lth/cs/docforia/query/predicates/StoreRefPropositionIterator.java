@@ -18,6 +18,7 @@ package se.lth.cs.docforia.query.predicates;
 import se.lth.cs.docforia.StoreRef;
 import se.lth.cs.docforia.query.Proposition;
 import se.lth.cs.docforia.query.PropositionIterator;
+import se.lth.cs.docforia.query.QueryContext;
 import se.lth.cs.docforia.query.Var;
 
 import java.util.Iterator;
@@ -26,26 +27,22 @@ import java.util.Iterator;
  * Basic suggester of layer contents
  */
 public class StoreRefPropositionIterator implements PropositionIterator {
-    private final int index;
+    private final int var;
     private final Iterator<? extends StoreRef> iter;
 
-    public <T extends StoreRef> StoreRefPropositionIterator(int index, Iterator<T> iter) {
-        this.index = index;
+    public <T extends StoreRef> StoreRefPropositionIterator(QueryContext context, Var var, Iterator<T> iter) {
+        this.var = context.indexOf(var);
         this.iter = iter;
     }
 
-    public <T extends StoreRef> StoreRefPropositionIterator(Var var, Iterator<T> iter) {
-        this(var.getIndex(), iter);
-    }
-
-    public <T extends StoreRef> StoreRefPropositionIterator(Var var, Iterable<T> iter) {
-        this(var.getIndex(),iter.iterator());
+    public <T extends StoreRef> StoreRefPropositionIterator(QueryContext context, Var var, Iterable<T> iter) {
+        this(context, var,iter.iterator());
     }
 
     @Override
     public boolean next(Proposition proposition) {
         if(iter.hasNext()) {
-            proposition.proposition[index] = iter.next();
+            proposition.data[var] = iter.next();
             return true;
         }
         else

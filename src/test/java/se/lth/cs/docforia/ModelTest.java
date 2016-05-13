@@ -36,10 +36,13 @@ import java.io.*;
 import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static se.lth.cs.docforia.graph.TokenProperties.NORMALIZED;
 import static se.lth.cs.docforia.graph.TokenProperties.STOPWORD;
+import static se.lth.cs.docforia.query.StreamUtils.orderBy;
+import static se.lth.cs.docforia.query.StreamUtils.toNode;
 
 /**
  * Primary test code
@@ -76,28 +79,34 @@ public abstract class ModelTest {
 
         List<Token> lundLocation = doc.select(T, NE)
                                       .where(T).coveredBy(NE)
-                                      .orderByRange(T)
-                                      .query()
+                                      .stream()
+                                      .sorted(StreamUtils.orderBy(T))
                                       .map(GetNode.of(T))
-                                      .toList();
+                                      .collect(Collectors.toList());
 
         assert lundLocation.size() == 3;
         for (Token token : lundLocation) {
             System.out.println(token);
         }
 
-        GroupProposition group = doc.select(T, NE)
+        Optional<PropositionGroup> group = doc.select(T, NE)
                                     .where(T).coveredBy(NE)
-                                    .orderByRange(T)
+                                    .stream()
+                                    .collect(QueryCollectors.groupBy(doc, NE).orderByValue(T).collector())
+                                    .stream()
+                                    .findFirst();
+                                    /*.orderByRange(T)
                                     .groupBy(NE)
                                     .query()
-                                    .first();
+                                    .first();*/
 
-        NamedEntity ne = group.key(NE);
+        assertTrue(group.isPresent());
+
+        NamedEntity ne = group.get().key(NE);
         System.out.println(ne);
 
-        assert group.list(T).size() == 3;
-        for (Token token : group.list(T)) {
+        assert group.get().list(T).size() == 3;
+        for (Token token : group.get().list(T)) {
             System.out.println(token);
         }
     }
@@ -179,33 +188,33 @@ public abstract class ModelTest {
         Token stad = tokens.tok_s1t4;
         NodeTVar<Token> T = Token.var();
 
-        List<Token> window = doc.select(T).where(T).inWindowOf(stad, 1, true).orderByRange(T).query().map(GetNode.of(T)).toList();
+        List<Token> window = doc.select(T).where(T).inWindowOf(stad, 1, true).stream().sorted(orderBy(T)).map(toNode(T)).collect(Collectors.toList());
 
         assertEquals(3,window.size());
         assertEquals("en", window.get(0).text());
         assertEquals("stad", window.get(1).text());
         assertEquals("i", window.get(2).text());
 
-        window = doc.select(T).where(T).inWindowOf(stad, 1).orderByRange(T).query().map(GetNode.of(T)).toList();
+        window = doc.select(T).where(T).inWindowOf(stad, 1).stream().sorted(orderBy(T)).map(toNode(T)).collect(Collectors.toList());
         assertEquals(3,window.size());
         assertEquals("en", window.get(0).text());
         assertEquals("stad", window.get(1).text());
         assertEquals("i", window.get(2).text());
 
-        window = doc.select(T).where(T).inWindowOf(tokens.tok_s1t1, 1, true).orderByRange(T).query().map(GetNode.of(T)).toList();
+        window = doc.select(T).where(T).inWindowOf(tokens.tok_s1t1, 1, true).stream().sorted(orderBy(T)).map(toNode(T)).collect(Collectors.toList());
         assertEquals(2,window.size());
         assertEquals("Helsingborg", window.get(0).text());
         assertEquals("är", window.get(1).text());
 
-        window = doc.select(T).where(T).inWindowOf(tokens.tok_s1t1, 1).orderByRange(T).query().map(GetNode.of(T)).toList();
+        window = doc.select(T).where(T).inWindowOf(tokens.tok_s1t1, 1).stream().sorted(orderBy(T)).map(toNode(T)).collect(Collectors.toList());
         assertEquals(0,window.size());
 
-        window = doc.select(T).where(T).inWindowOf(tokens.tok_s2t5, 1, true).orderByRange(T).query().map(GetNode.of(T)).toList();
+        window = doc.select(T).where(T).inWindowOf(tokens.tok_s2t5, 1, true).stream().sorted(orderBy(T)).map(toNode(T)).collect(Collectors.toList());
         assertEquals(2,window.size());
         assertEquals("Kärnan", window.get(0).text());
         assertEquals(".", window.get(1).text());
 
-        window = doc.select(T).where(T).inWindowOf(tokens.tok_s2t5, 1).orderByRange(T).query().map(GetNode.of(T)).toList();
+        window = doc.select(T).where(T).inWindowOf(tokens.tok_s2t5, 1).stream().sorted(orderBy(T)).map(toNode(T)).collect(Collectors.toList());
         assertEquals(0,window.size());
     }
 
@@ -217,7 +226,7 @@ public abstract class ModelTest {
         NodeTVar<NamedEntity> NE = NamedEntity.var();
         Proposition first = doc.select(NE).where(NE, (Function<NamedEntity, Boolean>) in -> {
             return in.text().equals("Conny Andersson");
-        }).orderByRange(NE).query().first();
+        }).stream().min(orderBy(NE)).orElse(null);
 
         assertNotNull(first);
 
@@ -225,7 +234,7 @@ public abstract class ModelTest {
 
         NodeTVar<Token> T = Token.var();
 
-        List<Token> tokens = doc.select(T).where(T).inWindowOf(ne, 2, true).orderByRange(T).query().map(GetNode.of(T)).toList();
+        List<Token> tokens = doc.select(T).where(T).inWindowOf(ne, 2, true).stream().sorted(orderBy(T)).map(toNode(T)).collect(Collectors.toList());
         assertEquals(4, tokens.size());
 
         assertEquals("Conny", tokens.get(0).text());
@@ -233,7 +242,7 @@ public abstract class ModelTest {
         assertEquals("är", tokens.get(2).text());
         assertEquals("namnet", tokens.get(3).text());
 
-        tokens = doc.select(T).where(T).inWindowOf(ne, 0, 2).orderByRange(T).query().map(GetNode.of(T)).toList();
+        tokens = doc.select(T).where(T).inWindowOf(ne, 0, 2).stream().sorted(orderBy(T)).map(toNode(T)).collect(Collectors.toList());
         assertEquals(4, tokens.size());
 
         assertEquals("Conny", tokens.get(0).text());
@@ -241,7 +250,7 @@ public abstract class ModelTest {
         assertEquals("är", tokens.get(2).text());
         assertEquals("namnet", tokens.get(3).text());
 
-        tokens = doc.select(T).where(T).inWindowOf(ne, 0, 2).orderByRange(T).query().map(GetNode.of(T)).toList();
+        tokens = doc.select(T).where(T).inWindowOf(ne, 0, 2).stream().sorted(orderBy(T)).map(toNode(T)).collect(Collectors.toList());
         assertEquals(4, tokens.size());
 
         assertEquals("Conny", tokens.get(0).text());
@@ -249,9 +258,9 @@ public abstract class ModelTest {
         assertEquals("är", tokens.get(2).text());
         assertEquals("namnet", tokens.get(3).text());
 
-        DocumentIterable<NamedEntity> query = doc.select(NE).where(NE, (Function<NamedEntity, Boolean>) in -> {
+        List<NamedEntity> query = doc.select(NE).where(NE, (Function<NamedEntity, Boolean>) in -> {
             return in.text().equals("Conny Andersson");
-        }).orderByRange(NE).query().map(GetNode.of(NE));
+        }).stream().sorted(orderBy(NE)).map(toNode(NE)).collect(Collectors.toList());
         Iterator<NamedEntity> iterator = query.iterator();
         assertTrue(iterator.hasNext());
         iterator.next();
@@ -259,7 +268,7 @@ public abstract class ModelTest {
         assertTrue(iterator.hasNext());
         ne = iterator.next();
 
-        tokens = doc.select(T).where(T).inWindowOf(ne, 2).orderByRange(T).query().map(GetNode.of(T)).toList();
+        tokens = doc.select(T).where(T).inWindowOf(ne, 2).stream().sorted(orderBy(T)).map(toNode(T)).collect(Collectors.toList());
         assertEquals(6, tokens.size());
 
         assertEquals("personer", tokens.get(0).text());
@@ -269,7 +278,7 @@ public abstract class ModelTest {
         assertEquals("(", tokens.get(4).text());
         assertEquals("skådespelare", tokens.get(5).text());
 
-        tokens = doc.select(T).where(T).inWindowOf(ne, 2,1).orderByRange(T).query().map(GetNode.of(T)).toList();
+        tokens = doc.select(T).where(T).inWindowOf(ne, 2,1).stream().sorted(orderBy(T)).map(toNode(T)).collect(Collectors.toList());
         assertEquals(5, tokens.size());
 
         assertEquals("personer", tokens.get(0).text());
@@ -278,21 +287,21 @@ public abstract class ModelTest {
         assertEquals("Andersson", tokens.get(3).text());
         assertEquals("(", tokens.get(4).text());
 
-        tokens = doc.select(T).where(T).inWindowOf(ne, 1,0).orderByRange(T).query().map(GetNode.of(T)).toList();
+        tokens = doc.select(T).where(T).inWindowOf(ne, 1,0).stream().sorted(orderBy(T)).map(toNode(T)).collect(Collectors.toList());
         assertEquals(3, tokens.size());
 
         assertEquals(":", tokens.get(0).text());
         assertEquals("Conny", tokens.get(1).text());
         assertEquals("Andersson", tokens.get(2).text());
 
-        tokens = doc.select(T).where(T).inWindowOf(ne, 0,1).orderByRange(T).query().map(GetNode.of(T)).toList();
+        tokens = doc.select(T).where(T).inWindowOf(ne, 0,1).stream().sorted(orderBy(T)).map(toNode(T)).collect(Collectors.toList());
         assertEquals(3, tokens.size());
 
         assertEquals("Conny", tokens.get(0).text());
         assertEquals("Andersson", tokens.get(1).text());
         assertEquals("(", tokens.get(2).text());
 
-        tokens = doc.select(T).where(T).inWindowOf(ne, 0).orderByRange(T).query().map(GetNode.of(T)).toList();
+        tokens = doc.select(T).where(T).inWindowOf(ne, 0).stream().sorted(orderBy(T)).map(toNode(T)).collect(Collectors.toList());
         assertEquals(2, tokens.size());
 
         assertEquals("Conny", tokens.get(0).text());
@@ -415,20 +424,20 @@ public abstract class ModelTest {
         NodeTVar<Token> T = Token.var();
         NodeTVar<Sentence> S = Sentence.var();
 
-        assertNull(doc.select(T).where(T).coveredBy(a1).query().first());
+        assertFalse(doc.select(T).where(T).coveredBy(a1).stream().findFirst().isPresent());
 
-        assertEquals(t1, doc.select(T).where(T).intersects(a1).query().map(GetNode.of(T)).first());
-        assertEquals(s1, doc.select(S).where(S).intersects(a1).query().map(GetNode.of(S)).first());
-        assertEquals(s1, doc.select(S).where(S).covering(a1).query().map(GetNode.of(S)).first());
+        assertEquals(t1, doc.select(T).where(T).intersects(a1).stream().map(toNode(T)).findFirst().get());
+        assertEquals(s1, doc.select(S).where(S).intersects(a1).stream().map(toNode(S)).findFirst().get());
+        assertEquals(s1, doc.select(S).where(S).covering(a1).stream().map(toNode(S)).findFirst().get());
 
-        List<Token> tokens = doc.select(T).where(T).intersects(a2).orderByRange(T).query().map(GetNode.of(T)).toList();
+        List<Token> tokens = doc.select(T).where(T).intersects(a2).stream().map(toNode(T)).collect(Collectors.toList());
         assertEquals(4, tokens.size());
         assertEquals(t7, tokens.get(0));
         assertEquals(t8, tokens.get(1));
         assertEquals(t9, tokens.get(2));
         assertEquals(t10, tokens.get(3));
 
-        tokens = doc.select(T).where(T).coveredBy(a2).orderByRange(T).query().map(GetNode.of(T)).toList();
+        tokens = doc.select(T).where(T).coveredBy(a2).stream().map(toNode(T)).collect(Collectors.toList());
         assertEquals(2, tokens.size());
         assertEquals(t8, tokens.get(0));
         assertEquals(t9, tokens.get(1));
@@ -561,8 +570,7 @@ public abstract class ModelTest {
 
         NodeVar T = Token.var();
 
-        Iterable<Proposition> query = doc.select(T).query();
-        Iterator<Proposition> iter = query.iterator();
+        Iterator<Proposition> iter = doc.select(T).stream().iterator();
 
         assertTrue(iter.hasNext());
         Token tok1 = iter.next().get(T);
@@ -604,7 +612,7 @@ public abstract class ModelTest {
         assertEquals(2, tok.getEnd());
 
         NodeVar T = Token.var();
-        Token tok2 = doc.select(T).query().first().get(T);
+        Token tok2 = doc.select(T).stream().findFirst().get().get(T);
         assertTrue(tok2 != tok);
         assertEquals(3, tok2.getStart());
         assertEquals(5, tok2.getEnd());
@@ -617,14 +625,13 @@ public abstract class ModelTest {
         View view = doc.view(47, 135);
 
         NodeVar S = Sentence.var();
-        Sentence sent = view.select(S).orderByRange(S).query().first().get(S);
+        Sentence sent = view.select(S).stream().findFirst().get().get(S);
         assertEquals(0, sent.getStart());
         assertEquals(88, sent.getEnd());
         assertEquals("Conny Andersson (skådespelare) Conny Andersson (racerförare) Conny Andersson (politiker)", sent.text());
 
         NodeVar T = Token.var();
-        Iterable<Proposition> result = view.select(T).where(T).coveredBy(0,15).coveredBy(sent).query();
-        Iterator<Proposition> iter = result.iterator();
+        Iterator<Proposition> iter = view.select(T).where(T).coveredBy(0,15).coveredBy(sent).stream().iterator();
 
         assertTrue(iter.hasNext());
         Token tok1 = iter.next().get(T);
@@ -636,7 +643,7 @@ public abstract class ModelTest {
 
         assertFalse(iter.hasNext());
 
-        Sentence realSent = doc.select(S).where(S).coveredBy(47, 135).query().first().get(S);
+        Sentence realSent = doc.select(S).where(S).coveredBy(47, 135).stream().findFirst().get().get(S);
         assertTrue(sent != realSent);
 
         assertEquals(47, realSent.getStart());
@@ -645,8 +652,8 @@ public abstract class ModelTest {
         assertEquals(88, sent.getEnd());
 
         NodeVar N = NamedEntity.var();
-        Iterable<GroupProposition> groups = view.select(T, N).where(T).coveredBy(N).orderByRange(T).groupBy(N).query();
-        Iterator<GroupProposition> giter = groups.iterator();
+        Iterable<PropositionGroup> groups = view.select(T, N).where(T).coveredBy(N).stream().collect(QueryCollectors.groupBy(view, N).orderByValue(T).collector());
+        Iterator<PropositionGroup> giter = groups.iterator();
 
         assertTrue(giter.hasNext());
         NamedEntity ne1 = giter.next().key().get(N);
@@ -673,7 +680,7 @@ public abstract class ModelTest {
 
         ne1.putProperty("example", 1);
 
-        NamedEntity realNe1 = doc.select(N).where(N).coveredBy(47,62).query().first().get(N);
+        NamedEntity realNe1 = doc.select(N).where(N).coveredBy(47,62).stream().findFirst().get().get(N);
         assertTrue(realNe1 != ne1);
         assertTrue(realNe1.hasProperty("example"));
         assertEquals("1", realNe1.getProperty("example"));
@@ -687,7 +694,7 @@ public abstract class ModelTest {
 
     }
 
-    private void validateGroup(NodeVar T, NodeVar A, GroupProposition group) {
+    private void validateGroup(NodeVar T, NodeVar A, PropositionGroup group) {
         List<Proposition> tokenGroup = group.values();
 
         assertTrue(tokenGroup.size() > 0);
@@ -707,18 +714,17 @@ public abstract class ModelTest {
 
         NodeVar T = Token.var();
         NodeVar A = Anchor.var();
-        DocumentIterable<GroupProposition> iterable = doc.select(A,T)
-                                                         .where(T).property(NORMALIZED).exists()
-                                                         .property(STOPWORD).notExists()
-                                                         .coveredBy(A)
-                                                         .where(A).property("resolved").exists()
-                                                         .orderByRange(T)
-                                                         .groupBy(A)
-                                                         .query();
+        Iterable<PropositionGroup> iterable = doc.select(A, T)
+                                                 .where(T).property(NORMALIZED).exists()
+                                                 .property(STOPWORD).notExists()
+                                                 .coveredBy(A)
+                                                 .where(A).property("resolved").exists()
+                                                 .stream()
+                                                 .collect(QueryCollectors.groupBy(doc, A).orderByValue(T).collector());
 
-        Iterator<GroupProposition> iter = iterable.iterator();
+        Iterator<PropositionGroup> iter = iterable.iterator();
 
-        GroupProposition group = iter.next();
+        PropositionGroup group = iter.next();
         validateGroup(T,A, group);
         assertEquals(3, group.size());
         assertEquals("conny", group.value(0,T).getProperty(NORMALIZED));
@@ -743,7 +749,7 @@ public abstract class ModelTest {
         assertFalse(iter.hasNext());
 
         NodeVar D = new NodeVar(Detection.class);
-        List<Proposition> detections = doc.select(D).orderByRange(D).query().toList();
+        List<Proposition> detections = doc.select(D).stream().sorted(orderBy(D)).collect(Collectors.toList());
         assertEquals(2, detections.size());
 
         assertEquals("Conny Andersson (skådespelare)", detections.get(0).get(D).text());
@@ -779,7 +785,7 @@ public abstract class ModelTest {
         NodeTVar<CoreferenceMention> C1 = CoreferenceMention.var("2");
         NodeTVar<CoreferenceMention> C2 = CoreferenceMention.var("5");
 
-        Iterator<Proposition> iter = doc.select(C1, C2).where(C1).coveredBy(C2).query().iterator();
+        Iterator<Proposition> iter = doc.select(C1, C2).where(C1).coveredBy(C2).stream().iterator();
         assertTrue(iter.hasNext());
         Proposition prop = iter.next();
         assertEquals("Pierre", prop.get(C1).text());
@@ -865,41 +871,37 @@ public abstract class ModelTest {
         NodeVar N = DynamicNode.var("NamedEntity");
         NodeVar N_Z = DynamicNode.var("NamedEntity","zeta");
 
-        assertEquals("1234", doc.select(S_A).where(S_A).covering(1, 5).query().first().get(S_A).text());
-        assertEquals("67890123", doc.select(S_B).where(S_B).covering(6, 14).query().first().get(S_B).text());
-        assertEquals("123456", doc.select(S_D).where(S_D).covering(1, 7).query().first().get(S_D).text());
+        assertEquals("1234", doc.select(S_A).where(S_A).covering(1, 5).stream().findFirst().get().get(S_A).text());
+        assertEquals("67890123", doc.select(S_B).where(S_B).covering(6, 14).stream().findFirst().get().get(S_B).text());
+        assertEquals("123456", doc.select(S_D).where(S_D).covering(1, 7).stream().findFirst().get().get(S_D).text());
 
-        assertFalse(doc.select(S).where(S).covering(1, 5).query().any());
-        assertFalse(doc.select(S).where(S).covering(6, 14).query().any());
+        assertFalse(doc.select(S).where(S).covering(1, 5).stream().findAny().isPresent());
+        assertFalse(doc.select(S).where(S).covering(6, 14).stream().findAny().isPresent());
 
-        assertFalse(doc.select(T).where(T).covering(0, 2).query().any());
-        assertEquals("01", doc.select(T_D).where(T_D).covering(0, 2).query().first().get(T_D).text());
+        assertFalse(doc.select(T).where(T).covering(0, 2).stream().findAny().isPresent());
+        assertEquals("01", doc.select(T_D).where(T_D).covering(0, 2).stream().findFirst().get().get(T_D).text());
 
-        assertEquals("34", doc.select(T).where(T).covering(3, 5).query().first().get(T).text());
-        assertEquals("678", doc.select(T).where(T).covering(6, 9).query().first().get(T).text());
+        assertEquals("34", doc.select(T).where(T).covering(3, 5).stream().findFirst().get().get(T).text());
+        assertEquals("678", doc.select(T).where(T).covering(6, 9).stream().findFirst().get().get(T).text());
 
-        assertFalse(doc.select(T).where(T).covering(10, 12).query().any());
-        assertEquals("01", doc.select(T_D).where(T_D).covering(10, 12).query().first().get(T_D).text());
+        assertFalse(doc.select(T).where(T).covering(10, 12).stream().findAny().isPresent());
+        assertEquals("01", doc.select(T_D).where(T_D).covering(10, 12).stream().findFirst().get().get(T_D).text());
 
-        assertEquals("23456", doc.select(T).where(T).covering(12, 17).query().first().get(T).text());
+        assertEquals("23456", doc.select(T).where(T).covering(12, 17).stream().findFirst().get().get(T).text());
 
-        assertNull(doc.select(T).where(T).covering(6, 12).query().first());
+        assertFalse(doc.select(T).where(T).covering(6, 12).stream().findFirst().isPresent());
 
         //2. Do a query selecting named entity tokens
-        DocumentIterable<Proposition> query = doc.select(N, S, T)
-                                                 .where(T).coveredBy(N)
-                                                 .where(N).coveredBy(S)
-                                                 .query();
-
-        Iterator<Proposition> iter = query.iterator();
+        Iterator<Proposition> iter = doc.select(N, S, T)
+                                        .where(T).coveredBy(N)
+                                        .where(N).coveredBy(S)
+                                        .stream().iterator();
         assertFalse(iter.hasNext());
-
-        query = doc.select(T_D)
-                   .where(T_D).coveredBy(N_Z)
-                   .where(N_Z).coveredBy(S_B)
-                   .query();
-
-        iter = query.iterator();
+        iter = doc.select(T_D, N_Z, S_B)
+                  .where(T_D).coveredBy(N_Z)
+                  .where(N_Z).coveredBy(S_B)
+                  .stream()
+                  .iterator();
 
         assertTrue(iter.hasNext());
         Proposition current = iter.next();
@@ -909,11 +911,8 @@ public abstract class ModelTest {
 
         assertFalse(iter.hasNext());
 
-        query = doc.select(T)
-                   .where(T).coveredBy(S_D)
-                   .query();
-
-        iter = query.iterator();
+        iter = doc.select(T, S_D)
+                  .where(T).coveredBy(S_D).stream().iterator();
 
         assertTrue(iter.hasNext());
         current = iter.next();
@@ -921,34 +920,30 @@ public abstract class ModelTest {
         assertEquals("123456", current.get(S_D).text());
         assertFalse(iter.hasNext());
 
-        //3. Test range optimizable query
-        query = doc.select(T).where(T).coveredBy(5,10).query();
-        iter = query.iterator();
+        //3. Test range optimizable query;
+        iter = doc.select(T).where(T).coveredBy(5,10).stream().iterator();
 
         assertTrue(iter.hasNext());
         assertEquals("678", iter.next().get(T).text());
         assertFalse(iter.hasNext());
 
         //4. Test multi range optimizable query
-        query = doc.select(T).where(T).coveredBy(3,12).coveredBy(5, 10).query();
-        iter = query.iterator();
+        iter = doc.select(T).where(T).coveredBy(3,12).coveredBy(5, 10).stream().iterator();
 
         assertTrue(iter.hasNext());
         assertEquals("678",iter.next().get(T).text());
         assertFalse(iter.hasNext());
 
         //5. Test another query
-        query = doc.select(T).where(T).coveredBy(S_A).query();
-        iter = query.iterator();
-
+        iter = doc.select(T, S_A).where(T).coveredBy(S_A).stream().iterator();
         assertTrue(iter.hasNext());
+
         current = iter.next();
         assertEquals("34", current.get(T).text());
         assertEquals("1234", current.get(S_A).text());
 
         assertFalse(iter.hasNext());
-        query = doc.select(T).where(T).coveredBy(S_B).query();
-        iter = query.iterator();
+        iter = doc.select(T, S_B).where(T).coveredBy(S_B).stream().iterator();
 
         assertTrue(iter.hasNext());
         current = iter.next();
@@ -958,22 +953,20 @@ public abstract class ModelTest {
         assertFalse(iter.hasNext());
 
         //6. Test filter query
-        query = doc.select(T,S)
-                   .where(T)
-                   .coveredBy(S)
-                   .where(S).property("test").equals("0")
-                   .query();
-
-        iter = query.iterator();
+        iter = doc.select(T,S)
+                  .where(T)
+                  .coveredBy(S)
+                  .where(S).property("test").equals("0")
+                  .stream()
+                  .iterator();
 
         assertFalse(iter.hasNext());
 
-        query = doc.select(T, S_A)
+        iter =  doc.select(T, S_A)
                    .where(T).coveredBy(S_A)
                    .where(S_A).property("test").equals("0")
-                   .query();
-
-        iter = query.iterator();
+                   .stream()
+                   .iterator();
 
         assertTrue(iter.hasNext());
 
@@ -982,54 +975,49 @@ public abstract class ModelTest {
         assertEquals("1234", current.get(S_A).text());
         assertFalse(iter.hasNext());
 
-        GroupProposition groupquery = doc.select(S, T)
-                                         .where(T)
-                                         .property("pos").exists()
-                                         .coveredBy(S)
-                                         .where(S)
-                                         .property("test").exists()
-                                         .property("neg").notExists().groupBy(S)
-                                         .query()
-                                         .first();
+        assertTrue(doc.select(S, T)
+                     .where(T)
+                     .property("pos").exists()
+                     .coveredBy(S)
+                     .where(S)
+                     .property("test").exists()
+                     .property("neg").notExists()
+                     .stream()
+                     .collect(QueryCollectors.groupBy(doc, S).collector()).isEmpty());
 
-        assertNull(groupquery);
-
-        groupquery
+        Optional<PropositionGroup> groupquery
                 = doc.select(S_B, T_D)
                      .where(T_D).property("pos").exists()
                      .coveredBy(S_B)
                      .where(S_B).property("test").exists()
                      .property("neg").notExists()
-                     .groupBy(S_B)
-                     .query()
-                     .first();
+                     .stream()
+                     .collect(QueryCollectors.groupBy(doc, S_B).collector())
+                     .stream()
+                     .findFirst();
 
-        assertNotNull(groupquery);
-        assertEquals("01", groupquery.value(0, T_D).text());
+        assertTrue(groupquery.isPresent());
+        assertEquals("01", groupquery.get().value(0, T_D).text());
 
-        assertEquals("67890123", groupquery.key(S_B).text());
-        assertEquals(1, groupquery.size());
+        assertEquals("67890123", groupquery.get().key(S_B).text());
+        assertEquals(1, groupquery.get().size());
 
         //7. Test property query
-        query = doc.select(T).where(T).property("ne").exists().query();
-        iter = query.iterator();
+        iter = doc.select(T).where(T).property("ne").exists().stream().iterator();
         assertFalse(iter.hasNext());
 
-        query = doc.select(T_D).where(T_D).property("ne").exists().query();
-        iter = query.iterator();
+        iter = doc.select(T_D).where(T_D).property("ne").exists().stream().iterator();
         assertTrue(iter.hasNext());
         assertEquals("city", iter.next().get(T_D).getProperty("ne"));
         assertFalse(iter.hasNext());
 
         //8. Test property value
-        query = doc.select(T).where(T).property("pos").equalsAny("NN", "PM").query();
-        iter = query.iterator();
+        iter = doc.select(T).where(T).property("pos").equalsAny("NN", "PM").stream().iterator();
         assertTrue(iter.hasNext());
         assertEquals("23456", iter.next().get(T).text());
         assertFalse(iter.hasNext());
 
-        query = doc.select(T_D).where(T_D).property("pos").equalsAny("NN", "PM").query();
-        iter = query.iterator();
+        iter = doc.select(T_D).where(T_D).property("pos").equalsAny("NN", "PM").stream().iterator();
         assertTrue(iter.hasNext());
         assertEquals("01", iter.next().get(T_D).text());
         assertFalse(iter.hasNext());
@@ -1057,25 +1045,24 @@ public abstract class ModelTest {
         NodeVar N = DynamicNode.var("NamedEntity");
 
         //1. Validate that the added bits are correct
-        assertEquals("1234", doc.select(S).where(S).covering(1, 5).query().first().get(S).text());
-        assertEquals("67890123", doc.select(S).where(S).covering(6, 14).query().first().get(S).text());
+        assertEquals("1234", doc.select(S).where(S).covering(1, 5).stream().findFirst().get().get(S).text());
+        assertEquals("67890123", doc.select(S).where(S).covering(6, 14).stream().findFirst().get().get(S).text());
 
-        assertEquals("01", doc.select(T).where(T).covering(0, 2).query().first().get(T).text());
-        assertEquals("34", doc.select(T).where(T).covering(3, 5).query().first().get(T).text());
-        assertEquals("678", doc.select(T).where(T).covering(6, 9).query().first().get(T).text());
-        assertEquals("01", doc.select(T).where(T).covering(10, 12).query().first().get(T).text());
-        assertEquals("23456", doc.select(T).where(T).covering(12, 17).query().first().get(T).text());
+        assertEquals("01", doc.select(T).where(T).covering(0, 2).stream().findFirst().get().get(T).text());
+        assertEquals("34", doc.select(T).where(T).covering(3, 5).stream().findFirst().get().get(T).text());
+        assertEquals("678", doc.select(T).where(T).covering(6, 9).stream().findFirst().get().get(T).text());
+        assertEquals("01", doc.select(T).where(T).covering(10, 12).stream().findFirst().get().get(T).text());
+        assertEquals("23456", doc.select(T).where(T).covering(12, 17).stream().findFirst().get().get(T).text());
 
-        assertNull(doc.select(T).where(T).covering(6, 12).query().first());
+        assertFalse(doc.select(T).where(T).covering(6, 12).stream().findFirst().isPresent());
 
         //2. Do a query selecting named entity tokens
-        DocumentIterable<Proposition> query = doc.select(T, N, S)
-                                                 .where(N).coveredBy(S)
-                                                 .where(T).coveredBy(N)
-                                                 .orderByRange(T, N, S)
-                                                 .query();
-
-        Iterator<Proposition> iter = query.iterator();
+        Iterator<Proposition> iter = doc.select(T, N, S)
+                                        .where(N).coveredBy(S)
+                                        .where(T).coveredBy(N)
+                                        .stream()
+                                        .sorted(orderBy(T, N, S))
+                                        .iterator();
 
         assertTrue(iter.hasNext());
         Proposition current = iter.next();
@@ -1092,8 +1079,7 @@ public abstract class ModelTest {
         assertFalse(iter.hasNext());
 
         //3. Test range optimizable query
-        query = doc.select(T).where(T).coveredBy(5,10).orderByRange(T).query();
-        iter = query.iterator();
+        iter = doc.select(T).where(T).coveredBy(5,10).stream().sorted(orderBy(T)).iterator();
 
         assertTrue(iter.hasNext());
         current = iter.next();
@@ -1102,16 +1088,14 @@ public abstract class ModelTest {
         assertFalse(iter.hasNext());
 
         //4. Test multi range optimizable query
-        query = doc.select(T).where(T).coveredBy(3, 12).coveredBy(5,10).orderByRange(T).query();
-        iter = query.iterator();
+        iter = doc.select(T).where(T).coveredBy(3, 12).coveredBy(5,10).stream().sorted(orderBy(T)).iterator();
 
         assertTrue(iter.hasNext());
         assertEquals("678", iter.next().get(T).text());
         assertFalse(iter.hasNext());
 
         //5. Test another query
-        query = doc.select(S,T).where(T).coveredBy(S).orderByRange(T).query();
-        iter = query.iterator();
+        iter = doc.select(S,T).where(T).coveredBy(S).stream().sorted(orderBy(T)).iterator();
 
         assertTrue(iter.hasNext());
         current = iter.next();
@@ -1128,13 +1112,12 @@ public abstract class ModelTest {
         assertFalse(iter.hasNext());
 
         //6. Test filter query
-        query = doc.select(T)
-                   .where(T)
-                   .coveredBy(S)
-                   .where(S).property("test").equals("0")
-                   .query();
-
-        iter = query.iterator();
+        iter = doc.select(T,S)
+                  .where(T)
+                  .coveredBy(S)
+                  .where(S).property("test").equals("0")
+                  .stream()
+                  .iterator();
 
         assertTrue(iter.hasNext());
         current = iter.next();
@@ -1142,19 +1125,25 @@ public abstract class ModelTest {
         assertEquals("1234", current.get(S).text());
         assertFalse(iter.hasNext());
 
-        GroupProposition groupquery
-                = doc.select(T)
-                     .where(T)
-                     .property("pos").exists()
-                     .coveredBy(S)
-                     .where(S)
-                     .property("test").exists()
-                     .property("neg").exists()
-                     .groupBy(S)
-                     .query()
-                     .first();
+        PropositionGroup groupquery = doc.select(T,S)
+                 .where(T)
+                 .property("pos").exists()
+                 .coveredBy(S)
+                 .where(S)
+                 .property("test").exists()
+                 .property("neg").exists()
+                 .stream()
+                 .collect(QueryCollectors.groupBy(doc, S).collector())
+                 .stream()
+                 .iterator()
+                 .next();
 
-        iter = query.iterator();
+        iter = doc.select(T,S)
+                  .where(T)
+                  .coveredBy(S)
+                  .where(S).property("test").equals("0")
+                  .stream()
+                  .iterator();
 
         assertTrue(iter.hasNext());
         assertEquals("34", groupquery.value(0, T).text());
@@ -1163,15 +1152,13 @@ public abstract class ModelTest {
         assertEquals(1, groupquery.size());
 
         //7. Test property query
-        query = doc.select(T).where(T).property("ne").exists().query();
-        iter = query.iterator();
+        iter = doc.select(T).where(T).property("ne").exists().stream().iterator();
         assertTrue(iter.hasNext());
         assertEquals("city", iter.next().get(T).getProperty("ne"));
         assertFalse(iter.hasNext());
 
         //8. Test property value
-        query = doc.select(T).where(T).property("pos").equalsAny("NN", "PM").query();
-        iter = query.iterator();
+        iter = doc.select(T).where(T).property("pos").equalsAny("NN", "PM").stream().iterator();
         assertTrue(iter.hasNext());
         assertEquals("01", iter.next().get(T).text());
         assertEquals("23456", iter.next().get(T).text());
@@ -1202,29 +1189,29 @@ public abstract class ModelTest {
 
         List<Proposition> propositions = doc.select(S, T)
                                             .where(T).coveredBy(S)
-                                            .query()
-                                            .toList();
+                                            .stream()
+                                            .collect(Collectors.toList());
 
-        assertEquals("1234", doc.select(S).where(S).covering(1, 5).query().first().get(S).text());
-        assertEquals("67890123", doc.select(S).where(S).covering(6, 14).query().first().get(S).text());
 
-        assertEquals("01", doc.select(T).where(T).covering(0, 2).query().first().get(T).text());
-        assertEquals("34", doc.select(T).where(T).covering(3, 5).query().first().get(T).text());
-        assertEquals("678", doc.select(T).where(T).covering(6, 9).query().first().get(T).text());
-        assertEquals("01", doc.select(T).where(T).covering(10, 12).query().first().get(T).text());
-        assertEquals("23456", doc.select(T).where(T).covering(12, 17).query().first().get(T).text());
+        assertEquals("1234", doc.select(S).where(S).covering(1, 5).stream().findFirst().get().get(S).text());
+        assertEquals("67890123", doc.select(S).where(S).covering(6, 14).stream().findFirst().get().get(S).text());
 
-        assertNull(doc.select(T).where(T).covering(6, 12).query().first());
+        assertEquals("01", doc.select(T).where(T).covering(0, 2).stream().findFirst().get().get(T).text());
+        assertEquals("34", doc.select(T).where(T).covering(3, 5).stream().findFirst().get().get(T).text());
+        assertEquals("678", doc.select(T).where(T).covering(6, 9).stream().findFirst().get().get(T).text());
+        assertEquals("01", doc.select(T).where(T).covering(10, 12).stream().findFirst().get().get(T).text());
+        assertEquals("23456", doc.select(T).where(T).covering(12, 17).stream().findFirst().get().get(T).text());
+
+        assertFalse(doc.select(T).where(T).covering(6, 12).stream().findFirst().isPresent());
 
         //2. Do a query selecting named entity tokens
-        Iterable<Proposition> query = doc.select(T,N,S)
-                                         .where(T)
-                                         .coveredBy(S)
-                                         .coveredBy(N)
-                                         .orderByRange(T)
-                                         .query();
-
-        Iterator<Proposition> iter = query.iterator();
+        Iterator<Proposition> iter = doc.select(T,N,S)
+                                        .where(T)
+                                        .coveredBy(S)
+                                        .coveredBy(N)
+                                        .stream()
+                                        .sorted(orderBy(T))
+                                        .iterator();
 
         assertTrue(iter.hasNext());
         Proposition current = iter.next();
@@ -1240,24 +1227,21 @@ public abstract class ModelTest {
         assertFalse(iter.hasNext());
 
         //3. Test range optimizable query
-        query = doc.select(T).where(T).coveredBy(5, 10).query();
-        iter = query.iterator();
+        iter = doc.select(T).where(T).coveredBy(5, 10).stream().iterator();
 
         assertTrue(iter.hasNext());
         assertEquals("678", iter.next().get(T).text());
         assertFalse(iter.hasNext());
 
         //4. Test multi range optimizable query
-        query = doc.select(T).where(T).coveredBy(3, 12).coveredBy(5, 10).query();
-        iter = query.iterator();
+        iter = doc.select(T).where(T).coveredBy(3, 12).coveredBy(5, 10).stream().iterator();
 
         assertTrue(iter.hasNext());
         assertEquals("678", iter.next().get(T).text());
         assertFalse(iter.hasNext());
 
         //5. Test another query
-        query = doc.select(S,T).where(T).coveredBy(S).orderByRange(T).query();
-        iter = query.iterator();
+        iter = doc.select(S,T).where(T).coveredBy(S).stream().sorted(orderBy(T)).iterator();
 
         assertTrue(iter.hasNext());
         current = iter.next();
@@ -1274,12 +1258,9 @@ public abstract class ModelTest {
         assertFalse(iter.hasNext());
 
         //6. Test filter query
-        query = doc.select(S, T)
-                   .where(T).coveredBy(S)
-                   .where(S).property("test").equals("0")
-                   .query();
-
-        iter = query.iterator();
+        iter = doc.select(S, T)
+                  .where(T).coveredBy(S)
+                  .where(S).property("test").equals("0").stream().iterator();
 
         assertTrue(iter.hasNext());
         current = iter.next();
@@ -1288,16 +1269,17 @@ public abstract class ModelTest {
         assertFalse(iter.hasNext());
 
         //7. Test property query
-        GroupProposition groupquery
+        PropositionGroup groupquery
                 = doc.select(T, S)
                      .where(S).property("test").exists()
                      .property("neg").notExists()
-
                      .where(T).property("pos").exists()
                      .coveredBy(S)
-                     .groupBy(S)
-                     .query()
-                     .first();
+                     .stream()
+                     .collect(QueryCollectors.groupBy(doc,S).collector())
+                     .stream()
+                     .findFirst()
+                     .orElse(null);
 
         assertNotNull(groupquery);
         assertEquals("01", groupquery.values().get(0).get(T).text());
@@ -1305,18 +1287,14 @@ public abstract class ModelTest {
         assertEquals("67890123", groupquery.key().get(S).text());
         assertEquals(1, groupquery.size());
 
-        query = doc.select(T).where(T).property("ne").exists().query();
-
-        iter = query.iterator();
+        iter = doc.select(T).where(T).property("ne").exists().stream().iterator();
         assertTrue(iter.hasNext());
         assertEquals("city", iter.next().get(T).getProperty("ne"));
         assertFalse(iter.hasNext());
 
         //8. Test property value
-        query = doc.select(T)
-                   .where(T).property("pos").equalsAny("NN", "PM").query();
-
-        iter = query.iterator();
+        iter = doc.select(T)
+                  .where(T).property("pos").equalsAny("NN", "PM").stream().iterator();
         assertTrue(iter.hasNext());
         assertEquals("01", iter.next().get(T).text());
         assertEquals("23456", iter.next().get(T).text());
@@ -1348,7 +1326,7 @@ public abstract class ModelTest {
 
         NodeTVar<Token> T = Token.var();
 
-        Iterator<Proposition> token = doc.select(T).where(T).coveredBy(s1).orderByRange(T).query().iterator();
+        Iterator<Proposition> token = doc.select(T).where(T).coveredBy(s1).stream().sorted(orderBy(T)).iterator();
 
         assertTrue(token.hasNext());
         assertEquals("är", token.next().get(T).text());
@@ -1361,7 +1339,7 @@ public abstract class ModelTest {
 
         Sentence s2 = sentences.next();
 
-        token = doc.select(T).where(T).coveredBy(s2).orderByRange(T).query().iterator();
+        token = doc.select(T).where(T).coveredBy(s2).stream().sorted(orderBy(T)).iterator();
 
         assertTrue(token.hasNext());
         assertEquals("I", token.next().get(T).text());
@@ -1373,10 +1351,10 @@ public abstract class ModelTest {
         assertFalse(sentences.hasNext());
 
         doc.removeAllNodes(Token.class);
-        token = doc.select(T).where(T).coveredBy(s1).query().iterator();
+        token = doc.select(T).where(T).coveredBy(s1).stream().iterator();
         assertFalse(token.hasNext());
 
-        token = doc.select(T).where(T).coveredBy(s2).query().iterator();
+        token = doc.select(T).where(T).coveredBy(s2).stream().iterator();
         assertFalse(token.hasNext());
     }
 
@@ -1396,8 +1374,8 @@ public abstract class ModelTest {
         Iterator<Proposition> token = doc.select(T)
                                          .where(T)
                                          .coveredBy(s1)
-                                         .orderByRange(T)
-                                         .query()
+                                         .stream()
+                                         .sorted(orderBy(T))
                                          .iterator();
 
         assertTrue(token.hasNext());
@@ -1412,7 +1390,7 @@ public abstract class ModelTest {
 
         Sentence s2 = sentences.next();
 
-        token = doc.select(T).where(T).coveredBy(s2).orderByRange(T).query().iterator();
+        token = doc.select(T).where(T).coveredBy(s2).stream().sorted(orderBy(T)).iterator();
 
         assertTrue(token.hasNext());
         assertEquals("I", token.next().get(T).text());
@@ -1465,8 +1443,8 @@ public abstract class ModelTest {
         Iterator<Proposition> token = doc.select(T)
                                          .where(T)
                                          .coveredBy(s1)
-                                         .orderByRange(T)
-                                         .query()
+                                         .stream()
+                                         .sorted(orderBy(T))
                                          .iterator();
 
         assertTrue(token.hasNext());
@@ -1481,7 +1459,7 @@ public abstract class ModelTest {
 
         Sentence s2 = sentences.next();
 
-        token = doc.select(T).where(T).coveredBy(s2).orderByRange(T).query().iterator();
+        token = doc.select(T).where(T).coveredBy(s2).stream().sorted(orderBy(T)).iterator();
 
         assertTrue(token.hasNext());
         assertEquals("I", token.next().get(T).text());
@@ -1559,13 +1537,13 @@ public abstract class ModelTest {
         NodeTVar<NamedEntity> N = NamedEntity.var();
         NodeTVar<Token> T = Token.var();
 
-        NamedEntity connyAndersson = subdoc.select(N).where(N).coveredBy(0, 15).query().first().get(N);
+        NamedEntity connyAndersson = subdoc.select(N).where(N).coveredBy(0, 15).stream().findFirst().get().get(N);
         assertNotNull(connyAndersson);
 
         assertEquals("Conny Andersson", connyAndersson.text());
         assertEquals("person", connyAndersson.getLabel());
 
-        Token connyTok = subdoc.select(T).where(T).coveredBy(0, 5).query().first().get(T);
+        Token connyTok = subdoc.select(T).where(T).coveredBy(0, 5).stream().findFirst().get().get(T);
         assertNotNull(connyTok);
 
         assertEquals("PM", connyTok.getProperty(TokenProperties.PPOS));
@@ -1573,7 +1551,7 @@ public abstract class ModelTest {
         DependencyRelation deprel = connyTok.outboundEdges(DependencyRelation.class).first();
         assertEquals("SS", deprel.getRelation());
 
-        Token anderssonTok = subdoc.select(T).where(T).coveredBy(6,15).query().first().get(T);
+        Token anderssonTok = subdoc.select(T).where(T).coveredBy(6,15).stream().findFirst().get().get(T);
         assertNotNull(anderssonTok);
 
         deprel = anderssonTok.outboundEdges(DependencyRelation.class).first();
@@ -1588,16 +1566,15 @@ public abstract class ModelTest {
 
         NodeTVar<Sentence> S = Sentence.var();
 
-        Sentence sent = subdoc.select(S).where(S).coveredBy(0, 44).query().first().get(S);
+        Sentence sent = subdoc.select(S).where(S).coveredBy(0, 44).stream().findFirst().get().get(S);
         assertNotNull(sent);
 
         subdoc = doc.subDocument(47, 135);
-        DocumentIterable<Proposition> iterable = subdoc.select(S)
-                                                       .where(S)
-                                                       .coveredBy(0, 88)
-                                                       .query();
-
-        Iterator<Proposition> iterator = iterable.iterator();
+        Iterator<Proposition> iterator = subdoc.select(S)
+                                               .where(S)
+                                               .coveredBy(0, 88)
+                                               .stream()
+                                               .iterator();
 
         assertTrue(iterator.hasNext());
         sent = iterator.next().get(S);
@@ -1605,7 +1582,7 @@ public abstract class ModelTest {
         assertEquals("Conny Andersson (skådespelare) Conny Andersson (racer"
                              + "förare) Conny Andersson (politiker)", sent.text());
 
-        connyAndersson = subdoc.select(N).where(N).coveredBy(0, 15).query().first().get(N);
+        connyAndersson = subdoc.select(N).where(N).coveredBy(0, 15).stream().findFirst().get().get(N);
 
         assertNotNull(connyAndersson);
         assertEquals("Conny Andersson", connyAndersson.text());
@@ -1633,7 +1610,8 @@ public abstract class ModelTest {
                                             .where(T).isOneOf(t1)
                                             .hasEdge(SR).to(T)
                                             .hasEdge(SR).from(T)
-                                            .query().toList();
+                                            .stream().collect(Collectors.toList());
+
         assertEquals(1, tokenedges.size());
         assertEquals(sr, tokenedges.get(0).get(SR));
         assertEquals(t1, tokenedges.get(0).get(T));
@@ -1650,14 +1628,14 @@ public abstract class ModelTest {
         T1 = Token.var(); T2 = Token.var();
         E = DependencyRelation.var();
 
-        Iterable<Proposition> props =
+        Iterator<Proposition> iter =
                 doc.select(T1,T2,E)
                    .where(T1).hasEdge(E).to(T2)
                    .where(E).property(DependencyRelation.RELATION_PROPERTY).equals("SS")
-                   .orderByRange(T1)
-                   .query();
+                   .stream()
+                   .sorted(orderBy(T1))
+                   .iterator();
 
-        Iterator<Proposition> iter = props.iterator();
         assertTrue(iter.hasNext());
         Proposition prop = iter.next();
 
@@ -1677,14 +1655,15 @@ public abstract class ModelTest {
         T1 = Token.var(); T2 = Token.var(); T3 = Token.var();
         E1 = DependencyRelation.var(); E2 = DependencyRelation.var();
 
-        Iterable<Proposition> props =
+        Iterator<Proposition> props =
                 doc.select(T1,T2,T3,E1,E2)
                    .where(T1).hasEdge(E1).to(T2) // T1 -> T2
                         .where(T2).hasEdge(E2).from(T3) // T3 -> T2
                         .where(E1).property(DependencyRelation.RELATION_PROPERTY).equals("SS")
                         .where(E2).property(DependencyRelation.RELATION_PROPERTY).equals("OO")
-                        .orderByRange(T1)
-                        .query();
+                        .stream()
+                        .sorted(orderBy(T1))
+                        .iterator();
     }
 
     @Test
@@ -1723,7 +1702,7 @@ public abstract class ModelTest {
         NodeTVar<Token> T = Token.var();
         NodeTVar<Sentence> S = Sentence.var();
 
-        List<Proposition> list = doc.select(T).where(T).coveredBy(S).orderByRange(T).query().toList();
+        List<Proposition> list = doc.select(T).where(T).coveredBy(S).stream().sorted(orderBy(T)).collect(Collectors.toList());
         assertEquals(3,list.size());
 
         assertEquals(0,list.get(0).get(T).getStart());
@@ -1735,13 +1714,13 @@ public abstract class ModelTest {
         assertEquals(4,list.get(2).get(T).getStart());
         assertEquals(7, list.get(2).get(T).getEnd());
 
-        list = doc.select(T).where(T).coveredBy(S).where(S).coveredBy(4, 7).orderByRange(T).query().toList();
+        list = doc.select(T).where(T).coveredBy(S).where(S).coveredBy(4, 7).stream().sorted(orderBy(T)).collect(Collectors.toList());
         assertEquals(2, list.size());
 
-        list = doc.select(T).where(T).coveredBy(4, 4).query().toList();
+        list = doc.select(T).where(T).coveredBy(4, 4).stream().collect(Collectors.toList());
         assertEquals(1,list.size());
 
-        list = doc.select(T).where(T).coveredBy(7, 7).query().toList();
+        list = doc.select(T).where(T).coveredBy(7, 7).stream().collect(Collectors.toList());
         assertEquals(1, list.size());
     }
 
@@ -1756,13 +1735,13 @@ public abstract class ModelTest {
 
         NodeTVar<Token> T = Token.var();
 
-        Iterator<Window<Proposition>> iter = doc.select(T).query().window(5).iterator();
+        Iterator<Window<Proposition>> iter = doc.select(T).compile().window(5).iterator();
         assertTrue(iter.hasNext());
         compareGram(T, iter.next(), "01", "34", "67", "90", "23");
 
         assertFalse(iter.hasNext());
 
-        iter = doc.select(T).query().window(4).iterator();
+        iter = doc.select(T).compile().window(4).iterator();
         assertTrue(iter.hasNext());
         compareGram(T, iter.next(), "01", "34", "67", "90");
 
@@ -1771,7 +1750,7 @@ public abstract class ModelTest {
 
         assertFalse(iter.hasNext());
 
-        iter = doc.select(T).query().window(3).iterator();
+        iter = doc.select(T).compile().window(3).iterator();
         assertTrue(iter.hasNext());
         compareGram(T, iter.next(), "01", "34", "67");
 
@@ -1783,7 +1762,7 @@ public abstract class ModelTest {
 
         assertFalse(iter.hasNext());
 
-        iter = doc.select(T).query().window(2).iterator();
+        iter = doc.select(T).compile().window(2).iterator();
         assertTrue(iter.hasNext());
         compareGram(T, iter.next(), "01", "34");
 
@@ -1809,14 +1788,14 @@ public abstract class ModelTest {
         final NodeTVar<NamedEntity> N = NamedEntity.var();
 
         doc.migrateNodeVariants(NamedEntity.class, null, "gold");
-        assertFalse(doc.select(N).query().any());
+        assertFalse(doc.select(N).compile().any());
 
         doc.setDefaultNodeVariant(NamedEntity.class, "test");
         assertEquals("test", doc.getDefaultNodeVariant(NamedEntity.class));
 
         doc.add(new NamedEntity()).setLabel("person").setRange(47, 62);
 
-        List<NamedEntity> results = doc.select(N).query().map(in -> in.get(N)).toList();
+        List<NamedEntity> results = doc.select(N).stream().map(in -> in.get(N)).collect(Collectors.toList());
 
         assertEquals(1, results.size());
         assertEquals("test", results.get(0).getVariant().get());
@@ -1829,8 +1808,9 @@ public abstract class ModelTest {
 
         NamedEntity ne = doc.select(N_Test)
                             .where(N_Test).coveredBy(N_Gold)
-                            .query()
-                            .first()
+                            .stream()
+                            .findFirst()
+                            .get()
                             .get(N_Test);
 
         assertNotNull(ne);
@@ -1838,7 +1818,7 @@ public abstract class ModelTest {
 
         DocumentIterable<Proposition> neiterable = doc.select(N_Test, N_Gold)
                                                       .where(N_Test).coveredBy(N_Gold)
-                                                      .query();
+                                                      .compile();
 
         Iterator<Proposition> neiter = neiterable.iterator();
         assertTrue(neiter.hasNext());
@@ -1862,7 +1842,7 @@ public abstract class ModelTest {
         NodeTVar<Token> T = Token.var();
 
         Token tok = first.add(new Token()).setRange(0, 4);
-        assertTrue(first.select(T).query().first().get(T).equals(tok));
+        assertTrue(first.select(T).stream().findFirst().get().get(T).equals(tok));
 
         first.addUriAlias("wikidata:Q1000");
         first.addUriAlias("freebase:m.3123");
@@ -1901,18 +1881,18 @@ public abstract class ModelTest {
 
         assertTrue(docs.contains("wikipedia:template:1"));
 
-        assertEquals("Lite", first.select(T).query().first().get(T).text());
+        assertEquals("Lite", first.select(T).stream().findFirst().get().get(T).text());
 
         NodeVar E = DynamicNode.var("entry");
 
-        DynamicNode annotation = template.select(E).query().first().get(E);
+        DynamicNode annotation = template.select(E).stream().findFirst().get().get(E);
         assertNotNull(annotation);
 
         NodeVar K = DynamicNode.var("key");
         NodeVar V = DynamicNode.var("value");
 
-        assertEquals("magic-number", template.select(K).where(K).coveredBy(annotation).query().first().get(K).text());
-        assertEquals("42", template.select(V).where(V).coveredBy(annotation).query().first().get(V).text());
+        assertEquals("magic-number", template.select(K).where(K).coveredBy(annotation).stream().findFirst().get().get(K).text());
+        assertEquals("42", template.select(V).where(V).coveredBy(annotation).stream().findFirst().get().get(V).text());
 
         assertEquals("sv.wikipedia:test", first.uri());
         assertEquals("wikipedia-dump", first.getProperty("source"));
@@ -2069,7 +2049,7 @@ public abstract class ModelTest {
         assertEquals(documentFactory(), doc.factory());
 
         assertFalse(doc.isView());
-        assertEquals(0, doc.select(Token.var()).query().count());
+        assertEquals(0, doc.select(Token.var()).stream().count());
 
         doc.setType("text/plain");
         assertEquals("text/plain", doc.type());
@@ -2132,24 +2112,24 @@ public abstract class ModelTest {
         NodeTVar<Token> T = Token.var();
         NodeTVar<Sentence> S = Sentence.var();
 
-        assertEquals(4, doc.select(T).query().count());
-        assertEquals(2, doc.select(S).query().count());
+        assertEquals(4, doc.select(T).stream().count());
+        assertEquals(2, doc.select(S).stream().count());
 
         doc.replace(Pattern.compile("\\.+"), ".", true);
         assertEquals("0123  6789.", doc.text());
 
-        List<Proposition> props = doc.select(T).query().toList();
+        List<Proposition> props = doc.select(T).stream().collect(Collectors.toList());
 
-        assertEquals(3, doc.select(T).query().count());
-        assertEquals(1, doc.select(S).query().count());
+        assertEquals(3, doc.select(T).stream().count());
+        assertEquals(1, doc.select(S).stream().count());
 
         doc.replace(Pattern.compile("\\s+"), " ", true);
         assertEquals("0123 6789.", doc.text());
 
-        assertEquals(3, doc.select(T).query().count());
-        assertEquals(1, doc.select(S).query().count());
+        assertEquals(3, doc.select(T).stream().count());
+        assertEquals(1, doc.select(S).stream().count());
 
-        Iterator<Proposition> iter = doc.select(T).orderByRange(T).query().iterator();
+        Iterator<Proposition> iter = doc.select(T).stream().sorted(orderBy(T)).iterator();
 
         assertTrue(iter.hasNext());
         assertEquals("0123", iter.next().get(T).text());
@@ -2162,7 +2142,7 @@ public abstract class ModelTest {
 
         assertFalse(iter.hasNext());
 
-        iter = doc.select(S).orderByRange(S).query().iterator();
+        iter = doc.select(S).stream().sorted(orderBy(S)).iterator();
         assertTrue(iter.hasNext());
 
         assertEquals("0123 6789.", iter.next().get(S).text());
@@ -2195,10 +2175,10 @@ public abstract class ModelTest {
         NodeTVar < Token > T = Token.var();
         NodeTVar<Sentence> S = Sentence.var();
 
-        assertEquals(5, doc.select(T).query().count());
-        assertEquals(1, doc.select(S).query().count());
+        assertEquals(5, doc.select(T).stream().count());
+        assertEquals(1, doc.select(S).stream().count());
 
-        Iterator<Proposition> iter = doc.select(T).orderByRange(T).query().iterator();
+        Iterator<Proposition> iter = doc.select(T).stream().sorted(orderBy(T)).iterator();
 
         assertTrue(iter.hasNext());
         assertEquals("123", iter.next().get(T).text());
@@ -2217,7 +2197,7 @@ public abstract class ModelTest {
         assertFalse(iter.hasNext());
 
 
-        iter = doc.select(S).orderByRange(S).query().iterator();
+        iter = doc.select(S).stream().sorted(orderBy(S)).iterator();
         assertTrue(iter.hasNext());
 
         assertEquals("123___781.", iter.next().get(S).text());

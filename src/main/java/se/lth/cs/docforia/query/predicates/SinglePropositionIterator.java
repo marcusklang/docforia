@@ -18,6 +18,7 @@ package se.lth.cs.docforia.query.predicates;
 import se.lth.cs.docforia.StoreRef;
 import se.lth.cs.docforia.query.Proposition;
 import se.lth.cs.docforia.query.PropositionIterator;
+import se.lth.cs.docforia.query.QueryContext;
 import se.lth.cs.docforia.query.Var;
 
 /**
@@ -25,11 +26,14 @@ import se.lth.cs.docforia.query.Var;
  */
 public class SinglePropositionIterator implements PropositionIterator {
 
-    private Var[] vars;
+    private int[] vars;
     private StoreRef[] storeRefs;
 
-    public SinglePropositionIterator(Var[] vars, StoreRef[] storeRefs) {
-        this.vars = vars;
+    public SinglePropositionIterator(QueryContext context, Var[]vars, StoreRef[] storeRefs) {
+        this.vars = new int[vars.length];
+        for (int i = 0; i < vars.length; i++) {
+            this.vars[i] = context.indexOf(vars[i]);
+        }
         this.storeRefs = storeRefs;
     }
 
@@ -42,7 +46,7 @@ public class SinglePropositionIterator implements PropositionIterator {
         else {
             read = true;
             for (int i = 0; i < vars.length; i++) {
-                proposition.proposition[vars[i].getIndex()] = storeRefs[i];
+                proposition.data[vars[i]] = storeRefs[i];
             }
             return true;
         }

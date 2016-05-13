@@ -20,6 +20,7 @@ import se.lth.cs.docforia.Edge;
 import se.lth.cs.docforia.graph.Relationship;
 import se.lth.cs.docforia.graph.ast.AstEdge;
 import se.lth.cs.docforia.graph.text.DependencyRelation;
+import se.lth.cs.docforia.graph.text.ParseTreeEdge;
 import se.lth.cs.docforia.graph.text.SemanticRole;
 
 /**
@@ -30,7 +31,8 @@ public enum MemoryCoreEdgeLayer {
     RELATIONSHIP(0, Relationship.class, Relationship::new),
     DEPENDENCY_REL(1, DependencyRelation.class, DependencyRelation::new),
     SEMANTIC_ROLE(2, SemanticRole.class, SemanticRole::new),
-    AST_EDGE(3, AstEdge.class, AstEdge::new);
+    AST_EDGE(3, AstEdge.class, AstEdge::new),
+    PARSE_TREE_EDGE(4, ParseTreeEdge.class, ParseTreeEdge::new);
 
     public final int id;
     public final String layer;

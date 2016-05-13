@@ -24,6 +24,8 @@ import se.lth.cs.docforia.query.NodeTVar;
  */
 public class Predicate extends Node<Predicate> {
     public static final String PROPERTY_SENSE = "sense";
+    public static final String PROPERTY_PREDCATE = "pred";
+    public static final String PROPERTY_FRAMESET = "frameset";
 
     public Predicate() {
         super();
@@ -44,6 +46,24 @@ public class Predicate extends Node<Predicate> {
 
     public boolean hasSense() {
         return hasProperty(PROPERTY_SENSE);
+    }
+
+    public Predicate setPredicate(String predicate) {
+        putProperty(PROPERTY_PREDCATE, predicate);
+        return this;
+    }
+
+    public Predicate setFrameset(String frameset) {
+        putProperty(PROPERTY_FRAMESET, frameset);
+        return this;
+    }
+
+    public String getFrameset() {
+        return getProperty(PROPERTY_FRAMESET);
+    }
+
+    public String getPredicate() {
+        return getProperty(PROPERTY_PREDCATE);
     }
 
     public static NodeTVar<Predicate> var() {

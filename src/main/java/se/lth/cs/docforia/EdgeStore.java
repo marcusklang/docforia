@@ -21,6 +21,9 @@ package se.lth.cs.docforia;
  * @see se.lth.cs.docforia.memstore.MemoryEdge for a memory based implementation
  **/
 public abstract class EdgeStore extends PropertyStore {
+    /** Parent */
+    public abstract Document parent();
+
     /** Get the head reference or null if it has not been set. */
 	public abstract NodeRef getHead();
 

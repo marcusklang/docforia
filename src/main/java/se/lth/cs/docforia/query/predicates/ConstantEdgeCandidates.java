@@ -15,12 +15,8 @@ package se.lth.cs.docforia.query.predicates;
  * limitations under the License.
  */
 
-import se.lth.cs.docforia.Document;
 import se.lth.cs.docforia.EdgeRef;
-import se.lth.cs.docforia.query.EdgeVar;
-import se.lth.cs.docforia.query.Predicate;
-import se.lth.cs.docforia.query.Proposition;
-import se.lth.cs.docforia.query.PropositionIterator;
+import se.lth.cs.docforia.query.*;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,13 +27,13 @@ import java.util.Iterator;
 public class ConstantEdgeCandidates extends Predicate {
     private HashSet<EdgeRef> edgeRefs;
 
-    public ConstantEdgeCandidates(Document doc, EdgeVar var, HashSet<EdgeRef> edgeRefs) {
-        super(doc, var);
+    public ConstantEdgeCandidates(QueryContext context, EdgeVar var, HashSet<EdgeRef> edgeRefs) {
+        super(context, var);
         this.edgeRefs = edgeRefs;
     }
 
     @Override
-    protected PropositionIterator suggest(final Proposition proposition) {
+    protected PropositionIterator suggest(PredicateState state, final Proposition proposition) {
         return new PropositionIterator() {
             private Iterator<EdgeRef> refIterator = edgeRefs.iterator();
 
@@ -46,7 +42,7 @@ public class ConstantEdgeCandidates extends Predicate {
                 if(!refIterator.hasNext())
                     return false;
 
-                proposition.proposition[vars[0].getIndex()] = refIterator.next();
+                proposition.data[varIndex[0]] = refIterator.next();
                 return true;
             }
         };
@@ -54,6 +50,6 @@ public class ConstantEdgeCandidates extends Predicate {
 
     @Override
     public boolean eval(Proposition proposition) {
-        return edgeRefs.contains(proposition.edgeref(vars[0]));
+        return edgeRefs.contains((EdgeRef)proposition.data[varIndex[0]]);
     }
 }

@@ -74,6 +74,11 @@ public class DocumentTransaction implements DocumentProxy {
         }
 
         @Override
+        public Document parent() {
+            return parent.doc;
+        }
+
+        @Override
         public NodeRef real() {
             if(internal == null)
                 throw new TransactionException("A wrapped node which have been removed is required by another transaction.");
@@ -254,6 +259,11 @@ public class DocumentTransaction implements DocumentProxy {
             this.parent = parent;
             this.instance = instance;
             this.internal = internal;
+        }
+
+        @Override
+        public Document parent() {
+            return parent.doc;
         }
 
         @Override
@@ -463,6 +473,11 @@ public class DocumentTransaction implements DocumentProxy {
         }
 
         @Override
+        public Document parent() {
+            return parent.doc;
+        }
+
+        @Override
         public int numProperties() {
             return props.size();
         }
@@ -582,6 +597,11 @@ public class DocumentTransaction implements DocumentProxy {
             this.parent = parent;
             this.instance = instance;
             this.layer = layer;
+        }
+
+        @Override
+        public Document parent() {
+            return parent.doc;
         }
 
         @Override

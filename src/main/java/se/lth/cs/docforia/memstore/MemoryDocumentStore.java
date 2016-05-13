@@ -19,10 +19,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceAVLTreeMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
-import se.lth.cs.docforia.DocumentStore;
-import se.lth.cs.docforia.EdgeRef;
-import se.lth.cs.docforia.LayerRef;
-import se.lth.cs.docforia.NodeRef;
+import se.lth.cs.docforia.*;
 import se.lth.cs.docforia.data.DataRef;
 import se.lth.cs.docforia.data.StringRef;
 
@@ -41,6 +38,11 @@ public class MemoryDocumentStore extends DocumentStore {
     protected Object2ReferenceOpenHashMap<String,ReferenceOpenHashSet<NodeRef>> nodesWithProperty;
     protected Object2ReferenceOpenHashMap<String,ReferenceOpenHashSet<NodeRef>> edgesWithProperty;
     */
+
+    @Override
+    public Document getDocument() {
+        return doc;
+    }
 
     protected String text = "";
 
@@ -393,6 +395,16 @@ public class MemoryDocumentStore extends DocumentStore {
     }
 
     @Override
+    public DocumentNodeLayer nodeLayer(String nodeLayer, String nodeVariant) {
+        return getNodeCollection(nodeLayer, nodeVariant);
+    }
+
+    @Override
+    public DocumentEdgeLayer edgeLayer(String edgeLayer, String edgeVariant) {
+        return getEdgeCollection(edgeLayer, edgeVariant);
+    }
+
+    @Override
     public EdgeRef createEdge(String edgeLayer, String edgeVariant) {
         return getEdgeCollection(edgeLayer, edgeVariant).create();
     }
@@ -478,5 +490,10 @@ public class MemoryDocumentStore extends DocumentStore {
     public void setDefaultEdgeVariant(Map<String, String> defaultVariants) {
         this.defaultEdgeVariant.clear();
         this.defaultEdgeVariant.putAll(defaultVariants);
+    }
+
+    @Override
+    public String toString() {
+        return "Memory Document Storage with " + nodes.keySet().size() + " node layers and " + edges.keySet().size() + " edge layers.";
     }
 }

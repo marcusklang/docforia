@@ -15,12 +15,8 @@ package se.lth.cs.docforia.query.predicates;
  * limitations under the License.
  */
 
-import se.lth.cs.docforia.Document;
 import se.lth.cs.docforia.NodeRef;
-import se.lth.cs.docforia.query.NodeVar;
-import se.lth.cs.docforia.query.Predicate;
-import se.lth.cs.docforia.query.Proposition;
-import se.lth.cs.docforia.query.PropositionIterator;
+import se.lth.cs.docforia.query.*;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,13 +27,13 @@ import java.util.Iterator;
 public class ConstantNodeCandidates extends Predicate {
     private HashSet<NodeRef> nodeRefs;
 
-    public ConstantNodeCandidates(Document doc, NodeVar var, HashSet<NodeRef> nodeRefs) {
-        super(doc, var);
+    public ConstantNodeCandidates(QueryContext context, NodeVar nodeVar, HashSet<NodeRef> nodeRefs) {
+        super(context, nodeVar);
         this.nodeRefs = nodeRefs;
     }
 
     @Override
-    protected PropositionIterator suggest(final Proposition proposition) {
+    protected PropositionIterator suggest(PredicateState state, final Proposition proposition) {
         return new PropositionIterator() {
             private Iterator<NodeRef> refIterator = nodeRefs.iterator();
 
@@ -46,7 +42,7 @@ public class ConstantNodeCandidates extends Predicate {
                 if(!refIterator.hasNext())
                     return false;
 
-                proposition.proposition[vars[0].getIndex()] = refIterator.next();
+                proposition.data[varIndex[0]] = refIterator.next();
                 return true;
             }
         };

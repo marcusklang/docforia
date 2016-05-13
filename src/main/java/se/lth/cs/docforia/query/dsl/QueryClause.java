@@ -20,29 +20,25 @@ import se.lth.cs.docforia.Edge;
 import se.lth.cs.docforia.Node;
 import se.lth.cs.docforia.query.*;
 import se.lth.cs.docforia.query.predicates.AnyPredicate;
-import se.lth.cs.docforia.util.DocumentIterable;
-import se.lth.cs.docforia.util.DocumentIterables;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Top Level Query builder clause
  */
 public class QueryClause extends CommonClause {
-    protected final ArrayList<Var> selects;
-    protected final HashSet<Var> selectVars = new HashSet<Var>();
     protected final Document doc;
+    protected final HashSet<Var> outputVars = new HashSet<>();
     protected List<Predicate> predicates = new ArrayList<Predicate>();
-    protected List<NodeVar> orderByRange = new ArrayList<NodeVar>();
-    protected boolean distinct = false;
-    protected boolean compiled = false;
+    protected QueryContext context;
 
     protected void select(Var var) {
-        if(!selectVars.contains(var)) {
-            var.setIndex(selectVars.size());
-            selectVars.add(var);
-        }
+        context.addVar(var);
     }
 
     public QueryClause(Document doc, Var...vars) {
@@ -52,12 +48,12 @@ public class QueryClause extends CommonClause {
         if(doc == null)
             throw new NullPointerException("doc");
 
-        this.doc = doc;
-        this.selects = new ArrayList<Var>(Arrays.asList(vars));
+        context = new QueryContext(doc);
 
-        for (int i = 0; i < vars.length; i++) {
-            vars[i].setIndex(i);
-            selectVars.add(vars[i]);
+        this.doc = doc;
+        for (Var var : vars) {
+            context.addVar(var);
+            outputVars.add(var);
         }
     }
 
@@ -69,10 +65,8 @@ public class QueryClause extends CommonClause {
     /** Add an AND constraint on the selected vars */
     @Override
     public WhereClause where(Var...vars) {
-        for (Var var : vars){
-            if(!selectVars.contains(var)) {
-                select(var);
-            }
+        for (Var var : vars) {
+            context.addVar(var);
         }
 
         return new WhereClause(this, vars);
@@ -81,7 +75,8 @@ public class QueryClause extends CommonClause {
     /** Add an AND constraint on the selected var, constraint is specified by {@code pred}*/
     @Override
     public QueryClause where(NodeVar var, final Function<Node,Boolean> pred) {
-        predicates.add(new Predicate(doc, var) {
+        context.addVar(var);
+        predicates.add(new Predicate(context, var) {
             @Override
             public boolean eval(Proposition proposition) {
                 return pred.apply(proposition.get(var));
@@ -94,7 +89,8 @@ public class QueryClause extends CommonClause {
     /** Add an AND constraint on the selected var, constraint is specified by {@code pred} */
     @Override
     public QueryClause where(EdgeVar var, final Function<Edge,Boolean> pred) {
-        predicates.add(new Predicate(doc, var) {
+        context.addVar(var);
+        predicates.add(new Predicate(context, var) {
             @Override
             public boolean eval(Proposition proposition) {
                 return pred.apply(proposition.get(var));
@@ -107,7 +103,8 @@ public class QueryClause extends CommonClause {
     /** Add an AND constraint on the selected var, constraint is specified by {@code pred} */
     @Override
     public <N extends Node> QueryClause where(NodeTVar<N> var, final Function<N,Boolean> pred) {
-        predicates.add(new Predicate(doc, var) {
+        context.addVar(var);
+        predicates.add(new Predicate(context, var) {
             @Override
             public boolean eval(Proposition proposition) {
                 return pred.apply(proposition.get(var));
@@ -120,7 +117,8 @@ public class QueryClause extends CommonClause {
     /** Add an AND constraint on the selected var, constraint is specified by {@code pred} */
     @Override
     public <E extends Edge> QueryClause where(EdgeTVar<E> var, final Function<E,Boolean> pred) {
-        predicates.add(new Predicate(doc, var) {
+        context.addVar(var);
+        predicates.add(new Predicate(context, var) {
             @Override
             public boolean eval(Proposition proposition) {
                 return pred.apply(proposition.get(var));
@@ -131,7 +129,7 @@ public class QueryClause extends CommonClause {
     }
 
     /** Specify ordering on vars, will propagate into grouped queries. */
-    @Override
+    /*@Override
     public QueryClause orderByRange(NodeVar...vars) {
         for(NodeVar var : vars) {
             if(!selectVars.contains(var))
@@ -140,14 +138,8 @@ public class QueryClause extends CommonClause {
             orderByRange.add(var);
         }
         return this;
-    }
-
-    /** Set distinct output. */
-    public QueryClause distinct() {
-        this.distinct = true;
-        return this;
-    }
-
+    }*/
+/*
     protected Comparator<Proposition> orderByComparator() {
         return (o1, o2) -> {
             for(int i = 0; i < orderByRange.size(); i++) {
@@ -158,14 +150,11 @@ public class QueryClause extends CommonClause {
 
             return 0;
         };
-    }
+    }*/
 
-    protected void compile() {
-        if(compiled)
-            return;
-
+    protected void addAnyPredicates() {
         //1. Check that all selectVars have been bound, otherwise infer an always true predicate.
-        HashSet<Var> remaningVars = new HashSet<Var>(selectVars);
+        HashSet<Var> remaningVars = new HashSet<Var>(outputVars);
         for (Predicate predicate : predicates) {
             for (Var var : predicate.vars()) {
                 remaningVars.remove(var);
@@ -174,13 +163,13 @@ public class QueryClause extends CommonClause {
 
         //2. For the remaining insert a always true predicate
         if(remaningVars.size() > 0) {
-            predicates.add(new AnyPredicate(doc, remaningVars.toArray(new Var[remaningVars.size()])));
+            predicates.add(new AnyPredicate(context, remaningVars.toArray(new Var[remaningVars.size()])));
         }
     }
-
+/*
     protected List<Proposition> result(int n) {
         compile();
-        Query q = new Query(doc, new ArrayList<Var>(selectVars), predicates);
+        Query q = new Query(doc, new ArrayList<Var>(queryVars), predicates);
 
         List<Proposition> evaluate;
         if(n <= 0) {
@@ -203,8 +192,20 @@ public class QueryClause extends CommonClause {
         }
 
         return evaluate;
+    }*/
+
+    public Stream<Proposition> stream() {
+        addAnyPredicates();
+        return StreamSupport.stream(new SpliteratableQuery(context, new HashSet<>(outputVars), predicates.toArray(new Predicate[predicates.size()])), false);
     }
 
+    @Override
+    public CompiledQuery compile() {
+        addAnyPredicates();
+        return new CompiledQuery(context, new HashSet<>(outputVars), predicates.toArray(new Predicate[predicates.size()]));
+    }
+
+    /*
     @Override
     public DocumentIterable<Proposition> query() {
         return DocumentIterables.wrap(result(-1));
@@ -213,5 +214,5 @@ public class QueryClause extends CommonClause {
     @Override
     public DocumentIterable<Proposition> query(int n) {
         return DocumentIterables.wrap(result(n));
-    }
+    }*/
 }

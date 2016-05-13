@@ -19,16 +19,6 @@ package se.lth.cs.docforia.query;
  * Query variable
  */
 public abstract class Var {
-    protected int index = -1;
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
     public abstract String getLayer();
     public abstract String getVariant();
 }

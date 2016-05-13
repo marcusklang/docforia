@@ -16,10 +16,7 @@ package se.lth.cs.docforia;
  */
 
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
-import se.lth.cs.docforia.util.AnnotationNavigator;
-import se.lth.cs.docforia.util.DocumentIterable;
-import se.lth.cs.docforia.util.DocumentIterables;
-import se.lth.cs.docforia.util.FilteredDocumentIterable;
+import se.lth.cs.docforia.util.*;
 
 import java.util.*;
 
@@ -238,6 +235,46 @@ public abstract class DocumentEngine {
 			}
 		};
 	}
+
+    /**
+     * Get all nodes via edges
+     * @param start        the starting node
+     * @param edgeLayerRef the edge layer to find edges via
+     * @param nodeLayerRef the node layer to find nodes in
+     * @param dir the directionality (IN and OUT supported, not BOTH)
+     */
+    public DocumentIterable<NodeRef> edgeNodes(NodeRef start, final LayerRef edgeLayerRef, final LayerRef nodeLayerRef, Direction dir) {
+        final DocumentIterable<EdgeRef> edges = edges(start, edgeLayerRef, dir);
+
+        switch (dir) {
+            case IN:
+                return new FilteredMappedDocumentIterable<NodeRef, EdgeRef>(edges) {
+                    @Override
+                    protected boolean accept(EdgeRef value) {
+                        return value.get().getTail().layer().equal(nodeLayerRef);
+                    }
+
+                    @Override
+                    protected NodeRef map(EdgeRef value) {
+                        return value.get().getTail();
+                    }
+                };
+            case OUT:
+                return new FilteredMappedDocumentIterable<NodeRef, EdgeRef>(edges) {
+                    @Override
+                    protected boolean accept(EdgeRef value) {
+                        return value.get().getHead().layer().equal(nodeLayerRef);
+                    }
+
+                    @Override
+                    protected NodeRef map(EdgeRef value) {
+                        return value.get().getHead();
+                    }
+                };
+            default:
+                throw new UnsupportedOperationException();
+        }
+    }
 
 	/**
 	 * Project inbound

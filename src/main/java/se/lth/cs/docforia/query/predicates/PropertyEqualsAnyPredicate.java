@@ -15,10 +15,10 @@ package se.lth.cs.docforia.query.predicates;
  * limitations under the License.
  */
 
-import se.lth.cs.docforia.Document;
 import se.lth.cs.docforia.PropertyContainer;
 import se.lth.cs.docforia.query.Predicate;
 import se.lth.cs.docforia.query.Proposition;
+import se.lth.cs.docforia.query.QueryContext;
 import se.lth.cs.docforia.query.Var;
 
 /**
@@ -28,8 +28,8 @@ public class PropertyEqualsAnyPredicate extends Predicate {
     private final String[] values;
     private final String key;
 
-    public PropertyEqualsAnyPredicate(Document doc, Var candidate, String key, String[] values) {
-        super(doc, candidate);
+    public PropertyEqualsAnyPredicate(QueryContext context, Var candidate, String key, String[] values) {
+        super(context, candidate);
         this.key = key;
         this.values = values;
     }

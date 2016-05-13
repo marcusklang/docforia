@@ -460,6 +460,7 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 	/**
 	 * Set document text
 	 * <b>Remarks:</b> it is up to the user to make sure that the set text is not less than current length.
+	 * This method resets setLength
 	 */
 	public void setText(String text) {
 		store().setText(text);
@@ -1917,7 +1918,7 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 	 * @param <N> Should be same as representation, otherwise a CastException will be thrown
      */
 	@SuppressWarnings("unchecked")
-	public <N extends Node> N node(Class<N> representation, NodeRef ref) {
+	public <N extends Node> N node(NodeRef ref) {
 		return (N) representations().get(ref);
 	}
 
@@ -1928,7 +1929,7 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 	 * @param <E> Should be same as representation, otherwise a CastException will be thrown
 	 */
 	@SuppressWarnings("unchecked")
-	public <E extends Edge> E edge(Class<E> representation, EdgeRef ref) {
+	public <E extends Edge> E edge(EdgeRef ref) {
 		return (E) representations().get(ref);
 	}
 

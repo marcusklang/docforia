@@ -15,11 +15,11 @@ package se.lth.cs.docforia.query.predicates;
  * limitations under the License.
  */
 
-import se.lth.cs.docforia.Document;
 import se.lth.cs.docforia.Node;
 import se.lth.cs.docforia.query.NodeVar;
 import se.lth.cs.docforia.query.Predicate;
 import se.lth.cs.docforia.query.Proposition;
+import se.lth.cs.docforia.query.QueryContext;
 
 import java.util.function.Function;
 
@@ -29,8 +29,8 @@ import java.util.function.Function;
 public class NodePredicate<N extends Node> extends Predicate {
     private final Function<N,Boolean> nodePred;
 
-    public NodePredicate(Document doc, NodeVar nodeVar, Function<N, Boolean> nodePred) {
-        super(doc, nodeVar);
+    public NodePredicate(QueryContext context, NodeVar nodeVar, Function<N, Boolean> nodePred) {
+        super(context, nodeVar);
         this.nodePred = nodePred;
     }
 

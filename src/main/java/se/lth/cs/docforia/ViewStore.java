@@ -28,6 +28,11 @@ public class ViewStore extends DocumentStore {
     private final View view;
     private final DocumentStore store;
 
+    @Override
+    public Document getDocument() {
+        return store.getDocument();
+    }
+
     public ViewStore(View view) {
         this.view = view;
         this.store = view.parent.store();

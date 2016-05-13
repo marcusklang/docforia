@@ -23,7 +23,6 @@ import se.lth.cs.docforia.query.NodeTVar;
  * Coreference Chain node
  */
 public class CoreferenceChain extends Node<CoreferenceChain> {
-
     public CoreferenceChain() {
         super();
     }

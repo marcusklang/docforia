@@ -46,9 +46,9 @@ public class EdgeClause {
             }
 
             if(exists)
-                parent.parent.predicates.add(new EdgeExistsPredicate(parent.parent.doc, (NodeVar)tail, head, edgeVar));
+                parent.parent.predicates.add(new EdgeExistsPredicate(parent.parent.context, (NodeVar)tail, head, edgeVar));
             else
-                parent.parent.predicates.add(new EdgeNotExistsPredicate(parent.parent.doc, (NodeVar)tail, head, edgeVar));
+                parent.parent.predicates.add(new EdgeNotExistsPredicate(parent.parent.context, (NodeVar)tail, head, edgeVar));
         }
 
         return parent;
@@ -63,15 +63,16 @@ public class EdgeClause {
             }
 
             if(exists)
-                parent.parent.predicates.add(new EdgeExistsPredicate(parent.parent.doc, tail, (NodeVar)head, edgeVar));
+                parent.parent.predicates.add(new EdgeExistsPredicate(parent.parent.context, tail, (NodeVar)head, edgeVar));
             else
-                parent.parent.predicates.add(new EdgeNotExistsPredicate(parent.parent.doc, tail, (NodeVar)head, edgeVar));
+                parent.parent.predicates.add(new EdgeNotExistsPredicate(parent.parent.context, tail, (NodeVar)head, edgeVar));
         }
 
         return parent;
     }
 
     public WhereClause fromTo(final NodeVar headOrTail) {
+        parent.parent.select(headOrTail);
         final LayerRef layerRef = this.parent.root().doc.engine().nodeLayer(headOrTail.getLayer(), headOrTail.getVariant());
 
         parent.where(edgeVar, in -> layerRef.equal(in.getHead().getRef().layer()) || layerRef.equal(in.getTail().getRef().layer()));

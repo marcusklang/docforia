@@ -15,17 +15,17 @@ package se.lth.cs.docforia.query.predicates;
  * limitations under the License.
  */
 
-import se.lth.cs.docforia.Document;
 import se.lth.cs.docforia.query.Predicate;
 import se.lth.cs.docforia.query.Proposition;
+import se.lth.cs.docforia.query.QueryContext;
 import se.lth.cs.docforia.query.Var;
 
 /**
  * Any predicate, provides a predicate that gives all candidates
  */
 public class AnyPredicate extends Predicate {
-    public AnyPredicate(Document doc, Var... vars) {
-        super(doc, vars);
+    public AnyPredicate(QueryContext context, Var... vars) {
+        super(context, vars);
     }
 
     @Override

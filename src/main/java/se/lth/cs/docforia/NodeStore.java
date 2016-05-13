@@ -21,6 +21,7 @@ package se.lth.cs.docforia;
  * @see se.lth.cs.docforia.memstore.MemoryNode for a memory based implementation
  **/
 public abstract class NodeStore extends PropertyStore {
+	public abstract Document parent();
 	public abstract String getLayer();
 	public abstract String getVariant();
 	public abstract void setVariant(String variant);

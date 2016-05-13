@@ -16,6 +16,7 @@ package se.lth.cs.docforia.memstore;
  */
 
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
+import se.lth.cs.docforia.DocumentNodeLayer;
 import se.lth.cs.docforia.LayerRef;
 import se.lth.cs.docforia.NodeRef;
 import se.lth.cs.docforia.util.AnnotationIndex;
@@ -30,7 +31,7 @@ import java.util.Objects;
 /**
  * Memory Node Collection
  */
-public class MemoryNodeCollection extends DocumentIterableBase<NodeRef> implements DocumentIterable<NodeRef> {
+public class MemoryNodeCollection extends DocumentIterableBase<NodeRef> implements DocumentIterable<NodeRef>, DocumentNodeLayer {
     protected final MemoryDocumentStore doc;
     protected AnnotationIndex<MemoryNode> annotations = new AnnotationIndex<>();
     protected ReferenceOpenHashSet<MemoryNode> nodes = new ReferenceOpenHashSet<>();
@@ -120,10 +121,15 @@ public class MemoryNodeCollection extends DocumentIterableBase<NodeRef> implemen
         return Iterables.<NodeRef>concat((Iterable)nodes, (Iterable)annotations).iterator();
     }
 
+    @Override
+    public LayerRef layer() {
+        return key;
+    }
+
     public MemoryNode create() {
         MemoryNode memoryNode = new MemoryNode(this);
-        memoryNode.start = -1;
-        memoryNode.end = -1;
+        memoryNode.start = Integer.MIN_VALUE;
+        memoryNode.end = Integer.MAX_VALUE;
 
         add(memoryNode);
         return memoryNode;
@@ -176,5 +182,10 @@ public class MemoryNodeCollection extends DocumentIterableBase<NodeRef> implemen
         node.start = start;
         node.end = end;
         add(node);
+    }
+
+    @Override
+    public String toString() {
+        return nodes.size() + " nodes and " + annotations.size() + " annotations in node layer " + key.layer;
     }
 }

@@ -32,25 +32,25 @@ public class CombinationIterator implements PropositionIterator
     private boolean first = true;
     private int dynamicLen = 0;
 
-    public CombinationIterator(Var[] vars, Filter[] filters, boolean[] constant)
+    public CombinationIterator(QueryContext context, Var[] vars, Filter[] filters, boolean[] constant)
     {
         this.iterators = new ResetablePropositionIterator[vars.length];
 
         int startIndex = 0;
 
         for(int i = 0; i < vars.length; i++) {
-            if(!constant[i])
+            if(!constant[context.indexOf(vars[i])])
             {
                 //Found dynamic
                 final Var var = vars[i];
                 final Filter filter = filters[i];
 
                 this.iterators[startIndex] = new ResetablePropositionIterator() {
-                    private PropositionIterator iter = new StoreRefPropositionIterator(var.getIndex(),filter.newIterator());
+                    private PropositionIterator iter = new StoreRefPropositionIterator(context, var, filter.newIterator());
 
                     @Override
                     public void reset() {
-                        iter = new StoreRefPropositionIterator(var.getIndex(),filter.newIterator());
+                        iter = new StoreRefPropositionIterator(context, var, filter.newIterator());
                     }
 
                     @Override

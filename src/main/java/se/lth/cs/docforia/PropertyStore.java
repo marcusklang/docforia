@@ -209,4 +209,26 @@ public abstract class PropertyStore {
 	public abstract void removeProperty(String key);
 
 	public abstract Iterable<Map.Entry<String, DataRef>> properties();
+
+	@Override
+	public String toString() {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("{ ");
+		boolean first = true;
+		for (Map.Entry<String, DataRef> stringDataRefEntry : properties()) {
+			if (first)
+				first = false;
+			else
+				sb.append(", ");
+
+			sb.append(stringDataRefEntry.getKey())
+			  .append("=")
+			  .append(stringDataRefEntry.getValue().stringValue());
+		}
+
+		sb.append(" }");
+
+		return sb.toString();
+	}
 }

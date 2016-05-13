@@ -18,18 +18,22 @@ package se.lth.cs.docforia;
 import se.lth.cs.docforia.data.DataRef;
 import se.lth.cs.docforia.util.Iterables;
 
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.StreamSupport;
 
 /**
- * Document storage abastract, is subclassed by the implemeting storage layer.
+ * Document storage abastract, is subclassed by the implementing storage layer.
  */
 @SuppressWarnings("unchecked")
 public abstract class DocumentStore extends PropertyStore {
 
-	/**
+    public DocumentStore() {
+
+    }
+
+    public abstract Document getDocument();
+
+    /**
 	 * Get an iterator of all nodes
 	 * <p>
 	 * <b>Remarks:</b> All variants and not just defaults are returned
@@ -222,6 +226,78 @@ public abstract class DocumentStore extends PropertyStore {
 
 	public abstract EdgeRef createEdge(String edgeLayer);
 	public abstract NodeRef createNode(String nodeLayer);
+
+    /**
+     * Get a node layer representation for faster creation of nodes
+     * @param nodeLayer   node layer type
+     * @param nodeVariant node variant
+     */
+    public DocumentNodeLayer nodeLayer(String nodeLayer, String nodeVariant) {
+        return new DocumentNodeLayer() {
+            @Override
+            public LayerRef layer() {
+                return getNodeLayerRef(nodeLayer, nodeVariant);
+            }
+
+            @Override
+            public NodeRef create() {
+                return DocumentStore.this.createNode(nodeLayer, nodeVariant);
+            }
+
+            @Override
+            public NodeRef create(int start, int end) {
+                NodeRef node = DocumentStore.this.createNode(nodeLayer, nodeVariant);
+                node.get().setRanges(start, end);
+                return node;
+            }
+
+            @Override
+            public int size() {
+                return (int)StreamSupport.stream(this.spliterator(), false).count();
+            }
+
+            @Override
+            public Iterator<NodeRef> iterator() {
+                return getDocument().engine().nodes(nodeLayer, nodeVariant).iterator();
+            }
+        };
+    }
+
+    /**
+     * Get a edge layer representation for faster creation of nodes
+     * @param edgeLayer   node layer type
+     * @param edgeVariant node variant
+     */
+    public DocumentEdgeLayer edgeLayer(String edgeLayer, String edgeVariant) {
+        return new DocumentEdgeLayer() {
+            @Override
+            public LayerRef layer() {
+                return getEdgeLayerRef(edgeLayer, edgeVariant);
+            }
+
+            @Override
+            public EdgeRef create() {
+                return DocumentStore.this.createEdge(edgeLayer, edgeVariant);
+            }
+
+            @Override
+            public EdgeRef create(NodeRef tail, NodeRef head) {
+                EdgeRef e = DocumentStore.this.createEdge(edgeLayer, edgeVariant);
+                e.get().connect(tail, head);
+                return e;
+            }
+
+            @Override
+            public int size() {
+                return (int)StreamSupport.stream(this.spliterator(), false).count();
+            }
+
+            @Override
+            public Iterator<EdgeRef> iterator() {
+                return getDocument().engine().edges(edgeLayer, edgeVariant).iterator();
+            }
+        };
+    }
 
 	public EdgeRef createEdge(String edgeLayer, String edgeVariant) {
 		EdgeRef edgeRef = createEdge(edgeLayer);

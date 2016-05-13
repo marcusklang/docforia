@@ -15,7 +15,10 @@ package se.lth.cs.docforia.query.predicates;
  * limitations under the License.
  */
 
-import se.lth.cs.docforia.*;
+import se.lth.cs.docforia.Direction;
+import se.lth.cs.docforia.EdgeRef;
+import se.lth.cs.docforia.NodeRef;
+import se.lth.cs.docforia.StoreRef;
 import se.lth.cs.docforia.query.*;
 
 /**
@@ -26,23 +29,23 @@ public class EdgeExistsPredicate extends Predicate {
     private static final int HEAD = 1;
     private static final int EDGE = 2;
 
-    public EdgeExistsPredicate(Document doc, NodeVar tail, NodeVar head, EdgeVar edgeVar) {
-        super(doc, tail, head, edgeVar);
+    public EdgeExistsPredicate(QueryContext context, NodeVar tail, NodeVar head, EdgeVar edgeVar) {
+        super(context, tail, head, edgeVar);
     }
 
     @Override
-    protected PropositionIterator suggest(Proposition proposition) {
-        if(constant[EDGE]) {
+    protected PropositionIterator suggest(final PredicateState state, final Proposition proposition) {
+        if(state.constant[EDGE]) {
             EdgeRef edge = proposition.edgeref(vars[EDGE]);
             NodeRef head = edge.get().getHead();
             NodeRef tail = edge.get().getTail();
 
-            if(constant[TAIL]) {
+            if(state.constant[TAIL]) {
                 if(!tail.equals(proposition.get(vars[TAIL]))) {
                     return EmptyPropositionIterator.instance();
                 }
             }
-            else if(constant[HEAD]) {
+            else if(state.constant[HEAD]) {
                 if(!head.equals(proposition.get(vars[HEAD]))) {
                     return EmptyPropositionIterator.instance();
                 }
@@ -53,24 +56,24 @@ public class EdgeExistsPredicate extends Predicate {
                 }
             }
 
-            return new SinglePropositionIterator(new Var[] {vars[0], vars[1], vars[2]}, new StoreRef[] {tail, head, edge});
+            return new SinglePropositionIterator(context, new Var[] {vars[0], vars[1], vars[2]}, new StoreRef[] {tail, head, edge});
         } else {
             //Operation: find Edge!
-            if(constant[TAIL] && constant[HEAD]) {
+            if(state.constant[TAIL] && state.constant[HEAD]) {
                 NodeRef tail = proposition.noderef(vars[TAIL]);
                 NodeRef head = proposition.noderef(vars[HEAD]);
-                return new StoreRefPropositionIterator(vars[EDGE], doc.engine().edges(tail, head, vars[EDGE].getLayer(), vars[EDGE].getVariant()));
+                return new StoreRefPropositionIterator(context, vars[EDGE], context.doc.engine().edges(tail, head, vars[EDGE].getLayer(), vars[EDGE].getVariant()));
             }
-            else if(constant[TAIL]) {
+            else if(state.constant[TAIL]) {
                 NodeRef tail = proposition.noderef(vars[TAIL]);
-                return new EdgeRefPropositionIterator(vars, doc.engine().edges(tail, vars[EDGE].getLayer(), vars[EDGE].getVariant(), Direction.OUT).iterator());
+                return new EdgeRefPropositionIterator(context, vars, context.doc.engine().edges(tail, vars[EDGE].getLayer(), vars[EDGE].getVariant(), Direction.OUT).iterator());
             }
-            else if(constant[HEAD]) {
+            else if(state.constant[HEAD]) {
                 NodeRef head = proposition.noderef(vars[HEAD]);
-                return new EdgeRefPropositionIterator(vars, doc.engine().edges(head, vars[EDGE].getLayer(), vars[EDGE].getVariant(), Direction.IN).iterator());
+                return new EdgeRefPropositionIterator(context, vars, context.doc.engine().edges(head, vars[EDGE].getLayer(), vars[EDGE].getVariant(), Direction.IN).iterator());
             }
             else {
-                return new EdgeRefPropositionIterator(vars, doc.engine().edges(vars[EDGE].getLayer(), vars[EDGE].getVariant()).iterator());
+                return new EdgeRefPropositionIterator(context, vars, context.doc.engine().edges(vars[EDGE].getLayer(), vars[EDGE].getVariant()).iterator());
             }
         }
     }
