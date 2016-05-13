@@ -41,55 +41,53 @@ import java.util.stream.StreamSupport;
  * Example usage:
  * <pre>
  * {@code
-         Document doc = new MemoryDocument("Greetings from Lund, Sweden!");
-         //                                 01234567890123456789012345678
+        Document doc = new MemoryDocument("Greetings from Lund, Sweden!");
+        //                                 01234567890123456789012345678
 
-         Token Greetings   = new Token(doc).setRange(0,  9);
-         Token from        = new Token(doc).setRange(10, 14);
-         Token Lund        = new Token(doc).setRange(15, 19);
-         Token comma       = new Token(doc).setRange(19, 20);
-         Token Sweden      = new Token(doc).setRange(21, 27);
-         Token exclamation = new Token(doc).setRange(27, 28);
+        Token Greetings   = new Token(doc).setRange(0,  9);
+        Token from        = new Token(doc).setRange(10, 14);
+        Token Lund        = new Token(doc).setRange(15, 19);
+        Token comma       = new Token(doc).setRange(19, 20);
+        Token Sweden      = new Token(doc).setRange(21, 27);
+        Token exclamation = new Token(doc).setRange(27, 28);
 
-         Sentence grettingsSentence = new Sentence(doc).setRange(0, 28);
+        Sentence grettingsSentence = new Sentence(doc).setRange(0, 28);
 
-         NamedEntity lundSwedenEntity
-            = new NamedEntity(doc).setRange(Lund.getStart(), Sweden.getEnd())
-                                  .setLabel("Location");
+        NamedEntity lundSwedenEntity
+                = new NamedEntity(doc).setRange(Lund.getStart(), Sweden.getEnd())
+                                      .setLabel("Location");
 
-         NodeTVar<Token> T = Token.var();
-         NodeTVar<NamedEntity> NE = NamedEntity.var();
+        NodeTVar<Token> T = Token.var();
+        NodeTVar<NamedEntity> NE = NamedEntity.var();
 
-         List<Token> lundLocation = doc.select(T, NE)
-                                       .where(T).coveredBy(NE)
-                                       .orderByRange(T)
-                                       .query()
-                                       .map(GetNode.of(T))
-                                       .toList();
+        List<Token> lundLocation = doc.select(T, NE)
+                                      .where(T).coveredBy(NE)
+                                      .stream()
+                                      .sorted(StreamUtils.orderBy(T))
+                                      .map(StreamUtils.toNode(T))
+                                      .collect(Collectors.toList());
 
-         assert lundLocation.size() == 3;
-         for (Token token : lundLocation) {
+        assert lundLocation.size() == 3;
+        for (Token token : lundLocation) {
             System.out.println(token);
-         }
-         // Outputs "Lund", ",", "Sweden"
+        }
 
-         GroupProposition group = doc.select(T, NE)
-                                     .where(T).coveredBy(NE)
-                                     .orderByRange(T)
-                                     .groupBy(NE)
-                                     .query()
-                                     .first();
+        Optional<PropositionGroup> group = doc.select(T, NE)
+                                              .where(T).coveredBy(NE)
+                                              .stream()
+                                              .collect(QueryCollectors.groupBy(doc, NE).orderByValue(T).collector())
+                                              .stream()
+                                              .findFirst();
 
-         NamedEntity ne = group.key(NE);
-         System.out.println(ne);
-         // Outputs "Lund, Sweden"
+        assertTrue(group.isPresent());
 
-         assert group.list(T).size() == 3;
-         for (Token token : group.list(T)) {
+        NamedEntity ne = group.get().key(NE);
+        System.out.println(ne);
+
+        assert group.get().list(T).size() == 3;
+        for (Token token : group.get().list(T)) {
             System.out.println(token);
-         }
-         // Outputs "Lund", ",", "Sweden"
-    }
+        }
     </pre>
     <b>Remarks:</b> This document can be used as a CharSequence key, hashCode and equals uses the text as input
  */

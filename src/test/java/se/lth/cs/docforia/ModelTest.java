@@ -29,7 +29,6 @@ import se.lth.cs.docforia.query.*;
 import se.lth.cs.docforia.query.Proposition;
 import se.lth.cs.docforia.util.DocumentIterable;
 import se.lth.cs.docforia.util.DocumentIterables;
-import se.lth.cs.docforia.util.GetNode;
 import se.lth.cs.docforia.util.Iterables;
 
 import java.io.*;
@@ -81,7 +80,7 @@ public abstract class ModelTest {
                                       .where(T).coveredBy(NE)
                                       .stream()
                                       .sorted(StreamUtils.orderBy(T))
-                                      .map(GetNode.of(T))
+                                      .map(toNode(T))
                                       .collect(Collectors.toList());
 
         assert lundLocation.size() == 3;
@@ -95,10 +94,6 @@ public abstract class ModelTest {
                                     .collect(QueryCollectors.groupBy(doc, NE).orderByValue(T).collector())
                                     .stream()
                                     .findFirst();
-                                    /*.orderByRange(T)
-                                    .groupBy(NE)
-                                    .query()
-                                    .first();*/
 
         assertTrue(group.isPresent());
 
