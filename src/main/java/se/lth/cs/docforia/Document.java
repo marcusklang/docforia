@@ -88,6 +88,7 @@ import java.util.stream.StreamSupport;
         for (Token token : group.get().list(T)) {
             System.out.println(token);
         }
+    }
     </pre>
     <b>Remarks:</b> This document can be used as a CharSequence key, hashCode and equals uses the text as input
  */
@@ -1911,7 +1912,7 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 
 	/**
 	 * Convert a NodeRef into a representation
-	 * @param representation Only used to determine return type, not actually used to createFragment type.
+	 * @param ref Only used to determine return type, not actually used to createFragment type.
 	 * @param ref the node ref
 	 * @param <N> Should be same as representation, otherwise a CastException will be thrown
      */
@@ -1922,7 +1923,7 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 
 	/**
 	 * Convert a EdgeRef into a representation
-	 * @param representation Only used to determine return type, not actually used to createFragment type.
+	 * @param ref Only used to determine return type, not actually used to createFragment type.
 	 * @param ref the node ref
 	 * @param <E> Should be same as representation, otherwise a CastException will be thrown
 	 */
