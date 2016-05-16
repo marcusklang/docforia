@@ -12,6 +12,9 @@ se.lth.cs.docforia.io.file
 se.lth.cs.docforia.io.mem
 se.lth.cs.docforia.io.stream
 se.lth.cs.docforia.io.text
+se.lth.cs.docforia.io.text.builders
+se.lth.cs.docforia.io.text.columns
+se.lth.cs.docforia.io.text.rebuilders
 se.lth.cs.docforia.memstore
 se.lth.cs.docforia.memstore.encoders
 se.lth.cs.docforia.query
