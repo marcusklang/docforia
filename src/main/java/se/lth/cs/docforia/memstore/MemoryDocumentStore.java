@@ -229,7 +229,11 @@ public class MemoryDocumentStore extends DocumentStore {
     }
 
     protected void migrate(MemoryEdgeCollection.Key oldKey, MemoryEdgeCollection.Key newKey, MemoryEdgeCollection collection) {
-
+        int edgeId = edgelayer2id.getInt(oldKey);
+        edgelayer2id.remove(oldKey);
+        edgelayer2id.put(newKey, edgeId);
+        edges.remove(oldKey);
+        edges.put(newKey, collection);
     }
 
     @Override
