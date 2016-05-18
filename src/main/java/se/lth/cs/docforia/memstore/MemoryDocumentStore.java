@@ -23,7 +23,6 @@ import se.lth.cs.docforia.*;
 import se.lth.cs.docforia.data.DataRef;
 import se.lth.cs.docforia.data.StringRef;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -55,17 +54,12 @@ public class MemoryDocumentStore extends DocumentStore {
     protected int nodelayerIdCounter = 1;
     protected int edgelayerIdCounter = 1;
 
-    protected Object2ObjectOpenHashMap<String,String> defaultNodeVariant = new Object2ObjectOpenHashMap<>();
-    protected Object2ObjectOpenHashMap<String,String> defaultEdgeVariant = new Object2ObjectOpenHashMap<>();
-
-    protected Object2ObjectOpenHashMap<String,Object2ObjectOpenHashMap<String,String>> variantMetadata;
     protected Object2ObjectOpenHashMap<String,DataRef> properties;
 
     public MemoryDocumentStore() {
         nodes = new Object2ReferenceAVLTreeMap<>();
         edges = new Object2ReferenceAVLTreeMap<>();
         properties = new Object2ObjectOpenHashMap<>();
-        variantMetadata = new Object2ObjectOpenHashMap<>();
     }
 
     @Override
@@ -226,6 +220,18 @@ public class MemoryDocumentStore extends DocumentStore {
             edges.remove(storage.key);
     }
 
+    protected void migrate(MemoryNodeCollection.Key oldKey, MemoryNodeCollection.Key newKey, MemoryNodeCollection collection) {
+        int nodeId = nodelayer2id.getInt(oldKey);
+        nodelayer2id.remove(oldKey);
+        nodelayer2id.put(newKey, nodeId);
+        nodes.remove(oldKey);
+        nodes.put(newKey, collection);
+    }
+
+    protected void migrate(MemoryEdgeCollection.Key oldKey, MemoryEdgeCollection.Key newKey, MemoryEdgeCollection collection) {
+
+    }
+
     @Override
     public EdgeRef getEdge(String uniqueRef) {
         throw new UnsupportedOperationException();
@@ -279,63 +285,6 @@ public class MemoryDocumentStore extends DocumentStore {
     @Override
     public void removeProperty(String key) {
         properties.remove(key);
-    }
-
-    @Override
-    public String getVariantMetadata(String variant, String key) {
-        Object2ObjectOpenHashMap<String, String> variantMetadata = this.variantMetadata.get(variant);
-        return variantMetadata != null ? variantMetadata.get(key) : null;
-    }
-
-    @Override
-    public boolean hasVariantMetadata(String variant, String key) {
-        Object2ObjectOpenHashMap<String, String> variantMetadata = this.variantMetadata.get(variant);
-        return variantMetadata != null && variantMetadata.containsKey(key);
-    }
-
-    @Override
-    public void putVariantMetadata(String variant, String key, String value) {
-        Object2ObjectOpenHashMap<String, String> variantMetadata = this.variantMetadata.get(variant);
-        if(variantMetadata == null)
-        {
-            variantMetadata = new Object2ObjectOpenHashMap<>();
-            this.variantMetadata.put(variant, variantMetadata);
-        }
-
-        variantMetadata.put(key, value);
-    }
-
-    @Override
-    public void removeVariantMetadata(String variant) {
-        variantMetadata.remove(variant);
-    }
-
-    @Override
-    public void removeVariantMetadata(String variant, String key) {
-        Object2ObjectOpenHashMap<String, String> variantMetadata = this.variantMetadata.get(variant);
-        if(variantMetadata != null)
-            variantMetadata.remove(key);
-    }
-
-    @Override
-    public Iterable<Map.Entry<String, String>> variantMetadata(String variant) {
-        Object2ObjectOpenHashMap<String,String> variantMetadata = this.variantMetadata.get(variant);
-        return variantMetadata != null ? variantMetadata.entrySet() : Collections.<String,String>emptyMap().entrySet();
-    }
-
-    @Override
-    public Iterable<String> variantsWithMetadata() {
-        return variantMetadata.keySet();
-    }
-
-    @Override
-    public LayerRef getNodeLayerRef(String nodeLayer, String variant) {
-        return getNodeCollection(nodeLayer, variant).key;
-    }
-
-    @Override
-    public LayerRef getEdgeLayerRef(String edgeLayer, String variant) {
-        return getEdgeCollection(edgeLayer, variant).key;
     }
 
     protected MemoryEdgeCollection getEdgeCollection(LayerRef ref) {
@@ -416,38 +365,12 @@ public class MemoryDocumentStore extends DocumentStore {
 
     @Override
     public EdgeRef createEdge(String edgeLayer) {
-        return createEdge(edgeLayer, defaultEdgeVariant.get(edgeLayer));
+        return createEdge(edgeLayer, null);
     }
 
     @Override
     public NodeRef createNode(String nodeLayer) {
-        return createNode(nodeLayer, defaultNodeVariant.get(nodeLayer));
-    }
-
-    @Override
-    public Map<String, String> getDefaultNodeVariants() {
-        return defaultNodeVariant;
-    }
-
-    @Override
-    public Map<String, String> getDefaultEdgeVariants() {
-        return defaultEdgeVariant;
-    }
-
-    @Override
-    public void setDefaultNodeVariant(String nodeLayer, String variant) {
-        if(variant == null)
-            defaultNodeVariant.remove(nodeLayer);
-        else
-            defaultNodeVariant.put(nodeLayer, variant);
-    }
-
-    @Override
-    public void setDefaultEdgeVariant(String edgeLayer, String variant) {
-        if(variant == null)
-            defaultEdgeVariant.remove(edgeLayer);
-        else
-            defaultEdgeVariant.put(edgeLayer, variant);
+        return createNode(nodeLayer, null);
     }
 
     @Override
@@ -478,18 +401,6 @@ public class MemoryDocumentStore extends DocumentStore {
 
             edges.remove(sourceKey);
         }
-    }
-
-    @Override
-    public void setDefaultNodeVariant(Map<String, String> defaultVariants) {
-        this.defaultNodeVariant.clear();
-        this.defaultNodeVariant.putAll(defaultVariants);
-    }
-
-    @Override
-    public void setDefaultEdgeVariant(Map<String, String> defaultVariants) {
-        this.defaultEdgeVariant.clear();
-        this.defaultEdgeVariant.putAll(defaultVariants);
     }
 
     @Override

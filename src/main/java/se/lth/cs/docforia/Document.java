@@ -201,6 +201,20 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 	}
 
 	/**
+	 * Add node
+	 * @param node
+	 * @param <N>
+	 * @return
+	 */
+	public <N extends Node> N add(N node, String variant) {
+		if(node.hasDynamicLayer())
+			throw new IllegalArgumentException("Incorrect add method for dynamic nodes, use add(node, layer, [variant])");
+
+		representations().register(node, store().createNode(nodeLayer(node.getClass()), variant));
+		return node;
+	}
+
+	/**
 	 * Add node with a dynamic layer type
 	 * @param node the dynamic node
 	 * @param layer the dynamic layer
@@ -230,7 +244,7 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 	 */
 	public <E extends Edge> E add(E edge, Node tail, Node head) {
 		representations().register(edge, store().createEdge(edgeLayer(edge.getClass())));
-        edge.store.connect(tail.store.getRef(), head.store.getRef());
+        edge.store.connect(tail.store, head.store);
 		return edge;
 	}
 
@@ -243,7 +257,7 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 	@Override
 	public DynamicEdge add(DynamicEdge edge, String layer, Node tail, Node head) {
 		representations().register(edge, store().createEdge(edgeLayer(layer)));
-        edge.store.connect(tail.store.getRef(), head.store.getRef());
+        edge.store.connect(tail.store, head.store);
 		return edge;
 	}
 
@@ -776,11 +790,8 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 
 					@Override
 					public boolean hasNext() {
-						if(current == null)
-							return moveForward();
-						else
-							return true;
-					}
+                        return current != null || moveForward();
+                    }
 				};
 			}
 		};
@@ -796,82 +807,10 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 	}
 
 	/**
-	 * Get the default node variant for a specific type
-	 * @param type the node type
-	 * @return null if no variants
-	 */
-	public <T extends Node> String getDefaultNodeVariant(Class<T> type) {
-		return store().getDefaultNodeVariants().get(nodeLayer(type));
-	}
-
-	/**
-	 * Get the default edge variant for a specific type
-	 * @param type the edge type
-	 * @return null if no variants
-	 */
-	public <T extends Edge> String getDefaultEdgeVariant(Class<T> type) {
-		return store().getDefaultEdgeVariants().get(edgeLayer(type));
-	}
-
-	/**
-	 * Get the default node variant for a specific type
-	 * @param dynamicType the node type
-	 * @return null if no variants
-	 */
-	public <T extends Node> String getDefaultNodeVariant(String dynamicType) {
-		return store().getDefaultNodeVariants().get(nodeLayer(dynamicType));
-	}
-
-	/**
-	 * Get the default node variant for a specific type
-	 * @param dynamicType the node type
-	 * @return null if no variants
-	 */
-	public <T extends Edge> String getDefaultEdgeVariant(String dynamicType) {
-		return store().getDefaultEdgeVariants().get(edgeLayer(dynamicType));
-	}
-
-	/**
-	 * Set the default node variant
-	 * @param type the node type
-	 * @param variant the node variant
-	 */
-	public <T extends Node> void setDefaultNodeVariant(Class<T> type, String variant) {
-		store().setDefaultNodeVariant(nodeLayer(type), variant);
-	}
-
-	/**
-	 * Set the default edge variant
-	 * @param type the edge type
-	 * @param variant the edge variant
-	 */
-	public <T extends Edge> void setDefaultEdgeVariant(Class<T> type, String variant) {
-		store().setDefaultEdgeVariant(edgeLayer(type), variant);
-	}
-
-	/**
-	 * Set default node variant for a dynamic type
-	 * @param dynamicType dynamic node type
-	 * @param variant the variant
-	 */
-	public <T extends Node> void setDefaultNodeVariant(String dynamicType, String variant) {
-		store().setDefaultNodeVariant(nodeLayer(dynamicType), variant);
-	}
-
-	/**
-	 * Set default edge variant for a dynamic type
-	 * @param dynamicType dynamic edge type
-	 * @param variant the variant
-	 */
-	public <T extends Edge> void setDefaultEdgeVariant(String dynamicType, String variant) {
-		store().setDefaultEdgeVariant(edgeLayer(dynamicType), variant);
-	}
-
-	/**
 	 * Move all nodes of a particular variation from one to another
 	 * @param type the node type
 	 * @param fromVariant from this variant
-	 * @param fromVariant to this variant
+	 * @param toVariant to this variant
 	 */
 	public <T extends Node> void migrateNodeVariants(Class<T> type, String fromVariant, String toVariant) {
 		store().migrateNodesToVariant(nodeLayer(type), fromVariant, toVariant);
@@ -881,7 +820,7 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 	 * Move all edges of a particular variation from one to another
 	 * @param type the edge type
 	 * @param fromVariant from this variant
-	 * @param fromVariant to this variant
+	 * @param toVariant to this variant
 	 */
 	public <T extends Edge> void migrateEdgeVariants(Class<T> type, String fromVariant, String toVariant) {
 		store().migrateEdgesToVariant(edgeLayer(type), fromVariant, toVariant);
@@ -891,7 +830,7 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 	 * Move all dynamically typed nodes of a particular variation from one to another
 	 * @param dynamicType the node type
 	 * @param fromVariant from this variant
-	 * @param fromVariant to this variant
+	 * @param toVariant to this variant
 	 */
 	public <T extends Node> void migrateNodeVariants(String dynamicType, String fromVariant, String toVariant) {
 		store().migrateNodesToVariant(nodeLayer(dynamicType), fromVariant, toVariant);
@@ -901,7 +840,7 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 	 * Move all dynamically typed nodes of a particular variation from one to another
 	 * @param dynamicType the node type
 	 * @param fromVariant from this variant
-	 * @param fromVariant to this variant
+	 * @param toVariant to this variant
 	 */
 	public <T extends Edge> void migrateEdgeVariants(String dynamicType, String fromVariant, String toVariant) {
 		store().migrateEdgesToVariant(edgeLayer(dynamicType), fromVariant, toVariant);
@@ -953,35 +892,35 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 	 * Create an iterable of all edges that is connected to node start dependening on direction
 	 */
 	public <T extends Edge> DocumentIterable<T> edges(Node start, Direction dir) {
-		return representations().wrapEdges(engine().edges(start.store.getRef(), dir));
+		return representations().wrapEdges(engine().edges(start.store, dir));
 	}
 
 	/**
 	 * Create an iterable of all edges of specific type that is connected to node start dependening on direction
 	 */
 	public <T extends Edge> DocumentIterable<T> edges(Node start, Class<T> edgeType, Direction dir) {
-		return representations().wrapEdges(engine().edges(start.store.getRef(), edgeLayer(edgeType), dir));
+		return representations().wrapEdges(engine().edges(start.store, edgeLayer(edgeType), dir));
 	}
 
 	/**
 	 * Create an iterable of all edges of dynamic type that is connected to node start dependening on direction
 	 */
 	public <T extends Edge> DocumentIterable<T> edges(Node start, String dynamicType, Direction dir) {
-		return representations().wrapEdges(engine().edges(start.store.getRef(), edgeLayer(dynamicType), dir));
+		return representations().wrapEdges(engine().edges(start.store, edgeLayer(dynamicType), dir));
 	}
 
 	/**
 	 * Create an iterable of all edges of dynamic type and variant that is connected to node start dependening on direction
 	 */
 	public <T extends Edge> DocumentIterable<T> edges(Node start,  String dynamicType, String variant, Direction dir) {
-		return representations().wrapEdges(engine().edges(start.store.getRef(), edgeLayer(dynamicType), variant, dir));
+		return representations().wrapEdges(engine().edges(start.store, edgeLayer(dynamicType), variant, dir));
 	}
 
 	/**
 	 * Create an iterable of all edges of specific type and variant that is connected to node start dependening on direction
 	 */
 	public <T extends Edge> DocumentIterable<T> edges(Node start, Class<T> edgeType, String variant, Direction dir) {
-		return representations().wrapEdges(engine().edges(start.store.getRef(), edgeLayer(edgeType), variant, dir));
+		return representations().wrapEdges(engine().edges(start.store, edgeLayer(edgeType), variant, dir));
 	}
 
 	/**
@@ -1176,7 +1115,7 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 	 * @param node the node to remove
      */
 	public void remove(Node node) {
-		store().remove(node.store.getRef());
+		store().remove(node.store);
 	}
 
 	/**
@@ -1184,7 +1123,7 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 	 * @param edge the edge to remove
      */
 	public void remove(Edge edge) {
-		store().remove(edge.store.getRef());
+		store().remove(edge.store);
 	}
 
 	/**
@@ -1319,8 +1258,8 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
         MutableRange range = new MutableRange(start, end);
         Document doc = newInstance(id(), this.text(start, end));
 
-        ArrayList<Node> nodesToCopy = new ArrayList<Node>();
-        IdentityHashMap<Node, Integer> ids = new IdentityHashMap<Node, Integer>();
+        ArrayList<Node> nodesToCopy = new ArrayList<>();
+        IdentityHashMap<Node, Integer> ids = new IdentityHashMap<>();
 
         //Get all nodes in range
         for(Node node : nodes()) {
@@ -1339,9 +1278,9 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
             }
         }
 
-        Set<Edge> edgesToCopy = Collections.newSetFromMap(new IdentityHashMap<Edge, Boolean>());
+        Set<Edge> edgesToCopy = Collections.newSetFromMap(new IdentityHashMap<>());
 
-        Set<Node> visisted = Collections.newSetFromMap(new IdentityHashMap<Node, Boolean>());
+        Set<Node> visisted = Collections.newSetFromMap(new IdentityHashMap<>());
         Deque<Node> nodequeue = new ArrayDeque<Node>(ids.keySet());
 
         //Depth-First-Search
@@ -1540,7 +1479,7 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 			edgeStore.putProperty(prop.getKey(), prop.getValue());
 		}
 
-		edgeStore.connect(importedtail.store.getRef(), importedhead.store.getRef());
+		edgeStore.connect(importedtail.store, importedhead.store);
 		return (E) representations().get(ref);
 	}
 
@@ -1868,49 +1807,6 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 	}
 
 	/**
-	 * Get variant metadata
-	 * @param variant the variant
-	 * @param key the key
-     */
-	public String getVariantMetadata(String variant, String key) {
-		return store().getVariantMetadata(variant, key);
-	}
-
-	/**
-	 * Put variant metadata
-	 * @param variant the variant
-	 * @param key the key
-	 * @param value the values to store
-     */
-	public void putVariantMetadata(String variant, String key, String value) {
-		store().putVariantMetadata(variant, key, value);
-	}
-
-	/**
-	 * Remove all variant metadata
-	 * @param variant the variant to remove all values from
-     */
-	public void removeVariantMetadata(String variant) {
-		store().removeVariantMetadata(variant);
-	}
-
-	/**
-	 * Get all variants that has metadata
-     */
-	public Iterable<String> variantsWithMetadata() {
-		return store().variantsWithMetadata();
-	}
-
-	/**
-	 * Get all metadata for a specific metadata
-	 * @param variant the variant
-	 * @return iterable of all values
-     */
-	public Iterable<Map.Entry<String, String>> variantMetadata(String variant) {
-		return store().variantMetadata(variant);
-	}
-
-	/**
 	 * Convert a NodeRef into a representation
 	 * @param ref Only used to determine return type, not actually used to createFragment type.
 	 * @param ref the node ref
@@ -2099,7 +1995,7 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 
 								if(endValue >= nodeStore.getEnd()) {
 									if(newStart == newEnd && nodeStore.getStart() != nodeStore.getEnd() && removeResultingAnchors) {
-										removalList.add(nodeStore.getRef());
+										removalList.add(nodeStore);
 									}
 
 									nodeStore.setRanges(newStart,newEnd);
@@ -2215,7 +2111,7 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 			return new Iterable<View>() {
 				@Override
 				public Iterator<View> iterator() {
-					return Arrays.asList(view(0,getEnd())).iterator();
+					return Collections.singletonList(view(0,getEnd())).iterator();
 				}
 			};
 		}
@@ -2529,21 +2425,6 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 			target.putProperty(entry.getKey(), entry.getValue().copy());
 		}
 
-		//Copy variant info
-		for (Map.Entry<String, String> edgeEntry : source.store().getDefaultEdgeVariants().entrySet()) {
-			target.store().setDefaultEdgeVariant(edgeEntry.getKey(),edgeEntry.getValue());
-		}
-
-		for (Map.Entry<String, String> nodeEntry : source.store().getDefaultNodeVariants().entrySet()) {
-			target.store().setDefaultNodeVariant(nodeEntry.getKey(), nodeEntry.getValue());
-		}
-
-		for (String variant : source.store().variantsWithMetadata()) {
-			for (Map.Entry<String, String> entry : source.store().variantMetadata(variant)) {
-				target.putVariantMetadata(variant, entry.getKey(), entry.getValue());
-			}
-		}
-
 		//Copy nodes
 		Reference2ReferenceOpenHashMap<NodeRef,NodeRef> nodeRefs = new Reference2ReferenceOpenHashMap<>();
 
@@ -2636,22 +2517,18 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 
         HashSet<LayerRef> currentNoderefs
                 = StreamSupport.stream(engine().nodeLayerRefs().spliterator(),false)
-                               .map(DocumentStore.NodeLayerRef::new)
                                .collect(Collectors.toCollection(HashSet::new));
 
         HashSet<LayerRef> currentEdgerefs
                 = StreamSupport.stream(engine().edgeLayerRefs().spliterator(),false)
-                               .map(DocumentStore.EdgeLayerRef::new)
                                .collect(Collectors.toCollection(HashSet::new));
 
         HashSet<LayerRef> compareNoderefs
                 = StreamSupport.stream(doc.engine().nodeLayerRefs().spliterator(),false)
-                                               .map(DocumentStore.NodeLayerRef::new)
                                                .collect(Collectors.toCollection(HashSet::new));
 
         HashSet<LayerRef> compareEdgerefs
                 = StreamSupport.stream(doc.engine().edgeLayerRefs().spliterator(),false)
-                               .map(DocumentStore.EdgeLayerRef::new)
                                .collect(Collectors.toCollection(HashSet::new));
 
         if(!currentNoderefs.equals(compareNoderefs))

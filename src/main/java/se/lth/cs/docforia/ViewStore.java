@@ -79,41 +79,6 @@ public class ViewStore extends DocumentStore {
     }
 
     @Override
-    public String getVariantMetadata(String variant, String key) {
-        return store.getVariantMetadata(variant, key);
-    }
-
-    @Override
-    public boolean hasVariantMetadata(String variant, String key) {
-        return store.hasVariantMetadata(variant, key);
-    }
-
-    @Override
-    public void putVariantMetadata(String variant, String key, String value) {
-        store.putVariantMetadata(variant, key, value);
-    }
-
-    @Override
-    public void removeVariantMetadata(String variant) {
-        store.removeVariantMetadata(variant);
-    }
-
-    @Override
-    public void removeVariantMetadata(String variant, String key) {
-        store.removeVariantMetadata(variant, key);
-    }
-
-    @Override
-    public Iterable<Map.Entry<String, String>> variantMetadata(String variant) {
-        return store.variantMetadata(variant);
-    }
-
-    @Override
-    public Iterable<String> variantsWithMetadata() {
-        return store.variantsWithMetadata();
-    }
-
-    @Override
     public void remove(NodeRef nodeId) {
         store.remove(nodeId);
     }

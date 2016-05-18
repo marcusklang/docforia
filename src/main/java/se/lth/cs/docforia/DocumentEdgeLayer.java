@@ -18,15 +18,35 @@ package se.lth.cs.docforia;
 /**
  * Document edge layer representation, suitable for batch insertions
  */
-public interface DocumentEdgeLayer extends Iterable<EdgeRef> {
-    /** Layer reference instance */
-    LayerRef layer();
-
+public interface DocumentEdgeLayer extends Iterable<EdgeRef>, LayerRef {
     /** Create edge */
     EdgeRef create();
 
     /** Create edge ith tail and head */
     EdgeRef create(NodeRef tail, NodeRef head);
+
+    /**
+     * Used to change type of an existing layer to something else
+     * <p>
+     * <b>Remarks:</b> Retains any variant if specified
+     * @param newLayer the new raw layer type
+     */
+    default void migrate(String newLayer) {
+        migrate(newLayer, getVariant());
+    }
+
+    /**
+     * Used to change type of an existing layer to something else
+     * <p>
+     * <b>Remarks:</b> Retains any variant if specified
+     * @param newLayer the new raw layer type
+     */
+    void migrate(String newLayer, String variant);
+
+    /**
+     * Remove node, should belong to this layer.
+     */
+    void remove(EdgeRef ref);
 
     /** Get the count of edges in this layer */
     int size();

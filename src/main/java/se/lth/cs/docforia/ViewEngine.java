@@ -34,16 +34,6 @@ public class ViewEngine extends DocumentEngine {
     }
 
     @Override
-    public LayerRef edgeLayer(String edgeType, String edgeVariant) {
-        return store().getEdgeLayerRef(edgeType, edgeVariant);
-    }
-
-    @Override
-    public LayerRef nodeLayer(String nodeLayer, String nodeVariant) {
-        return store().getNodeLayerRef(nodeLayer, nodeVariant);
-    }
-
-    @Override
     public DocumentStore store() {
         return engine.store();
     }
@@ -84,10 +74,7 @@ public class ViewEngine extends DocumentEngine {
             @Override
             protected boolean accept(NodeRef value) {
                 NodeStore store = value.get();
-                if(store.isAnnotation())
-                    return isOverlapping(store);
-                else
-                    return true;
+                return !store.isAnnotation() || isOverlapping(store);
             }
         };
     }

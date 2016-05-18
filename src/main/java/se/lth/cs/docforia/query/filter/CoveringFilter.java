@@ -35,12 +35,8 @@ public class CoveringFilter extends NodeFilter {
     public CoveringFilter(DocumentEngine engine, String type, String variant, int from, int to) {
         this.engine = engine;
         this.type = type;
-        if(variant == null) {
-            this.variant = engine.store().getDefaultNodeVariants().get(type);
-        }
-        else {
-            this.variant = variant;
-        }
+        this.variant = variant;
+
         this.from = from;
         this.to = to;
         this.covering = engine.coveringAnnotation(type, variant, from, to);

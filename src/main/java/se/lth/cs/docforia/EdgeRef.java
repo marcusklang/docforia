@@ -18,5 +18,5 @@ package se.lth.cs.docforia;
 /** Edge reference */
 public interface EdgeRef extends StoreRef {
 	EdgeStore get();
-	LayerRef layer();
+	DocumentEdgeLayer layer();
 }

@@ -19,9 +19,7 @@ package se.lth.cs.docforia;
  * Document node layer representation, suitable for batch insertions
  *
  */
-public interface DocumentNodeLayer extends Iterable<NodeRef> {
-    /** Layer reference instance */
-    LayerRef layer();
+public interface DocumentNodeLayer extends Iterable<NodeRef>, LayerRef {
 
     /** Create a node in this layer */
     NodeRef create();
@@ -31,6 +29,29 @@ public interface DocumentNodeLayer extends Iterable<NodeRef> {
      *  <b>Remarks:</b> This is a low level API with minimal or no checks.
      **/
     NodeRef create(int start, int end);
+
+    /**
+     * Used to change type of an existing layer to something else
+     * <p>
+     * <b>Remarks:</b> Retains any variant if specified
+     * @param newLayer the new raw layer type
+     */
+    default void migrate(String newLayer) {
+        migrate(newLayer, getVariant());
+    }
+
+    /**
+     * Used to change type of an existing layer to something else
+     * <p>
+     * <b>Remarks:</b> Retains any variant if specified
+     * @param newLayer the new raw layer type
+     */
+    void migrate(String newLayer, String variant);
+
+    /**
+     * Remove node, should belong to this layer.
+     */
+    void remove(NodeRef ref);
 
     /** Get the number of stored nodes */
     int size();

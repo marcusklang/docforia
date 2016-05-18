@@ -92,22 +92,21 @@ public abstract class Node<T extends Node<T>>
     /**
      * Set the variant of this node.
      * @param variant the variant name
-     * @param <N> current node
      * @return this representation
      */
 	@SuppressWarnings("unchecked")
-	public <N extends Node> N setVariant(String variant) {
+	public T setVariant(String variant) {
 		if(variant == null)
 			throw new NullPointerException("variant");
 
 		store.setVariant(variant);
-		return (N)this;
+		return (T)this;
 	}
 
 	@SuppressWarnings("unchecked")
-	public <N extends Node> N setVariant(Optional<String> variant) {
+	public T setVariant(Optional<String> variant) {
 		store.setVariant(variant.isPresent() ? variant.get() : null);
-		return (N)this;
+		return (T)this;
 	}
 
     /**
@@ -440,7 +439,7 @@ public abstract class Node<T extends Node<T>>
 				layer.getLayer(),
 				layer.getVariant(),
 				edgeType.getName(),
-				getDocument().getDefaultEdgeVariant(edgeType)))
+				null))
 		{
 			nodes.add((N)doc.representation(nodeRef));
 		}
@@ -490,7 +489,7 @@ public abstract class Node<T extends Node<T>>
 				layer.getLayer(),
 				layer.getVariant(),
 				edgeType.getName(),
-				getDocument().getDefaultEdgeVariant(edgeType)))
+				null))
 		{
 			nodes.add((N) documentRepresentations.get(nodeRef));
 		}
@@ -1157,7 +1156,7 @@ public abstract class Node<T extends Node<T>>
 	}
 
 	public NodeRef getRef() {
-		return store.getRef();
+		return store;
 	}
 
 	@Override
@@ -1264,7 +1263,7 @@ public abstract class Node<T extends Node<T>>
 
     @Override
     public int hashCode() {
-        return store.getRef().hashCode();
+        return store.hashCode();
     }
 
     @Override

@@ -32,10 +32,10 @@ import java.util.Objects;
  * Memory Node Collection
  */
 public class MemoryNodeCollection extends DocumentIterableBase<NodeRef> implements DocumentIterable<NodeRef>, DocumentNodeLayer {
-    protected final MemoryDocumentStore doc;
+    protected final MemoryDocumentStore store;
     protected AnnotationIndex<MemoryNode> annotations = new AnnotationIndex<>();
     protected ReferenceOpenHashSet<MemoryNode> nodes = new ReferenceOpenHashSet<>();
-    protected final Key key;
+    protected Key key;
 
     public static class Key implements Comparable<Key>, LayerRef {
         protected final String layer;
@@ -100,9 +100,24 @@ public class MemoryNodeCollection extends DocumentIterableBase<NodeRef> implemen
         }
     }
 
-    public MemoryNodeCollection(MemoryDocumentStore doc, Key key) {
-        this.doc = doc;
+    public MemoryNodeCollection(MemoryDocumentStore store, Key key) {
+        this.store = store;
         this.key = key;
+    }
+
+    @Override
+    public String getLayer() {
+        return key.layer;
+    }
+
+    @Override
+    public boolean equal(LayerRef ref) {
+        return key.equal(((MemoryNodeCollection)ref).key);
+    }
+
+    @Override
+    public String getVariant() {
+        return key.variant;
     }
 
     public Key getKey() {
@@ -119,11 +134,6 @@ public class MemoryNodeCollection extends DocumentIterableBase<NodeRef> implemen
             return Collections.emptyIterator();
 
         return Iterables.<NodeRef>concat((Iterable)nodes, (Iterable)annotations).iterator();
-    }
-
-    @Override
-    public LayerRef layer() {
-        return key;
     }
 
     public MemoryNode create() {
@@ -153,6 +163,28 @@ public class MemoryNodeCollection extends DocumentIterableBase<NodeRef> implemen
         }
     }
 
+    @Override
+    public void migrate(String newLayer) {
+        migrate(newLayer, key.variant);
+    }
+
+    @Override
+    public void migrate(String newLayer, String variant) {
+        Key oldKey = key;
+        Key newKey = new Key(newLayer, variant);
+
+        store.migrate(oldKey, newKey, this);
+    }
+
+    @Override
+    public void remove(NodeRef ref) {
+        MemoryNode memref = (MemoryNode) ref;
+        if(memref.storage != this)
+            throw new IllegalArgumentException("Node does not belong to this layer!");
+
+        remove(memref);
+    }
+
     public void remove(MemoryNode node) {
         unlink(node);
         node.remove();
@@ -166,6 +198,23 @@ public class MemoryNodeCollection extends DocumentIterableBase<NodeRef> implemen
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MemoryNodeCollection nodeCollection = (MemoryNodeCollection) o;
+
+        return store == nodeCollection.store && key.equal(nodeCollection.key);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = store.hashCode();
+        result = 31 * result + key.hashCode();
+        return result;
+    }
+
     public boolean isEmpty() {
         return nodes.isEmpty() && annotations.isEmpty();
     }
@@ -173,7 +222,7 @@ public class MemoryNodeCollection extends DocumentIterableBase<NodeRef> implemen
     public void variantChanged(MemoryNode node, String variant) {
         if(!variant.equals(key.variant)) {
             unlink(node);
-            doc.getNodeCollection(this.key.layer, variant).add(node);
+            store.getNodeCollection(this.key.layer, variant).add(node);
         }
     }
 

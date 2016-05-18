@@ -16,7 +16,10 @@ package se.lth.cs.docforia.memstore;
  */
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import se.lth.cs.docforia.*;
+import se.lth.cs.docforia.Document;
+import se.lth.cs.docforia.Edge;
+import se.lth.cs.docforia.EdgeStore;
+import se.lth.cs.docforia.NodeRef;
 import se.lth.cs.docforia.data.DataRef;
 
 import java.util.Map;
@@ -24,7 +27,7 @@ import java.util.Map;
 /**
  * Memory Edge
  */
-public class MemoryEdge extends EdgeStore implements EdgeRef {
+public class MemoryEdge extends EdgeStore {
     protected MemoryEdgeCollection storage;
     protected Edge instance;
     protected MemoryNode head;
@@ -37,12 +40,12 @@ public class MemoryEdge extends EdgeStore implements EdgeRef {
 
     @Override
     public Document parent() {
-        return storage.doc.doc;
+        return storage.store.doc;
     }
 
     @Override
-    public LayerRef layer() {
-        return storage.key;
+    public MemoryEdgeCollection layer() {
+        return storage;
     }
 
     @Override
@@ -142,11 +145,6 @@ public class MemoryEdge extends EdgeStore implements EdgeRef {
 
     @Override
     public final EdgeStore get() {
-        return this;
-    }
-
-    @Override
-    public EdgeRef getRef() {
         return this;
     }
 

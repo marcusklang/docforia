@@ -20,7 +20,7 @@ package se.lth.cs.docforia;
  * <p>
  * @see se.lth.cs.docforia.memstore.MemoryNode for a memory based implementation
  **/
-public abstract class NodeStore extends PropertyStore {
+public abstract class NodeStore extends PropertyStore implements NodeRef {
 	public abstract Document parent();
 	public abstract String getLayer();
 	public abstract String getVariant();
@@ -41,6 +41,4 @@ public abstract class NodeStore extends PropertyStore {
 	public void setNoRanges() {
 		setRanges(-1,-1);
 	}
-
-	public abstract NodeRef getRef();
 }

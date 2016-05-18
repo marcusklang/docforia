@@ -20,7 +20,7 @@ package se.lth.cs.docforia;
  * <p>
  * @see se.lth.cs.docforia.memstore.MemoryEdge for a memory based implementation
  **/
-public abstract class EdgeStore extends PropertyStore {
+public abstract class EdgeStore extends PropertyStore implements EdgeRef {
     /** Parent */
     public abstract Document parent();
 
@@ -47,7 +47,4 @@ public abstract class EdgeStore extends PropertyStore {
 
     /** Connect two nodes by this edge */
 	public abstract void connect(NodeRef tail, NodeRef head);
-
-    /** Get the original edge reference */
-	public abstract EdgeRef getRef();
 }

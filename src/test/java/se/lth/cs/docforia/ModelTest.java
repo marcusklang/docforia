@@ -219,9 +219,11 @@ public abstract class ModelTest {
         Document doc = conny.createDocument(documentFactory());
 
         NodeTVar<NamedEntity> NE = NamedEntity.var();
-        Proposition first = doc.select(NE).where(NE, (Function<NamedEntity, Boolean>) in -> {
-            return in.text().equals("Conny Andersson");
-        }).stream().min(orderBy(NE)).orElse(null);
+        Proposition first = doc.select(NE)
+                .where(NE, (Function<NamedEntity, Boolean>) in -> in.text().equals("Conny Andersson"))
+                .stream()
+                .min(orderBy(NE))
+                .orElse(null);
 
         assertNotNull(first);
 
@@ -1778,29 +1780,22 @@ public abstract class ModelTest {
         Conny_Andersson conny = new Conny_Andersson();
         Document doc = conny.createDocument(documentFactory());
 
-        assertNull(doc.getDefaultNodeVariant(NamedEntity.class));
-
         final NodeTVar<NamedEntity> N = NamedEntity.var();
 
         doc.migrateNodeVariants(NamedEntity.class, null, "gold");
         assertFalse(doc.select(N).compile().any());
 
-        doc.setDefaultNodeVariant(NamedEntity.class, "test");
-        assertEquals("test", doc.getDefaultNodeVariant(NamedEntity.class));
+        doc.add(new NamedEntity(), "test").setLabel("person").setRange(47, 62);
 
-        doc.add(new NamedEntity()).setLabel("person").setRange(47, 62);
+        NodeTVar<NamedEntity> N_Test = NamedEntity.var("test");
 
-        List<NamedEntity> results = doc.select(N).stream().map(in -> in.get(N)).collect(Collectors.toList());
+        List<NamedEntity> results = doc.select(N_Test).stream().map(toNode(N_Test)).collect(Collectors.toList());
 
         assertEquals(1, results.size());
         assertEquals("test", results.get(0).getVariant().get());
         assertEquals("person", results.get(0).getLabel());
 
-        doc.setDefaultNodeVariant(NamedEntity.class, null);
-
-        NodeTVar<NamedEntity> N_Test = NamedEntity.var("test");
         NodeTVar<NamedEntity> N_Gold = NamedEntity.var("gold");
-
         NamedEntity ne = doc.select(N_Test)
                             .where(N_Test).coveredBy(N_Gold)
                             .stream()

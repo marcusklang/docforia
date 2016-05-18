@@ -25,7 +25,7 @@ public interface NodeRef extends StoreRef, Range {
 	/**
 	 * Layer this node belongs to.
      */
-	LayerRef layer();
+	DocumentNodeLayer layer();
 
 	@Override
 	default int length() {

@@ -42,16 +42,6 @@ public class MemoryDocumentEngine extends DocumentEngine {
     }
 
     @Override
-    public LayerRef edgeLayer(String edgeType, String edgeVariant) {
-        return store.getEdgeLayerRef(edgeType, edgeVariant);
-    }
-
-    @Override
-    public LayerRef nodeLayer(String nodeLayer, String nodeVariant) {
-        return store.getNodeLayerRef(nodeLayer, nodeVariant);
-    }
-
-    @Override
     public DocumentIterable<EdgeRef> edges(boolean onlyDefaultVariant) {
         return onlyDefaultVariant ? DocumentIterables.wrap(store.edges()) : edges();
     }
@@ -60,7 +50,7 @@ public class MemoryDocumentEngine extends DocumentEngine {
     @Override
     public DocumentIterable<EdgeRef> edges(final String edgeLayer, boolean onlyDefaultVariant) {
         if(onlyDefaultVariant)
-            return edges(edgeLayer, store.defaultEdgeVariant.get(edgeLayer));
+            return edges(edgeLayer, null);
         else {
             final MemoryNodeCollection.Key key = new MemoryNodeCollection.Key(edgeLayer, null);
 
@@ -75,7 +65,7 @@ public class MemoryDocumentEngine extends DocumentEngine {
 
     @Override
     public DocumentIterable<EdgeRef> edges(final String edgeLayer, final String edgeVariant) {
-        final MemoryEdgeCollection.Key key = new MemoryEdgeCollection.Key(edgeLayer, store.defaultEdgeVariant.get(edgeVariant));
+        final MemoryEdgeCollection.Key key = new MemoryEdgeCollection.Key(edgeLayer, edgeVariant);
         return new DocumentIterableBase<EdgeRef>() {
             @Override
             public Iterator<EdgeRef> iterator() {
@@ -109,7 +99,7 @@ public class MemoryDocumentEngine extends DocumentEngine {
         return new DocumentIterableBase<NodeRef>() {
             @Override
             public Iterator<NodeRef> iterator() {
-                MemoryNodeCollection nodeRefs = store.nodes.get(new MemoryNodeCollection.Key(nodeLayer, store.defaultNodeVariant.get(nodeLayer)));
+                MemoryNodeCollection nodeRefs = store.nodes.get(new MemoryNodeCollection.Key(nodeLayer, null));
                 if(nodeRefs == null)
                     return Collections.emptyIterator();
                 else

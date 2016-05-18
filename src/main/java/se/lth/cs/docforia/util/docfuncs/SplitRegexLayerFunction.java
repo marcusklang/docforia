@@ -17,8 +17,8 @@ package se.lth.cs.docforia.util.docfuncs;
 
 import se.lth.cs.docforia.Document;
 import se.lth.cs.docforia.DocumentFunction;
+import se.lth.cs.docforia.DocumentNodeLayer;
 import se.lth.cs.docforia.Node;
-import se.lth.cs.docforia.NodeStore;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,20 +43,19 @@ public class SplitRegexLayerFunction implements DocumentFunction {
     @Override
     public void apply(Document doc) {
         Matcher matcher = pattern.matcher(doc.getText());
+        DocumentNodeLayer nodeLayer = doc.store().nodeLayer(layer);
+
         int last = 0;
         while(matcher.find()) {
             int start = last;
             int end = matcher.start();
 
-            NodeStore nodeStore = doc.store().createNode(layer).get();
-            nodeStore.setRanges(start,end);
-
+            nodeLayer.create(start,end);
             last = matcher.end();
         }
 
         if(last != doc.getText().length()) {
-            NodeStore nodeStore = doc.store().createNode(layer).get();
-            nodeStore.setRanges(last,doc.getText().length());
+            nodeLayer.create(last,doc.getText().length());
         }
     }
 }

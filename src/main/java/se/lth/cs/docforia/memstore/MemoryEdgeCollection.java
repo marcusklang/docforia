@@ -30,9 +30,9 @@ import java.util.Objects;
  * Memory Edge Collection
  */
 public class MemoryEdgeCollection extends DocumentIterableBase<EdgeRef> implements DocumentIterable<EdgeRef>, DocumentEdgeLayer {
-    public final MemoryDocumentStore doc;
-    public final Key key;
+    public final MemoryDocumentStore store;
     public final ReferenceLinkedOpenHashSet<MemoryEdge> edges = new ReferenceLinkedOpenHashSet<>();
+    public Key key;
 
     public static class Key implements Comparable<Key>, LayerRef {
         public final String layer;
@@ -99,23 +99,47 @@ public class MemoryEdgeCollection extends DocumentIterableBase<EdgeRef> implemen
         }
     }
 
+    @Override
+    public void migrate(String newLayer) {
+        migrate(newLayer, key.variant);
+    }
+
+    @Override
+    public void migrate(String newLayer, String variant) {
+        Key oldKey = key;
+        Key newKey = new Key(newLayer, variant);
+        store.migrate(oldKey, newKey, this);
+        this.key = newKey;
+    }
+
+    @Override
+    public String getLayer() {
+        return key.layer;
+    }
+
+    @Override
+    public String getVariant() {
+        return key.variant;
+    }
+
+    @Override
+    public boolean equal(LayerRef ref) {
+        return ref == this || ((ref instanceof MemoryEdgeCollection.Key) && ref.equal(this.key));
+    }
+
     public Key getKey() {
         return key;
     }
 
-    public MemoryEdgeCollection(MemoryDocumentStore doc, Key key) {
-        this.doc = doc;
+    public MemoryEdgeCollection(MemoryDocumentStore store, Key key) {
+        this.store = store;
         this.key = key;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Iterator<EdgeRef> iterator() {
-        return (Iterator<EdgeRef>)((Iterable<? extends EdgeRef>)edges).iterator(); //Performance reason!
-    }
-
-    @Override
-    public LayerRef layer() {
-        return key;
+        return ((Iterable)edges).iterator(); //MemoryEdges are EdgeRef
     }
 
     @Override
@@ -141,6 +165,16 @@ public class MemoryEdgeCollection extends DocumentIterableBase<EdgeRef> implemen
         return edges.size();
     }
 
+    @Override
+    public void remove(EdgeRef ref) {
+        MemoryEdge memref = (MemoryEdge)ref;
+        if(memref.storage != this)
+            throw new IllegalArgumentException("This edge does not belong to this layer!");
+
+        remove(memref);
+    }
+
+
     public void remove(MemoryEdge edge) {
         edges.remove(edge);
         MemoryNode head = (MemoryNode) edge.getHead();
@@ -161,9 +195,9 @@ public class MemoryEdgeCollection extends DocumentIterableBase<EdgeRef> implemen
     public void variantChanged(MemoryEdge edge, String variant) {
         if(!variant.equals(this.key.variant)) {
             remove(edge);
-            doc.getEdgeCollection(key.layer, variant).add(edge);
+            store.getEdgeCollection(key.layer, variant).add(edge);
             if(isEmpty()) {
-                doc.edges.remove(this.key);
+                store.edges.remove(this.key);
             }
         }
     }

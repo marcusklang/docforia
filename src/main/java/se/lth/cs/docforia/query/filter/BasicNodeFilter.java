@@ -31,12 +31,7 @@ public class BasicNodeFilter extends NodeFilter {
     public BasicNodeFilter(DocumentEngine engine, String type, String variant) {
         this.engine = engine;
         this.type = type;
-        if(variant == null) {
-            this.variant = engine.store().getDefaultNodeVariants().get(type);
-        }
-        else {
-            this.variant = variant;
-        }
+        this.variant = variant;
     }
 
     @Override

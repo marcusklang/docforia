@@ -36,21 +36,6 @@ public abstract class DocumentEngine {
 	public abstract DocumentStore store();
 
 	/**
-	 * Get edge layer using default layer
-	 * @param edgeType the layer name
-	 */
-	public LayerRef edgeLayer(String edgeType) {
-		return edgeLayer(edgeType, this.store().getDefaultEdgeVariants().get(edgeType));
-	}
-
-	/**
-	 * Get edge layer
-	 * @param edgeType the layer name
-	 * @param edgeVariant the variant
-	 */
-	public abstract LayerRef edgeLayer(String edgeType, String edgeVariant);
-
-	/**
 	 * Get an iterable of all edges of default variant type
 	 * @return iterable of edges
 	 */
@@ -85,13 +70,10 @@ public abstract class DocumentEngine {
 		final DocumentIterable<EdgeRef> edgeIterable = edges();
 		if(onlyDefaultVariant)
 			return new FilteredDocumentIterable<EdgeRef>(edgeIterable) {
-				final Map<String, String> variantFilter = store().getDefaultEdgeVariants();
-				
 				@Override
 				protected boolean accept(EdgeRef current) {
 					String currentVariant = current.get().getVariant();
-					String defaultVariant = variantFilter.get(current.get().getLayer());
-					return Objects.equals(currentVariant,defaultVariant);
+					return Objects.equals(currentVariant, null);
 				}
 				
 				@Override
@@ -185,7 +167,7 @@ public abstract class DocumentEngine {
 	 * @return iterable of the edges matching the given criteria
 	 */
 	public DocumentIterable<EdgeRef> edges(NodeRef start, String layer, Direction dir) {
-		return edges(start, layer, store().getDefaultEdgeVariants().get(layer), dir);
+		return edges(start, layer, null, dir);
 	}
 
 	/**
@@ -197,7 +179,7 @@ public abstract class DocumentEngine {
 	 * @return iterable of the edges matching the given criteria
 	 */
 	public DocumentIterable<EdgeRef> edges(NodeRef start, final String layer, final String variant, Direction dir) {
-        final LayerRef edgeLayerRef = store().getEdgeLayerRef(layer, variant);
+        final LayerRef edgeLayerRef = store().edgeLayer(layer, variant);
 
         return new FilteredDocumentIterable<EdgeRef>(edges(start, dir)) {
 			
@@ -291,7 +273,7 @@ public abstract class DocumentEngine {
         ReferenceOpenHashSet<NodeRef> visited = new ReferenceOpenHashSet<>();
         ArrayDeque<Iterator<EdgeRef>> s = new ArrayDeque<>();
 
-        LayerRef edgeLayerRef = store().getEdgeLayerRef(edgeLayer, edgeVariant);
+        LayerRef edgeLayerRef = store().edgeLayer(edgeLayer, edgeVariant);
 
         if(includeStart)
             nodeRefs.add(start);
@@ -331,7 +313,7 @@ public abstract class DocumentEngine {
         ReferenceOpenHashSet<NodeRef> visited = new ReferenceOpenHashSet<>();
         ArrayDeque<Iterator<EdgeRef>> s = new ArrayDeque<>();
 
-        LayerRef edgeLayerRef = store().getEdgeLayerRef(edgeLayer, edgeVariant);
+        LayerRef edgeLayerRef = store().edgeLayer(edgeLayer, edgeVariant);
 
         if(includeStart)
             nodeRefs.add(start);
@@ -357,22 +339,6 @@ public abstract class DocumentEngine {
     }
 
 	/**
-	 * Get node layer using default layer
-	 * @param nodeLayer the layer name
-	 * @return
-	 */
-	public LayerRef nodeLayer(String nodeLayer) {
-		return edgeLayer(nodeLayer, this.store().getDefaultNodeVariants().get(nodeLayer));
-	}
-
-	/**
-	 * Get node layer
-	 * @param nodeLayer the layer name
-	 * @param nodeVariant the variant
-	 */
-	public abstract LayerRef nodeLayer(String nodeLayer, String nodeVariant);
-
-	/**
 	 * Get an iterable of all nodes
 	 * @return iterable of all nodes
 	 */
@@ -387,7 +353,7 @@ public abstract class DocumentEngine {
 	 * @return iterable of node with matching layer name
 	 */
 	public DocumentIterable<NodeRef> nodes(final String nodeLayer) {
-		return nodes(nodeLayer, store().getDefaultNodeVariants().get(nodeLayer));
+		return nodes(nodeLayer, null);
 	}
 	
 	private boolean stringEqual(final String a, final String b) {
@@ -528,7 +494,7 @@ public abstract class DocumentEngine {
 	 * @return iterable of all nodes covered by range (from, to)
 	 */
 	public final DocumentIterable<NodeRef> coveredAnnotation(final String nodeLayer, final int from, final int to) {
-		return coveredAnnotation(nodeLayer, store().getDefaultNodeVariants().get(nodeLayer), from, to);
+		return coveredAnnotation(nodeLayer, null, from, to);
 	}
 
 	/**
@@ -617,7 +583,7 @@ public abstract class DocumentEngine {
 	 * @param nodeLayer raw layer name
 	 */
 	public final void removeAllNodes(String nodeLayer)  {
-		removeAllNodes(nodeLayer,store().getDefaultNodeVariants().get(nodeLayer));
+		removeAllNodes(nodeLayer, null);
 	}
 
 	/**
@@ -648,7 +614,7 @@ public abstract class DocumentEngine {
 	 * @param edgeType raw layer name
 	 */
 	public final void removeAllEdges(String edgeType)  {
-		removeAllEdges(edgeType, store().getDefaultEdgeVariants().get(edgeType));
+		removeAllEdges(edgeType, null);
 	}
 
 	/**

@@ -316,12 +316,12 @@ public abstract class Edge<T extends Edge<T>> implements Iterable<Map.Entry<Stri
 	}
 
 	public T connect(Node tail, Node head) {
-		store.connect(tail.store.getRef(), head.store.getRef());
+		store.connect(tail.store, head.store);
 		return (T)this;
 	}
 
 	public EdgeRef getRef() {
-		return store.getRef();
+		return store;
 	}
 
 	public String getLayer() {
@@ -395,6 +395,6 @@ public abstract class Edge<T extends Edge<T>> implements Iterable<Map.Entry<Stri
 
     @Override
     public int hashCode() {
-        return store.getRef().hashCode();
+        return store.hashCode();
     }
 }

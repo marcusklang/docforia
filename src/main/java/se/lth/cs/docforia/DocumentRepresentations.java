@@ -276,7 +276,7 @@ public class DocumentRepresentations {
 
     protected Node importNode(Node node) {
 		NodeStore store = importExistingNode(node);
-		return this.get(store.getRef());
+		return this.get(store);
 	}
 	
 	/**
@@ -286,7 +286,7 @@ public class DocumentRepresentations {
 	 */
 	protected Node importNode(Node node, int start, int end) {
 		NodeStore store = importExistingNode(node, start, end);
-		return this.get(store.getRef());
+		return this.get(store);
 	}
 	
 	private static ConcurrentHashMap<String, NodeFactory> nodeFactories = new ConcurrentHashMap<String, NodeFactory>();

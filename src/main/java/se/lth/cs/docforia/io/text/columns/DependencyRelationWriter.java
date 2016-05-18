@@ -59,7 +59,7 @@ public class DependencyRelationWriter implements ColumnWriter {
             for (TextToken token : sentence) {
                 NodeStore tok = token.token();
 
-                Iterator<EdgeRef> edges = engine.edges(tok.getRef(), dependencyLayer.layer(), Direction.OUT).iterator();
+                Iterator<EdgeRef> edges = engine.edges(tok, dependencyLayer, Direction.OUT).iterator();
                 boolean found = edges.hasNext();
                 if(found) {
                     EdgeRef edgeRef = edges.next();

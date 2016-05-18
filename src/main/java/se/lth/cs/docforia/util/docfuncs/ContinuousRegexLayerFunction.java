@@ -17,8 +17,8 @@ package se.lth.cs.docforia.util.docfuncs;
 
 import se.lth.cs.docforia.Document;
 import se.lth.cs.docforia.DocumentFunction;
+import se.lth.cs.docforia.DocumentNodeLayer;
 import se.lth.cs.docforia.Node;
-import se.lth.cs.docforia.NodeStore;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,13 +43,13 @@ public class ContinuousRegexLayerFunction implements DocumentFunction {
 
     @Override
     public void apply(Document doc) {
+        DocumentNodeLayer nodeLayer = doc.store().nodeLayer(layer);
         Matcher matcher = pattern.matcher(doc.getText());
         while(matcher.find()) {
             int start = matcher.start();
             int end = matcher.end();
 
-            NodeStore nodeStore = doc.store().createNode(layer).get();
-            nodeStore.setRanges(start,end);
+            nodeLayer.create(start,end);
         }
     }
 }

@@ -17,7 +17,9 @@ package se.lth.cs.docforia.memstore;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
-import se.lth.cs.docforia.*;
+import se.lth.cs.docforia.Document;
+import se.lth.cs.docforia.Node;
+import se.lth.cs.docforia.NodeStore;
 import se.lth.cs.docforia.data.DataRef;
 import se.lth.cs.docforia.data.StringRef;
 import se.lth.cs.docforia.util.AnnotationIndex;
@@ -27,7 +29,7 @@ import java.util.Map;
 /**
  * Memory Node
  */
-public class MemoryNode extends NodeStore implements NodeRef {
+public class MemoryNode extends NodeStore {
     protected MemoryNodeCollection storage;
     protected Node instance;
     protected Object2ObjectOpenHashMap<String,DataRef> properties = new Object2ObjectOpenHashMap<>();
@@ -44,12 +46,12 @@ public class MemoryNode extends NodeStore implements NodeRef {
 
     @Override
     public Document parent() {
-        return storage.doc.doc;
+        return storage.store.doc;
     }
 
     @Override
-    public LayerRef layer() {
-        return storage.key;
+    public MemoryNodeCollection layer() {
+        return storage;
     }
 
     @Override
@@ -91,11 +93,6 @@ public class MemoryNode extends NodeStore implements NodeRef {
     @Override
     public void setRanges(int start, int end) {
         storage.rangeChanged(this, start, end);
-    }
-
-    @Override
-    public NodeRef getRef() {
-        return this;
     }
 
     @Override
@@ -159,7 +156,7 @@ public class MemoryNode extends NodeStore implements NodeRef {
     public String toString() {
         String header = layer().getLayer() + (layer().getVariant() != null ? ", " + layer().getVariant() : "");
         if(isAnnotation()) {
-            return header + " : Annotation {" + storage.doc.getText().substring(start,end) + "}";
+            return header + " : Annotation {" + storage.store.getText().substring(start,end) + "}";
         } else {
             StringBuilder sb = new StringBuilder();
             sb.append(header).append(" : Node ");

@@ -54,7 +54,7 @@ public class DocumentTransaction implements DocumentProxy {
     protected Reference2ObjectOpenHashMap<NodeRef,Node> nodes = new Reference2ObjectOpenHashMap<>();
     protected Reference2ObjectOpenHashMap<EdgeRef,Edge> edges = new Reference2ObjectOpenHashMap<>();
 
-    private static class WrappedNodeStore extends NodeStore implements NodeRef, TransactionNodeStore {
+    private static class WrappedNodeStore extends NodeStore implements TransactionNodeStore {
         private DocumentTransaction parent;
         private Node instance;
         private NodeStore internal;
@@ -86,7 +86,7 @@ public class DocumentTransaction implements DocumentProxy {
             if(internal instanceof TransactionNodeStore)
                 return ((TransactionNodeStore) internal).real();
             else
-                return internal.getRef();
+                return internal;
         }
 
         @Override
@@ -129,8 +129,8 @@ public class DocumentTransaction implements DocumentProxy {
         }
 
         @Override
-        public LayerRef layer() {
-            return parent.getLayerRef(getLayer(), getVariant());
+        public DocumentNodeLayer layer() {
+            throw new UnsupportedOperationException("Not yet implemented.");
         }
 
         @Override
@@ -158,12 +158,6 @@ public class DocumentTransaction implements DocumentProxy {
         public boolean isAnnotation() {
             return modifiedRange ? !pureNode : internal.isAnnotation();
         }
-
-        @Override
-        public NodeRef getRef() {
-            return this;
-        }
-
 
         @Override
         public void putProperty(String key, DataRef value) {
@@ -274,7 +268,7 @@ public class DocumentTransaction implements DocumentProxy {
             if(internal instanceof TransactionEdgeStore)
                 return ((TransactionEdgeStore) internal).real();
             else
-                return internal.getRef();
+                return internal;
         }
 
         @Override
@@ -332,8 +326,8 @@ public class DocumentTransaction implements DocumentProxy {
         }
 
         @Override
-        public LayerRef layer() {
-            return parent.getLayerRef(getLayer(),getVariant());
+        public DocumentEdgeLayer layer() {
+            throw new UnsupportedOperationException("Not yet implemented.");
         }
 
         @Override
@@ -350,11 +344,6 @@ public class DocumentTransaction implements DocumentProxy {
         public void setVariant(String variant) {
             this.modifiedVariant = true;
             this.variant = variant;
-        }
-
-        @Override
-        public EdgeRef getRef() {
-            return this;
         }
 
         @Override
@@ -517,8 +506,8 @@ public class DocumentTransaction implements DocumentProxy {
         }
 
         @Override
-        public LayerRef layer() {
-            return layer;
+        public DocumentNodeLayer layer() {
+            throw new UnsupportedOperationException("Not yet implemented.");
         }
 
         @Override
@@ -551,11 +540,6 @@ public class DocumentTransaction implements DocumentProxy {
         public void setRanges(int start, int end) {
             this.start = start;
             this.end = end;
-        }
-
-        @Override
-        public NodeRef getRef() {
-            return this;
         }
 
         @Override
@@ -629,8 +613,8 @@ public class DocumentTransaction implements DocumentProxy {
         }
 
         @Override
-        public LayerRef layer() {
-            return layer;
+        public DocumentEdgeLayer layer() {
+            throw new UnsupportedOperationException("Not yet implemented.");
         }
 
         @Override
@@ -677,11 +661,6 @@ public class DocumentTransaction implements DocumentProxy {
         public void connect(NodeRef tail, NodeRef head) {
             this.head = head;
             this.tail = tail;
-        }
-
-        @Override
-        public EdgeRef getRef() {
-            return this;
         }
 
         @Override
@@ -829,7 +808,7 @@ public class DocumentTransaction implements DocumentProxy {
     public <N extends Node> N get(N node) {
         if(node.doc != this)
         {
-            return (N)representation(node.store.getRef());
+            return (N)representation(node.store);
         }
         else
             return node;
@@ -839,7 +818,7 @@ public class DocumentTransaction implements DocumentProxy {
     public <E extends Edge> E get(E edge) {
         if(edge.doc != this)
         {
-            return (E)representation(edge.store.getRef());
+            return (E)representation(edge.store);
         }
         else
             return edge;
@@ -858,7 +837,7 @@ public class DocumentTransaction implements DocumentProxy {
         repr.doc = this;
         repr.store = new WrappedNodeStore(this, repr, ref.get());
         nodes.put(ref, repr);
-        nodes.put(repr.store.getRef(), repr);
+        nodes.put(repr.store, repr);
         return repr;
     }
 
@@ -875,15 +854,15 @@ public class DocumentTransaction implements DocumentProxy {
         repr.doc = this;
         repr.store = new WrappedEdgeStore(this, repr, ref.get());
         edges.put(ref, repr);
-        edges.put(repr.store.getRef(), repr);
+        edges.put(repr.store, repr);
         return repr;
     }
 
     public void remove(Node node) {
         if(node.getRef() instanceof WrappedNodeStore && node.doc == this) {
-            removedNodes.add(((WrappedNodeStore)node.getRef()).internal.getRef());
+            removedNodes.add(((WrappedNodeStore)node.getRef()).internal);
             nodes.remove(node.getRef());
-            nodes.remove(node.store.getRef());
+            nodes.remove(node.store);
         } else if(node.getRef() instanceof TransNodeStore && node.doc == this) {
             removedNodes.add(node.getRef());
             addedNodes.remove(node.getRef());
@@ -895,7 +874,7 @@ public class DocumentTransaction implements DocumentProxy {
 
     public void remove(Edge edge) {
         if(edge.getRef() instanceof WrappedEdgeStore && edge.doc == this) {
-            removedEdges.add(((WrappedEdgeStore)edge.getRef()).internal.getRef());
+            removedEdges.add(((WrappedEdgeStore)edge.getRef()).internal);
             edges.remove(edge.getRef());
         } else if(edge.getRef() instanceof TransEdgeStore && edge.doc == this) {
             removedEdges.add(edge.getRef());

@@ -232,17 +232,14 @@ public class ParseTreeWriter implements ColumnWriter {
         DocumentEdgeLayer parseTreeEdges = document.store().edgeLayer(Document.edgeLayer(ParseTreeEdge.class), null);
         DocumentNodeLayer parseNodeLayer = document.store().nodeLayer(Document.nodeLayer(ParseTreeNode.class), null);
         DocumentNodeLayer tokenLayer = document.store().nodeLayer(Document.nodeLayer(Token.class), null);
-        LayerRef parseEdgeLayerRef = parseTreeEdges.layer();
-        LayerRef parseNodeLayerRef = parseNodeLayer.layer();
-        LayerRef tokenLayerRef = tokenLayer.layer();
 
         for (int k = 0; k < sentences.size(); k++) {
             TextSentence sentence = sentences.get(k);
-            NodeRef topLevel = findTopLevel(engine, sentence, k, parseEdgeLayerRef, parseNodeLayerRef);
+            NodeRef topLevel = findTopLevel(engine, sentence, k, parseTreeEdges, parseNodeLayer);
             Reference2ObjectOpenHashMap<NodeRef, State> minMax
-                    = buildMinMaxMap(engine, sentence, parseEdgeLayerRef, parseNodeLayerRef, tokenLayerRef, topLevel);
+                    = buildMinMaxMap(engine, sentence, parseTreeEdges, parseNodeLayer, tokenLayer, topLevel);
 
-            bfsInsertion(engine, topLevel, sentence, minMax, parseEdgeLayerRef, parseNodeLayerRef, ParseTreeNode.PROPERTY_LABEL);
+            bfsInsertion(engine, topLevel, sentence, minMax, parseTreeEdges, parseNodeLayer, ParseTreeNode.PROPERTY_LABEL);
         }
     }
 }

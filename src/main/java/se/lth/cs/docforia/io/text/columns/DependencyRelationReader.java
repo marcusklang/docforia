@@ -58,8 +58,8 @@ public class DependencyRelationReader implements ColumnReader {
 
                 int idxhead = Integer.parseInt(head);
                 if(idxhead != 0) {
-                    NodeRef headref = sentence.get(idxhead-1).token().getRef();
-                    NodeRef tailref = token.token().getRef();
+                    NodeRef headref = sentence.get(idxhead-1).token();
+                    NodeRef tailref = token.token();
                     if(label != null) {
                         deplayer.create(tailref, headref).get().putProperty(DependencyRelation.RELATION_PROPERTY, label);
                     } else {

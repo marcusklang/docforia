@@ -73,7 +73,7 @@ public class EdgeClause {
 
     public WhereClause fromTo(final NodeVar headOrTail) {
         parent.parent.select(headOrTail);
-        final LayerRef layerRef = this.parent.root().doc.engine().nodeLayer(headOrTail.getLayer(), headOrTail.getVariant());
+        final LayerRef layerRef = this.parent.root().doc.store().nodeLayer(headOrTail.getLayer(), headOrTail.getVariant());
 
         parent.where(edgeVar, in -> layerRef.equal(in.getHead().getRef().layer()) || layerRef.equal(in.getTail().getRef().layer()));
 

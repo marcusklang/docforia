@@ -18,7 +18,11 @@ package se.lth.cs.docforia;
 import se.lth.cs.docforia.data.DataRef;
 import se.lth.cs.docforia.util.Iterables;
 
-import java.util.*;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
@@ -71,21 +75,7 @@ public abstract class DocumentStore extends PropertyStore {
      * @return Iterable of outbound edges
      */
 	public abstract Iterable<EdgeRef> outboundEdges(NodeRef node);
-	
-	public Map<String,String> getDefaultEdgeVariants() { return Collections.emptyMap(); }
-	public Map<String,String> getDefaultNodeVariants() { return Collections.emptyMap(); }
-	
-	public void setDefaultNodeVariant(Map<String,String> defaultVariants)
-	{
-		for(Map.Entry<String, String> entry : defaultVariants.entrySet())
-			setDefaultNodeVariant(entry.getKey(), entry.getValue());
-	}
-	
-	public void setDefaultEdgeVariant(Map<String,String> defaultVariants)
-	{
-		for(Map.Entry<String, String> entry : defaultVariants.entrySet())
-			setDefaultEdgeVariant(entry.getKey(), entry.getValue());
-	}
+
 
 	protected void markNodeAsRemoved(Node node) {
 		node.store = null;
@@ -94,12 +84,10 @@ public abstract class DocumentStore extends PropertyStore {
 		edge.store = null;
 	}
 
-	public void setDefaultNodeVariant(String nodeLayer, String variant) { throw new UnsupportedOperationException(); }
-	public void setDefaultEdgeVariant(String edgeLayer, String variant) { throw new UnsupportedOperationException(); }
-	
 	public void migrateNodesToVariant(String nodeLayer, String prevVariant, String newVariant) { throw new UnsupportedOperationException(); }
 	public void migrateEdgesToVariant(String edgeLayer, String prevVariant, String newVariant) { throw new UnsupportedOperationException(); }
 
+/*
 	protected static class NodeLayerRef implements LayerRef {
 		private String nodeLayer;
 		private String variant;
@@ -204,28 +192,52 @@ public abstract class DocumentStore extends PropertyStore {
 	public LayerRef getEdgeLayerRef(final String edgeLayer, final String variant) {
 		return new EdgeLayerRef(edgeLayer, variant);
 	}
+	*/
 
 	public abstract void remove(NodeRef nodeId);
 	public abstract void remove(EdgeRef edgeId);
-	
+
+    public void remove(DocumentNodeLayer layer) {
+        List<NodeRef> nodes = StreamSupport.stream(layer.spliterator(), false).collect(Collectors.toList());
+        nodes.forEach(this::remove);
+    }
+
+    public void remove(DocumentEdgeLayer layer) {
+        List<EdgeRef> edges = StreamSupport.stream(layer.spliterator(), false).collect(Collectors.toList());
+        edges.forEach(this::remove);
+    }
+
 	public abstract EdgeRef getEdge(String uniqueRef);
 	public abstract NodeRef getNode(String uniqueRef);
 
 	public abstract String getText();
 	public abstract void setText(String text);
 
-	//TODO: Remove all variant metadata stuff.
-	public abstract String getVariantMetadata(String variant, String key);
-	public abstract boolean hasVariantMetadata(String variant, String key);
-	public abstract void putVariantMetadata(String variant, String key, String value);
-	public abstract void removeVariantMetadata(String variant);
-	public abstract void removeVariantMetadata(String variant, String key);
-
-	public abstract Iterable<Map.Entry<String,String>> variantMetadata(String variant);
-	public abstract Iterable<String> variantsWithMetadata();
-
+    /**
+     * Creates an edge.
+     * <p>
+     * <b>Remarks:</b>
+     * When creating many edges use: {@link #edgeLayer(String)} and then {@link DocumentEdgeLayer#create()}
+     * or {@link DocumentEdgeLayer#create(NodeRef, NodeRef)}
+     */
 	public abstract EdgeRef createEdge(String edgeLayer);
+
+    /**
+     * Creates a node.
+     * <p>
+     * <b>Remarks:</b>
+     * When creating many nodes use: {@link #nodeLayer(String)} and then {@link DocumentNodeLayer#create()}}
+     * or {@link DocumentNodeLayer#create(int, int)}
+     */
 	public abstract NodeRef createNode(String nodeLayer);
+
+    /**
+     * Get node layer
+     * @param nodeLayer the node layer
+     */
+    public DocumentNodeLayer nodeLayer(String nodeLayer) {
+        return nodeLayer(nodeLayer);
+    }
 
     /**
      * Get a node layer representation for faster creation of nodes
@@ -234,21 +246,75 @@ public abstract class DocumentStore extends PropertyStore {
      */
     public DocumentNodeLayer nodeLayer(String nodeLayer, String nodeVariant) {
         return new DocumentNodeLayer() {
+            private String realNodeLayer = nodeLayer;
+            private String realNodeVariant = nodeVariant;
+
             @Override
-            public LayerRef layer() {
-                return getNodeLayerRef(nodeLayer, nodeVariant);
+            public String getLayer() {
+                return realNodeLayer;
+            }
+
+            @Override
+            public String getVariant() {
+                return realNodeVariant;
             }
 
             @Override
             public NodeRef create() {
-                return DocumentStore.this.createNode(nodeLayer, nodeVariant);
+                return DocumentStore.this.createNode(realNodeLayer, realNodeVariant);
             }
 
             @Override
             public NodeRef create(int start, int end) {
-                NodeRef node = DocumentStore.this.createNode(nodeLayer, nodeVariant);
+                NodeRef node = DocumentStore.this.createNode(realNodeLayer, realNodeVariant);
                 node.get().setRanges(start, end);
                 return node;
+            }
+
+            @Override
+            public void migrate(String newLayer) {
+                migrate(newLayer, realNodeVariant);
+            }
+
+            @Override
+            public void migrate(String newLayer, String variant) {
+                DocumentNodeLayer newNodeLayer = nodeLayer(newLayer, variant);
+                for (NodeRef nodeRef : this) {
+                    NodeStore nodeStore = nodeRef.get();
+                    NodeStore newNodeStore;
+                    if(nodeStore.isAnnotation()) {
+                        newNodeStore = newNodeLayer.create(nodeStore.getStart(), nodeStore.getEnd()).get();
+                    } else {
+                        newNodeStore = newNodeLayer.create().get();
+                    }
+
+                    for (Map.Entry<String, DataRef> entry : nodeStore.properties()) {
+                        newNodeStore.putProperty(entry.getKey(), entry.getValue());
+                    }
+
+                    DocumentEngine engine = getDocument().engine();
+                    for (EdgeRef inbound : engine.edges(nodeStore, Direction.IN)) {
+                        inbound.get().connect(inbound.get().getTail(), newNodeStore);
+                    }
+
+                    for (EdgeRef outbound : engine.edges(nodeStore, Direction.OUT)) {
+                        outbound.get().connect(newNodeStore, outbound.get().getHead());
+                    }
+                }
+
+                DocumentStore.this.remove(this);
+
+                this.realNodeLayer = newLayer;
+                this.realNodeVariant = variant;
+            }
+
+            @Override
+            public void remove(NodeRef ref) {
+                if(!ref.layer().equal(this)) {
+                    throw new IllegalArgumentException("The given node does not belong to this layer!");
+                }
+
+                DocumentStore.this.remove(ref);
             }
 
             @Override
@@ -258,33 +324,86 @@ public abstract class DocumentStore extends PropertyStore {
 
             @Override
             public Iterator<NodeRef> iterator() {
-                return getDocument().engine().nodes(nodeLayer, nodeVariant).iterator();
+                return getDocument().engine().nodes(realNodeLayer, realNodeVariant).iterator();
             }
         };
     }
 
     /**
-     * Get a edge layer representation for faster creation of nodes
-     * @param edgeLayer   node layer type
-     * @param edgeVariant node variant
+     * Get low-level access to the edge layer
+     * @param edgeLayer edge layer type
+     */
+    public DocumentEdgeLayer edgeLayer(String edgeLayer) {
+        return edgeLayer(edgeLayer, null);
+    }
+
+    /**
+     * Get low-level access to the edge layer
+     * @param edgeLayer   edge layer type
+     * @param edgeVariant edge variant
      */
     public DocumentEdgeLayer edgeLayer(String edgeLayer, String edgeVariant) {
+        //This is a slow default implementation, that should be overridden for optimal performance
         return new DocumentEdgeLayer() {
+            private String realEdgeLayer = edgeLayer;
+            private String realEdgeVariant = edgeVariant;
+
             @Override
-            public LayerRef layer() {
-                return getEdgeLayerRef(edgeLayer, edgeVariant);
+            public String getLayer() {
+                return realEdgeLayer;
+            }
+
+            @Override
+            public String getVariant() {
+                return realEdgeVariant;
             }
 
             @Override
             public EdgeRef create() {
-                return DocumentStore.this.createEdge(edgeLayer, edgeVariant);
+                return DocumentStore.this.createEdge(realEdgeLayer, realEdgeVariant);
             }
 
             @Override
             public EdgeRef create(NodeRef tail, NodeRef head) {
-                EdgeRef e = DocumentStore.this.createEdge(edgeLayer, edgeVariant);
+                EdgeRef e = DocumentStore.this.createEdge(realEdgeLayer, realEdgeVariant);
                 e.get().connect(tail, head);
                 return e;
+            }
+
+			@Override
+			public void migrate(String newLayer) {
+                migrate(newLayer, realEdgeVariant);
+			}
+
+            @Override
+            public void migrate(String newLayer, String variant) {
+                DocumentEdgeLayer newLayerType = edgeLayer(newLayer, realEdgeVariant);
+
+                //Create new edges
+                for (EdgeRef edgeRef : this) {
+                    EdgeStore edgeStore = edgeRef.get();
+                    EdgeRef newEdge = newLayerType.create(edgeStore.getTail(), edgeStore.getHead());
+                    EdgeStore newEdgeStore = newEdge.get();
+
+                    for (Map.Entry<String, DataRef> entry : edgeStore.properties()) {
+                        newEdgeStore.putProperty(entry.getKey(), entry.getValue());
+                    }
+                }
+
+                //Delete old ones
+                DocumentStore.this.remove(this);
+
+                this.realEdgeLayer = newLayer;
+                this.realEdgeVariant = variant;
+            }
+
+            @Override
+            public void remove(EdgeRef ref) {
+                if(!ref.layer().equal(this)) {
+                    throw new IllegalArgumentException("The given edge does not belong to this layer!");
+                }
+
+                DocumentStore.this.remove(ref);
             }
 
             @Override
@@ -294,7 +413,7 @@ public abstract class DocumentStore extends PropertyStore {
 
             @Override
             public Iterator<EdgeRef> iterator() {
-                return getDocument().engine().edges(edgeLayer, edgeVariant).iterator();
+                return getDocument().engine().edges(realEdgeLayer, realEdgeVariant).iterator();
             }
         };
     }

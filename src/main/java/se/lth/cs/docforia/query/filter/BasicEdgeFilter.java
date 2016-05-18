@@ -31,12 +31,7 @@ public class BasicEdgeFilter extends EdgeFilter {
     public BasicEdgeFilter(DocumentEngine engine, String type, String variant) {
         this.engine = engine;
         this.type = type;
-        if(variant == null) {
-            this.variant = engine.store().getDefaultEdgeVariants().get(type);
-        }
-        else {
-            this.variant = variant;
-        }
+        this.variant = variant;
     }
 
     @Override

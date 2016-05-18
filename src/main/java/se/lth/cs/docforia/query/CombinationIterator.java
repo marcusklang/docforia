@@ -39,7 +39,7 @@ public class CombinationIterator implements PropositionIterator
         int startIndex = 0;
 
         for(int i = 0; i < vars.length; i++) {
-            if(!constant[context.indexOf(vars[i])])
+            if(!constant[i])
             {
                 //Found dynamic
                 final Var var = vars[i];

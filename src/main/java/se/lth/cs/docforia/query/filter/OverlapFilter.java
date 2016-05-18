@@ -34,11 +34,7 @@ public class OverlapFilter extends NodeFilter {
     public OverlapFilter(DocumentEngine engine, String layer, String variant, int from, int to) {
         this.engine = engine;
         this.layer = layer;
-        if(variant == null) {
-            this.variant = engine.store().getDefaultNodeVariants().get(this.layer);
-        } else {
-            this.variant = variant;
-        }
+        this.variant = variant;
         this.overlaps = engine.overlappingAnnotations(layer, variant, from, to);
         this.from = from;
         this.to = to;
