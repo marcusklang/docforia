@@ -236,7 +236,7 @@ public abstract class DocumentStore extends PropertyStore {
      * @param nodeLayer the node layer
      */
     public DocumentNodeLayer nodeLayer(String nodeLayer) {
-        return nodeLayer(nodeLayer);
+        return nodeLayer(nodeLayer, null);
     }
 
     /**
