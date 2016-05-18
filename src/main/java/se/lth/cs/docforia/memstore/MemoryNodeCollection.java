@@ -174,6 +174,15 @@ public class MemoryNodeCollection extends DocumentIterableBase<NodeRef> implemen
         Key newKey = new Key(newLayer, variant);
 
         store.migrate(oldKey, newKey, this);
+        for (MemoryNode node : nodes) {
+            node.instance = null;
+        }
+
+        for (MemoryNode memoryNode : annotations) {
+            memoryNode.instance = null;
+        }
+
+        this.key = newKey;
     }
 
     @Override

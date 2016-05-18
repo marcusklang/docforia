@@ -72,7 +72,7 @@ public class Proposition {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends PropertyContainer<?>> T get(Var var) {
+    public <T extends PropertyStoreProxy<?>> T get(Var var) {
         StoreRef storeRef = data[context.indexOf(var)];
         if(storeRef == null)
             throw new NoSuchElementException("No proposition for given var!");

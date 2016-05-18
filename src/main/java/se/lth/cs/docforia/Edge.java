@@ -16,9 +16,6 @@ package se.lth.cs.docforia;
  */
 
 import se.lth.cs.docforia.data.DataRef;
-import se.lth.cs.docforia.data.Decoder;
-import se.lth.cs.docforia.data.Encoder;
-import se.lth.cs.docforia.data.PropertyMap;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -28,7 +25,7 @@ import java.util.Map.Entry;
  * Edge abstraction
  * @param <T> The inherting class type, is used to allow chaining with type checking.
  */
-public abstract class Edge<T extends Edge<T>> implements Iterable<Map.Entry<String, DataRef>>, PropertyContainer<T> {
+public abstract class Edge<T extends Edge<T>> implements Iterable<Map.Entry<String, DataRef>>, PropertyStoreProxy<T> {
 	protected EdgeStore store;
 	protected DocumentProxy doc;
 
@@ -75,237 +72,6 @@ public abstract class Edge<T extends Edge<T>> implements Iterable<Map.Entry<Stri
 	public final <T extends Node> T getTail() {
 		return (T)doc.representation(store.getTail());
 	}
-	
-	public String getProperty(String key) {
-		return store.getProperty(key);
-	}
-	
-	public T putProperty(String key, String value) {
-		store.putProperty(key, value);;
-		return (T)this;
-	}
-
-    @Override
-    public <T extends DataRef> T getRefProperty(String key) {
-        return store.getRefProperty(key);
-    }
-
-    @Override
-    public <T extends DataRef> T getRefProperty(String key, Class<T> type) {
-        return store.getRefProperty(key, type);
-    }
-
-    @Override
-    public <T1> T1 getProperty(String key, Decoder<T1> decoder) {
-        DataRef ref = getRefProperty(key);
-        if(ref == null)
-            return null;
-        else
-            return decoder.decode(store, key, ref);
-    }
-
-    @Override
-    public <T1> T1 getProperty(String key, T1 reuse, Decoder<T1> decoder) {
-        DataRef ref = getRefProperty(key);
-        if(ref == null)
-            return null;
-        else
-            return decoder.decode(store, key, ref, reuse);
-    }
-
-    @Override
-    public char getCharProperty(String key) {
-        return store.getCharProperty(key);
-    }
-
-    @Override
-    public int getIntProperty(String key) {
-        return store.getIntProperty(key);
-    }
-
-    @Override
-    public long getLongProperty(String key) {
-        return store.getLongProperty(key);
-    }
-
-    @Override
-    public float getFloatProperty(String key) {
-        return store.getFloatProperty(key);
-    }
-
-    @Override
-    public double getDoubleProperty(String key) {
-        return store.getDoubleProperty(key);
-    }
-
-    @Override
-    public boolean getBooleanProperty(String key) {
-        return store.getBooleanProperty(key);
-    }
-
-    @Override
-    public byte[] getBinaryProperty(String key) {
-        return store.getBinaryProperty(key);
-    }
-
-    @Override
-    public int[] getIntArrayProperty(String key) {
-        return store.getIntArrayProperty(key);
-    }
-
-    @Override
-    public long[] getLongArrayProperty(String key) {
-        return store.getLongArrayProperty(key);
-    }
-
-    @Override
-    public float[] getFloatArrayProperty(String key) {
-        return store.getFloatArrayProperty(key);
-    }
-
-    @Override
-    public double[] getDoubleArrayProperty(String key) {
-        return store.getDoubleArrayProperty(key);
-    }
-
-    @Override
-    public String[] getStringArrayProperty(String key) {
-        return store.getStringArrayProperty(key);
-    }
-
-    @Override
-    public Document[] getDocumentArrayProperty(String key) {
-        return store.getDocumentArrayProperty(key);
-    }
-
-    @Override
-    public Document getDocumentProperty(String key) {
-        return store.getDocumentProperty(key);
-    }
-
-    @Override
-    public PropertyMap getPropertyMapProperty(String key) {
-        return store.getPropertyMapProperty(key);
-    }
-
-    @Override
-    public T putProperty(String key, DataRef value) {
-        store.putProperty(key, value);
-        return (T)this;
-    }
-
-    @Override
-    public T putProperty(String key, char ch) {
-        store.putProperty(key, ch);
-        return (T)this;
-    }
-
-    @Override
-    public T putProperty(String key, int value) {
-        store.putProperty(key, value);
-        return (T)this;
-    }
-
-    @Override
-    public T putProperty(String key, long value) {
-        store.putProperty(key, value);
-        return (T)this;
-    }
-
-    @Override
-    public T putProperty(String key, boolean value) {
-        store.putProperty(key, value);
-        return (T)this;
-    }
-
-    @Override
-    public T putProperty(String key, float value) {
-        store.putProperty(key, value);
-        return (T)this;
-    }
-
-    @Override
-    public T putProperty(String key, double value) {
-        store.putProperty(key, value);
-        return (T)this;
-    }
-
-    @Override
-    public T putProperty(String key, byte[] value) {
-        store.putProperty(key, value);
-        return (T)this;
-    }
-
-    @Override
-    public T putProperty(String key, int[] value) {
-        store.putProperty(key, value);
-        return (T)this;
-    }
-
-    @Override
-    public T putProperty(String key, long[] value) {
-        store.putProperty(key, value);
-        return (T)this;
-    }
-
-    @Override
-    public T putProperty(String key, float[] value) {
-        store.putProperty(key, value);
-        return (T)this;
-    }
-
-    @Override
-    public T putProperty(String key, double[] value) {
-        store.putProperty(key, value);
-        return (T)this;
-    }
-
-    @Override
-    public T putProperty(String key, boolean[] value) {
-        store.putProperty(key, value);
-        return (T)this;
-    }
-
-    @Override
-    public T putProperty(String key, String[] value) {
-        store.putProperty(key, value);
-        return (T)this;
-    }
-
-    @Override
-    public T putProperty(String key, PropertyMap value) {
-        store.putProperty(key, value);
-        return (T)this;
-    }
-
-    @Override
-    public T putProperty(String key, Document value) {
-        store.putProperty(key, value);
-        return (T)this;
-    }
-
-    @Override
-    public T putProperty(String key, Document[] value) {
-        store.putProperty(key, value);
-        return (T)this;
-    }
-
-    @Override
-    public <T1> T putProperty(String key, T1 value, Encoder<T1> encoder) {
-        store.putProperty(key, encoder.encode(store, key, value));
-        return (T)this;
-    }
-
-    @Override
-	public boolean hasProperty(String key) {
-		return store.hasProperty(key);
-        //return doc.propertyHook.has(doc, this, key);
-	}
-
-	public void removeProperty(String key) {
-		store.removeProperty(key);
-        //doc.propertyHook.remove(doc, this, key);
-	}
 
 	@SuppressWarnings("unchecked")
 	public <T extends Node> T getOpposite(Node n) {
@@ -340,7 +106,12 @@ public abstract class Edge<T extends Edge<T>> implements Iterable<Map.Entry<Stri
         return this.store != null;
     }
 
-	@Override
+    @Override
+    public PropertyStore store() {
+        return store;
+    }
+
+    @Override
 	public Iterator<Entry<String, DataRef>> iterator() {
 		return new Iterator<Map.Entry<String,DataRef>>() {
 			

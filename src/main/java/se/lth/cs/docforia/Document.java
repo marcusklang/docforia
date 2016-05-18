@@ -17,7 +17,8 @@ package se.lth.cs.docforia;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
-import se.lth.cs.docforia.data.*;
+import se.lth.cs.docforia.data.DataRef;
+import se.lth.cs.docforia.data.DocRef;
 import se.lth.cs.docforia.query.Var;
 import se.lth.cs.docforia.query.dsl.CommonClause;
 import se.lth.cs.docforia.query.dsl.QueryClause;
@@ -93,7 +94,7 @@ import java.util.stream.StreamSupport;
     <b>Remarks:</b> This document can be used as a CharSequence key, hashCode and equals uses the text as input
  */
 @SuppressWarnings("unchecked")
-public abstract class Document implements CharSequence, Range, DocumentProxy, PropertyContainer<Document>, Comparable<Document> {
+public abstract class Document implements CharSequence, Range, DocumentProxy, PropertyStoreProxy<Document>, Comparable<Document> {
 
     /** Id property key */
     public static final String PROP_ID = "__id__";
@@ -518,238 +519,6 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
         return this;
     }
 
-    /**
-     * Get document property
-     * @return null if property does not exist
-     */
-    @Override
-    public String getProperty(String key) {
-        return store().getProperty(key);
-    }
-
-    @Override
-	public <T> T getProperty(String key, Decoder<T> decoder) {
-		return store().getProperty(key, decoder);
-	}
-
-	@Override
-	public <T> T getProperty(String key, T reuse, Decoder<T> decoder) {
-        return store().getProperty(key, reuse, decoder);
-	}
-
-	@Override
-	public <T extends DataRef> T getRefProperty(String key) {
-        return store().getRefProperty(key);
-	}
-
-	@Override
-	public <T extends DataRef> T getRefProperty(String key, Class<T> type) {
-        return store().getRefProperty(key, type);
-	}
-
-	@Override
-	public char getCharProperty(String key) {
-        return store().getCharProperty(key);
-	}
-
-	@Override
-	public int getIntProperty(String key) {
-        return store().getIntProperty(key);
-	}
-
-	@Override
-	public long getLongProperty(String key) {
-        return store().getLongProperty(key);
-	}
-
-	@Override
-	public float getFloatProperty(String key) {
-        return store().getFloatProperty(key);
-	}
-
-	@Override
-	public double getDoubleProperty(String key) {
-        return store().getDoubleProperty(key);
-	}
-
-	@Override
-	public boolean getBooleanProperty(String key) {
-        return store().getBooleanProperty(key);
-	}
-
-	@Override
-	public byte[] getBinaryProperty(String key) {
-        return store().getBinaryProperty(key);
-	}
-
-	@Override
-	public int[] getIntArrayProperty(String key) {
-        return store().getIntArrayProperty(key);
-	}
-
-	@Override
-	public long[] getLongArrayProperty(String key) {
-		return store().getLongArrayProperty(key);
-	}
-
-	@Override
-	public float[] getFloatArrayProperty(String key) {
-		return store().getFloatArrayProperty(key);
-	}
-
-	@Override
-	public double[] getDoubleArrayProperty(String key) {
-		return store().getDoubleArrayProperty(key);
-	}
-
-	@Override
-	public String[] getStringArrayProperty(String key) {
-		return store().getStringArrayProperty(key);
-	}
-
-    @Override
-    public PropertyMap getPropertyMapProperty(String key) {
-        return store().getPropertyMapProperty(key);
-    }
-
-    @Override
-    public Document getDocumentProperty(String key) {
-        return store().getDocumentProperty(key);
-    }
-
-    @Override
-    public Document[] getDocumentArrayProperty(String key) {
-        return store().getDocumentArrayProperty(key);
-    }
-
-    @Override
-	public Document putProperty(String key, DataRef value) {
-		store().putProperty(key,value);
-        return this;
-	}
-
-    @Override
-    public Document putProperty(String key, String value) {
-        store().putProperty(key, value);
-        return this;
-    }
-
-	@Override
-	public Document putProperty(String key, char ch) {
-        store().putProperty(key,ch);
-        return this;
-	}
-
-	@Override
-	public Document putProperty(String key, int value) {
-        store().putProperty(key,value);
-        return this;
-	}
-
-	@Override
-	public Document putProperty(String key, long value) {
-        store().putProperty(key,value);
-        return this;
-	}
-
-	@Override
-	public Document putProperty(String key, boolean value) {
-        store().putProperty(key,value);
-        return this;
-	}
-
-	@Override
-	public Document putProperty(String key, float value) {
-        store().putProperty(key,value);
-        return this;
-	}
-
-	@Override
-	public Document putProperty(String key, double value) {
-        store().putProperty(key,value);
-        return this;
-	}
-
-	@Override
-	public Document putProperty(String key, byte[] value) {
-        store().putProperty(key,value);
-        return this;
-	}
-
-	@Override
-	public Document putProperty(String key, int[] value) {
-        store().putProperty(key,value);
-        return this;
-	}
-
-	@Override
-	public Document putProperty(String key, long[] value) {
-        store().putProperty(key,value);
-        return this;
-	}
-
-	@Override
-	public Document putProperty(String key, float[] value) {
-        store().putProperty(key,value);
-        return this;
-	}
-
-	@Override
-	public Document putProperty(String key, double[] value) {
-        store().putProperty(key,value);
-        return this;
-	}
-
-	@Override
-	public Document putProperty(String key, boolean[] value) {
-        store().putProperty(key,value);
-        return this;
-	}
-
-	@Override
-	public Document putProperty(String key, String[] value) {
-        store().putProperty(key,value);
-        return this;
-	}
-
-    @Override
-    public Document putProperty(String key, PropertyMap value) {
-        store().putProperty(key,value);
-        return this;
-    }
-
-    @Override
-    public Document putProperty(String key, Document value) {
-        store().putProperty(key,value);
-        return this;
-    }
-
-    @Override
-    public Document putProperty(String key, Document[] value) {
-        store().putProperty(key,value);
-        return this;
-    }
-
-    @Override
-	public <T> Document putProperty(String key, T value, Encoder<T> encoder) {
-        store().putProperty(key,value, encoder);
-        return this;
-	}
-
-    /**
-	 * Check if document has property
-	 */
-	public boolean hasProperty(String key) {
-		return store().hasProperty(key);
-	}
-
-	/**
-	 * Remove document property if it exists.
-	 */
-    public void removeProperty(String key) {
-        store().removeProperty(key);
-    }
-
 	/**
 	 * Get an iterable of all properties
 	 */
@@ -999,6 +768,14 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
     }
 
     /**
+     * Get a node Stream
+     */
+    public <T extends Edge> Stream<T> edgeStream(Class<T> layer) {
+        return StreamSupport.stream(edges(layer).spliterator(), false);
+    }
+
+
+    /**
 	 * Create an iterable of all nodes with specific type and variant
 	 */
 	public <N extends Node> DocumentIterable<N> nodes(Class<N> nodeType, String variant) {
@@ -1010,6 +787,13 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
      */
     public <T extends Node> Stream<T> nodeStream(Class<T> layer, String variant) {
         return StreamSupport.stream(nodes(layer, variant).spliterator(), false);
+    }
+
+    /**
+     * Get a edge stream
+     */
+    public <T extends Edge> Stream<T> edgeStream(Class<T> layer, String variant) {
+        return StreamSupport.stream(edges(layer, variant).spliterator(), false);
     }
 
 	/**

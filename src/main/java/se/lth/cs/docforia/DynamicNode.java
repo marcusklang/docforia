@@ -20,7 +20,7 @@ import se.lth.cs.docforia.query.NodeVar;
 /**
  * Dynamic node layer representation, or fallback for unknown classes.
  */
-public class DynamicNode extends Node {
+public class DynamicNode extends Node<DynamicNode> {
 
 	public DynamicNode() {
 		super();

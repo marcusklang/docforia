@@ -109,6 +109,11 @@ public class MemoryEdgeCollection extends DocumentIterableBase<EdgeRef> implemen
         Key oldKey = key;
         Key newKey = new Key(newLayer, variant);
         store.migrate(oldKey, newKey, this);
+
+        for (MemoryEdge edge : edges) {
+            edge.instance = null;
+        }
+
         this.key = newKey;
     }
 

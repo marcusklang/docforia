@@ -18,7 +18,7 @@ package se.lth.cs.docforia;
 /**
  * Dynamic edge layer representation, or fallback for unknown classes.
  */
-public class DynamicEdge extends Edge {
+public class DynamicEdge extends Edge<DynamicEdge> {
 
 	public DynamicEdge() {
 		super();

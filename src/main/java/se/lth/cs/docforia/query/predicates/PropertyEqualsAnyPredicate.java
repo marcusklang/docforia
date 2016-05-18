@@ -15,7 +15,7 @@ package se.lth.cs.docforia.query.predicates;
  * limitations under the License.
  */
 
-import se.lth.cs.docforia.PropertyContainer;
+import se.lth.cs.docforia.PropertyStoreProxy;
 import se.lth.cs.docforia.query.Predicate;
 import se.lth.cs.docforia.query.Proposition;
 import se.lth.cs.docforia.query.QueryContext;
@@ -36,11 +36,11 @@ public class PropertyEqualsAnyPredicate extends Predicate {
 
     @Override
     public boolean eval(Proposition proposition) {
-        PropertyContainer propertyContainer = proposition.get(vars[0]);
-        if(!propertyContainer.hasProperty(key))
+        PropertyStoreProxy propertyStoreProxy = proposition.get(vars[0]);
+        if(!propertyStoreProxy.hasProperty(key))
             return false;
 
-        String source = propertyContainer.getProperty(key);
+        String source = propertyStoreProxy.getProperty(key);
 
         for (String target : values) {
             if(target.equals(source))
