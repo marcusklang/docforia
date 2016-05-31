@@ -48,7 +48,15 @@ public class Proposition {
     }
 
     public NodeRef noderef(Var var) {
-        return (NodeRef)data[context.indexOf(var)];
+        try {
+            return (NodeRef) data[context.indexOf(var)];
+        }
+        catch(ArrayIndexOutOfBoundsException ex) {
+            if(context.indexOf(var) == -1)
+                throw new QueryException("The variable " + var.toString() + " could not be found in this proposition.");
+            else
+                throw ex;
+        }
     }
 
     @SuppressWarnings("unchecked")
