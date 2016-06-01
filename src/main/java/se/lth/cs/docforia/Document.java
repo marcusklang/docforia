@@ -446,8 +446,8 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
     public Document addUriAlises(String...uris) {
         if(hasProperty(PROP_URI)) {
             String[] input = getStringArrayProperty(PROP_URI);
-            String[] output = Arrays.copyOf(uris, uris.length+uris.length);
-            System.arraycopy(uris, input.length - input.length, output, input.length, input.length + uris.length - input.length);
+            String[] output = Arrays.copyOf(uris, input.length + uris.length);
+            System.arraycopy(uris, 0, output, input.length, uris.length);
             putProperty(PROP_URI, output);
         }
         return this;
