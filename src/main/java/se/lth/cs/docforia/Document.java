@@ -18,6 +18,7 @@ package se.lth.cs.docforia;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import se.lth.cs.docforia.data.DataRef;
+import se.lth.cs.docforia.data.DocArrayRef;
 import se.lth.cs.docforia.data.DocRef;
 import se.lth.cs.docforia.query.Var;
 import se.lth.cs.docforia.query.dsl.CommonClause;
@@ -2165,6 +2166,9 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
         representations().resetRepresentations();
     }
 
+    /**
+     * Get an iterable of properties containing a single document
+     */
     public Iterable<Map.Entry<String,Document>> documentProperties() {
         return new FilteredMappedDocumentIterable<Map.Entry<String, Document>,Map.Entry<String,DataRef>>(properties()) {
             @Override
@@ -2193,6 +2197,38 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
             }
         };
     }
+
+	/**
+	 * Get an iterable of pure properties i.e. property that does not contain a document or document array
+     */
+	public Iterable<Map.Entry<String,DataRef>> pureProperties() {
+		return new FilteredMappedDocumentIterable<Map.Entry<String, DataRef>,Map.Entry<String,DataRef>>(properties()) {
+			@Override
+			protected boolean accept(Map.Entry<String, DataRef> value) {
+				return !(value.getValue() instanceof DocRef || value.getValue() instanceof DocArrayRef);
+			}
+
+			@Override
+			protected Map.Entry<String, DataRef> map(Map.Entry<String, DataRef> value) {
+				return new Map.Entry<String, DataRef>() {
+					@Override
+					public String getKey() {
+						return value.getKey();
+					}
+
+					@Override
+					public DataRef getValue() {
+						return (value.getValue());
+					}
+
+					@Override
+					public DataRef setValue(DataRef value) {
+						throw new UnsupportedOperationException();
+					}
+				};
+			}
+		};
+	}
 
 	/**
 	 * Convert a document from one storage layer to another
