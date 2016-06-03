@@ -367,6 +367,18 @@ public class MemoryDocumentStore extends DocumentStore {
         return getNodeCollection(nodeLayer, nodeVariant).create();
     }
 
+    /** Iterable of node layers and all their variants */
+    @Override
+    public Iterable<? extends DocumentNodeLayer> nodeLayers() {
+        return nodes.values();
+    }
+
+    /** Iterable of edge layers and all their variants */
+    @Override
+    public Iterable<? extends DocumentEdgeLayer> edgeLayers() {
+        return edges.values();
+    }
+
     @Override
     public EdgeRef createEdge(String edgeLayer) {
         return createEdge(edgeLayer, null);

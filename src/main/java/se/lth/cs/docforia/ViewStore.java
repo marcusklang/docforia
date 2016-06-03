@@ -134,6 +134,16 @@ public class ViewStore extends DocumentStore {
     }
 
     @Override
+    public Iterable<? extends DocumentNodeLayer> nodeLayers() {
+        return store.nodeLayers();
+    }
+
+    @Override
+    public Iterable<? extends DocumentEdgeLayer> edgeLayers() {
+        return store.edgeLayers();
+    }
+
+    @Override
     public void removeProperty(String key) {
         store.removeProperty(key);
     }

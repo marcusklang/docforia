@@ -16,6 +16,7 @@ package se.lth.cs.docforia;
  */
 
 import se.lth.cs.docforia.data.DataRef;
+import se.lth.cs.docforia.memstore.MemoryNodeCollection;
 import se.lth.cs.docforia.util.Iterables;
 
 import java.util.IdentityHashMap;
@@ -481,6 +482,12 @@ public abstract class DocumentStore extends PropertyStore {
             }
         }
     }
+
+    /** Get an iterable of all node layers */
+    public abstract Iterable<? extends DocumentNodeLayer> nodeLayers();
+
+    /** Get an iterable of all edge layers */
+    public abstract Iterable<? extends DocumentEdgeLayer> edgeLayers();
 
     /** Indicate if this store is read only */
 	public boolean isReadOnly() {
