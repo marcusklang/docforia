@@ -1,0 +1,103 @@
+// [START java_declaration]
+option java_package = "se.lth.cs.docforia.io.multipart";
+option java_outer_classname = "MultipartBinary";
+option optimize_for = LITE_RUNTIME;
+// [END java_declaration]
+
+enum ValueType {
+    BINARY =1;
+    STRING = 2;
+    INT = 3;
+    LONG = 4;
+    FLOAT = 5;
+    DOUBLE  = 6;
+    BOOLEAN  = 7;
+    STRING_ARRAY = 8;
+    INT_ARRAY = 9;
+    LONG_ARRAY = 10;
+    FLOAT_ARRAY = 11;
+    DOUBLE_ARRAY = 12;
+    BOOLEAN_ARRAY = 13;
+    PROPERTY_MAP = 14;
+    DOCUMENT = 15;
+    DOCUMENT_ARRAY = 16;
+}
+
+message Value {
+    required ValueType type = 1;
+    oneof value {
+        bytes binaryValue = 2; //fallback for all unsupported types
+        string stringValue = 3;
+        sint32 intValue = 4;
+        sint64 longValue = 5;
+        float floatValue = 6;
+        double doubleValue = 7;
+        bool boolValue = 8;
+    }
+}
+
+message Properties {
+    message Entry {
+        required string key = 1;
+        required Value value = 2;
+    }
+
+    repeated Entry entry = 1;
+}
+
+message PropertyColumn {
+    required string key = 1;
+    required ValueType type = 2;
+    required bytes data = 3;
+}
+
+message Header {
+    message Dependency {
+        repeated uint32 nodeLayerId = 1;
+    }
+    required uint32 length = 1;
+
+    required Properties coreproperties = 2;
+
+    repeated string nodeLayer = 3;
+    repeated string edgeLayer = 4;
+
+    repeated Dependency edgeLayerDeps = 5;
+
+    repeated string uri = 6;
+    optional string id = 7;
+    optional string lang = 8;
+    optional string type = 9;
+}
+
+message NodeLayer {
+    required uint32 idx = 1;
+    optional uint32 id = 2;
+    optional string userdefined = 3;
+
+    message Variant {
+        optional string name = 1;
+        required uint32 numNodes = 2;
+        repeated sint32 ranges = 3 [packed = true]; //delta coded
+    }
+
+    repeated Variant variants = 4;
+    repeated PropertyColumn properties = 5;
+}
+
+message EdgeLayer {
+    required uint32 idx = 1;
+    optional uint32 id = 2;
+    optional string userdefined = 3;
+
+    message Variant {
+        optional string name = 1;
+        repeated uint32 nodelayers = 2;
+        repeated uint32 nodestarts = 3;
+        repeated sint32 head = 4 [packed = true]; //delta coded
+        repeated sint32 tail = 5 [packed = true]; //delta coded
+    }
+
+    repeated Variant variants = 4;
+    repeated PropertyColumn properties = 5;
+}

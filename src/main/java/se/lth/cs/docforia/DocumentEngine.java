@@ -417,7 +417,7 @@ public abstract class DocumentEngine {
 
 	/**
 	 * Get all edge variants of a particular layer present in the document
-	 * @return iterable of all nodes
+	 * @return iterable of all edge layer variants
 	 */
 	public DocumentIterable<String> edgeLayerVariants(String layer) {
 		HashSet<String> edgeVariants = new HashSet<String>();
@@ -428,6 +428,24 @@ public abstract class DocumentEngine {
 		}
 		return DocumentIterables.wrap(edgeVariants);
 	}
+
+	/**
+	 * Get all edge variants of a particular layer present in the document
+	 * @return iterable of all edge layer variants
+	 */
+	public DocumentIterable<Optional<String>> edgeLayerAllVariants(String layer) {
+		HashSet<Optional<String>> edgeVariants = new HashSet<Optional<String>>();
+		for(EdgeRef ref : store().edges()) {
+			if(ref.get().getLayer().equals(layer)) {
+				if(ref.get().getVariant() == null)
+					edgeVariants.add(Optional.empty());
+				else
+					edgeVariants.add(Optional.of(ref.get().getVariant()));
+			}
+		}
+		return DocumentIterables.wrap(edgeVariants);
+	}
+
 
 	/**
 	 * Get all node layers present in the document

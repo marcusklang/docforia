@@ -16,6 +16,7 @@ package se.lth.cs.docforia;
  */
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import se.lth.cs.docforia.data.DataRef;
 import se.lth.cs.docforia.data.DocArrayRef;
@@ -111,6 +112,11 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 
     /** Type property key */
     public static final String PROP_TYPE = "__type__";
+
+	/** All reserved property keys */
+	public static final Set<String> PROP_ALL = Collections.unmodifiableSet(new ObjectOpenHashSet<>(new String[]{
+		PROP_ID, PROP_URI, PROP_TITLE, PROP_LANG, PROP_TYPE
+	}));
 
 	//protected Record record;
 	protected HashMap<String,Object> tags;

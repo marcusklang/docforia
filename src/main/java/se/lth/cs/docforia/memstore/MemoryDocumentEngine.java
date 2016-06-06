@@ -394,6 +394,67 @@ public class MemoryDocumentEngine extends DocumentEngine {
     }
 
     @Override
+    public DocumentIterable<String> edgeLayerVariants(String edgeLayer) {
+        return new DocumentIterableBase<String>() {
+            @Override
+            public Iterator<String> iterator() {
+                final ObjectBidirectionalIterator<MemoryEdgeCollection.Key> iterator = store.edges.keySet().tailSet(new MemoryEdgeCollection.Key(edgeLayer, null)).iterator();
+                return new Iterator<String>() {
+                    private String next;
+                    private boolean valid = false;
+
+                    private boolean moveForward() {
+                        if(!valid) {
+                            while(iterator.hasNext()) {
+                                MemoryEdgeCollection.Key nextkey = iterator.next();
+                                if(nextkey.layer.equals(edgeLayer)) {
+                                    if(store.edges.get(nextkey).size() == 0)
+                                        continue;
+
+                                    if(nextkey.variant != null) {
+                                        next = nextkey.variant;
+                                    }
+                                    else
+                                        continue;
+
+                                    valid = true;
+                                }
+                                else
+                                    valid = false;
+
+                                return valid;
+                            }
+
+                            return false;
+                        }
+                        else
+                            return true;
+                    }
+
+                    @Override
+                    public boolean hasNext() {
+                        return moveForward();
+                    }
+
+                    @Override
+                    public String next() {
+                        if(!moveForward())
+                            throw new NoSuchElementException();
+
+                        valid = false;
+                        return next;
+                    }
+
+                    @Override
+                    public void remove() {
+                        throw new UnsupportedOperationException();
+                    }
+                };
+            }
+        };
+    }
+
+    @Override
     public DocumentIterable<Optional<String>> nodeLayerAllVariants(final String nodeLayer) {
         return new DocumentIterableBase<Optional<String>>() {
             @Override
@@ -409,6 +470,66 @@ public class MemoryDocumentEngine extends DocumentEngine {
                                 MemoryNodeCollection.Key nextkey = iterator.next();
                                 if(nextkey.layer.equals(nodeLayer)) {
                                     if(store.nodes.get(nextkey).size() == 0)
+                                        continue;
+
+                                    if(nextkey.variant == null)
+                                        next = Optional.empty();
+                                    else
+                                        next = Optional.of(nextkey.variant);
+
+                                    valid = true;
+                                }
+                                else
+                                    valid = false;
+
+                                return valid;
+                            }
+
+                            return false;
+                        }
+                        else
+                            return true;
+                    }
+
+                    @Override
+                    public boolean hasNext() {
+                        return moveForward();
+                    }
+
+                    @Override
+                    public Optional<String> next() {
+                        if(!moveForward())
+                            throw new NoSuchElementException();
+
+                        valid = false;
+                        return next;
+                    }
+
+                    @Override
+                    public void remove() {
+                        throw new UnsupportedOperationException();
+                    }
+                };
+            }
+        };
+    }
+
+    @Override
+    public DocumentIterable<Optional<String>> edgeLayerAllVariants(String edgeLayer) {
+        return new DocumentIterableBase<Optional<String>>() {
+            @Override
+            public Iterator<Optional<String>> iterator() {
+                final ObjectBidirectionalIterator<MemoryEdgeCollection.Key> iterator = store.edges.keySet().tailSet(new MemoryEdgeCollection.Key(edgeLayer, null)).iterator();
+                return new Iterator<Optional<String>>() {
+                    private Optional<String> next;
+                    private boolean valid = false;
+
+                    private boolean moveForward() {
+                        if(!valid) {
+                            while(iterator.hasNext()) {
+                                MemoryEdgeCollection.Key nextkey = iterator.next();
+                                if(nextkey.layer.equals(edgeLayer)) {
+                                    if(store.edges.get(nextkey).size() == 0)
                                         continue;
 
                                     if(nextkey.variant == null)

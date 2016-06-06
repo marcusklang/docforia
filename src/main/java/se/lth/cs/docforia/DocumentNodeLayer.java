@@ -17,7 +17,8 @@ package se.lth.cs.docforia;
 
 /**
  * Document node layer representation, suitable for batch insertions
- *
+ * <p>
+ * <b>Remarks:</b> For iteration: non annotation nodes comes first, then comes all annotations
  */
 public interface DocumentNodeLayer extends Iterable<NodeRef>, LayerRef {
 

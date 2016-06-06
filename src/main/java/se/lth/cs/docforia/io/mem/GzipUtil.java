@@ -28,7 +28,7 @@ public class GzipUtil {
     public static byte[] compress(byte[] data) {
         try {
             //Heuristic, 75% compression.
-            Output compressed = new Output(32);
+            Output compressed = new Output(32,2147483647);
             GZIPOutputStream gzipOutputStream = new GZIPOutputStream(compressed, 1 << 12);
 
             Output output = new Output(gzipOutputStream);
