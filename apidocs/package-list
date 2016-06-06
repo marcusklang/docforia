@@ -10,6 +10,7 @@ se.lth.cs.docforia.graph.text
 se.lth.cs.docforia.io
 se.lth.cs.docforia.io.file
 se.lth.cs.docforia.io.mem
+se.lth.cs.docforia.io.multipart
 se.lth.cs.docforia.io.stream
 se.lth.cs.docforia.io.text
 se.lth.cs.docforia.io.text.builders
