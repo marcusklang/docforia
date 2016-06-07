@@ -128,6 +128,8 @@ public class MultipartMessages {
             int headerSize = input.readVarInt(true);
             messages.header = MultipartBinary.Header.parseFrom(input.readBytes(headerSize));
             messages.text = input.readString();
+            if(messages.text.equals(""))
+                messages.text = null;
 
             int propertySize = input.readVarInt(true);
             if(propertySize > 0) {
@@ -173,7 +175,7 @@ public class MultipartMessages {
             output.writeBytes(headerData);
         }
 
-        output.writeString(text);
+        output.writeString(text == null ? "" : text);
 
         {
             if(properties == null) {
