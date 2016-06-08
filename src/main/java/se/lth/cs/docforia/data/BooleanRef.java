@@ -83,8 +83,43 @@ public class BooleanRef extends CoreRef {
     }
 
     @Override
+    public String toString() {
+        return value ? "true" : "false";
+    }
+
+    @Override
     public byte[] binaryValue() {
         return this.binary;
+    }
+
+    @Override
+    public int intValue() {
+        return value ? 1 : 0;
+    }
+
+    @Override
+    public long longValue() {
+        return value ? 1L : 0L;
+    }
+
+    @Override
+    public float floatValue() {
+        return value ? 1.0f : 0.0f;
+    }
+
+    @Override
+    public double doubleValue() {
+        return value ? 1.0 : 0.0;
+    }
+
+    @Override
+    public char charValue() {
+        return value ? '1' : '0';
+    }
+
+    @Override
+    public boolean booleanValue() {
+        return value;
     }
 
     @Override

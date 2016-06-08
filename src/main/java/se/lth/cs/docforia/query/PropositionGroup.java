@@ -18,9 +18,7 @@ package se.lth.cs.docforia.query;
 import se.lth.cs.docforia.Edge;
 import se.lth.cs.docforia.Node;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Group result
@@ -71,22 +69,62 @@ public class PropositionGroup implements Iterable<Proposition> {
         return children.get(index).get(var);
     }
 
-    public <N extends Node> List<N> list(NodeTVar<N> var) {
-        //TODO: Implement a unmodifiable view
-        ArrayList<N> instances = new ArrayList<>();
-        for (Proposition child : children) {
-            instances.add(child.get(var));
+    private class NodeList<N extends Node> extends AbstractList<N> implements RandomAccess {
+
+        private NodeTVar<N> var;
+
+        public NodeList(NodeTVar<N> var) {
+            this.var = var;
         }
-        return instances;
+
+        @Override
+        public N get(int index) {
+            return children.get(index).get(var);
+        }
+
+        @Override
+        public int size() {
+            return children.size();
+        }
     }
 
-    public <E extends Edge> List<E> list(EdgeTVar<E> var) {
-        //TODO: Implement a unmodifiable view
-        ArrayList<E> instances = new ArrayList<>();
-        for (Proposition child : children) {
-            instances.add(child.get(var));
+    private class EdgeList<E extends Edge> extends AbstractList<E> implements RandomAccess {
+
+        private EdgeTVar<E> var;
+
+        public EdgeList(EdgeTVar<E> var) {
+            this.var = var;
         }
-        return instances;
+
+        @Override
+        public E get(int index) {
+            return children.get(index).get(var);
+        }
+
+        @Override
+        public int size() {
+            return children.size();
+        }
+    }
+
+    /**
+     * Get a list of a specific node variable.
+     * @param var node variable
+     * @param <N> node type
+     * @return  a lightweight read-only abstraction over internal store
+     */
+    public <N extends Node> List<N> list(NodeTVar<N> var) {
+        return new NodeList<>(var);
+    }
+
+    /**
+     * Get a list of a specific edge variable.
+     * @param var edge variable
+     * @param <E> edge type
+     * @return  a lightweight read-only abstraction over internal store
+     */
+    public <E extends Edge> List<E> list(EdgeTVar<E> var) {
+        return new EdgeList<>(var);
     }
 
     public <N extends Node> N value(int index, NodeVar var) {
