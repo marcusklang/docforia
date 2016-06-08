@@ -90,7 +90,7 @@ public class SequenceColumnRW implements ColumnReader, ColumnWriter {
                     token.setProperty(i+realoffset, propval);
                 }
             }
-            sentence.setMinCols(realoffset+1);
+            sentence.setMinCols(realoffset+properties.size());
         }
     }
 }
