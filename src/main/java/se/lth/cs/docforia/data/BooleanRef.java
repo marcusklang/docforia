@@ -47,7 +47,7 @@ public class BooleanRef extends CoreRef {
 
     @Override
     public String stringValue() {
-        return null;
+        return value ? "true" : "false";
     }
 
     @Override
@@ -80,11 +80,6 @@ public class BooleanRef extends CoreRef {
 
     public static BooleanRef readJson(JsonNode node) {
         return node.asBoolean() ? TRUE : FALSE;
-    }
-
-    @Override
-    public String toString() {
-        return value ? "true" : "false";
     }
 
     @Override
