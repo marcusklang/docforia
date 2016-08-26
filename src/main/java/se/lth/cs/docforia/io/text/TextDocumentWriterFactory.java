@@ -38,9 +38,29 @@ public class TextDocumentWriterFactory {
     private String beginMarker = "#begin document";
     private String endMarker = "#end document";
     private TextBuilder builder = new CharSeparatorTextBuilder();
+    private boolean writeHeader = false;
+    private String headerText = "";
 
     public void addColumn(ColumnWriter writer) {
         columnWriters.add(writer);
+    }
+
+    public String getHeaderText() {
+        return headerText;
+    }
+
+    /** The header text, a hashtag # will be appended before */
+    public void setHeaderText(String headerText) {
+        this.headerText = headerText;
+    }
+
+    public boolean shouldWriteHeader() {
+        return writeHeader;
+    }
+
+    /** Set if this writer should write a header at the top */
+    public void setWriteHeader(boolean writeHeader) {
+        this.writeHeader = writeHeader;
     }
 
     /** Set the begin document marker */
@@ -106,6 +126,10 @@ public class TextDocumentWriterFactory {
             }
 
             try {
+                if(writeHeader) {
+                    writer.write("#" + headerText + "\n");
+                }
+
                 if(useMarkers) {
                     writer.write(beginMarker);
                     writer.write('\n');

@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class SequenceColumnRW implements ColumnReader, ColumnWriter {
     private List<String> properties;
-    private int offset = 0;
+    private int offset = -1;
 
     /**
      * Append to end constructor for writing
