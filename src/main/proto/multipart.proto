@@ -1,3 +1,4 @@
+syntax = "proto2";
 // [START java_declaration]
 option java_package = "se.lth.cs.docforia.io.multipart";
 option java_outer_classname = "MultipartBinary";

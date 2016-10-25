@@ -15,14 +15,6 @@ package se.lth.cs.docforia.data;
  * limitations under the License.
  */
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonNode;
-import se.lth.cs.docforia.io.mem.Input;
-import se.lth.cs.docforia.io.mem.Output;
-
-import java.io.IOError;
-import java.io.IOException;
-
 /**
  * double container
  */
@@ -89,25 +81,8 @@ public class DoubleRef extends CoreRef {
     }
 
     @Override
-    public void write(JsonGenerator jsonWriter) {
-        try {
-            jsonWriter.writeNumber(value);
-        } catch (IOException e) {
-            throw new IOError(e);
-        }
-    }
-
-    public static DoubleRef read(Input reader) {
-        return new DoubleRef(reader.readDouble());
-    }
-
-    public static DoubleRef readJson(JsonNode node) {
-        return new DoubleRef(node.doubleValue());
-    }
-
-    @Override
-    public void write(Output writer) {
-        writer.writeDouble(value);
+    public void write(CoreRefWriter writer) {
+        writer.write(value);
     }
 
     @Override

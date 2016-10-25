@@ -15,14 +15,8 @@ package se.lth.cs.docforia.data;
  * limitations under the License.
  */
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonNode;
-import se.lth.cs.docforia.io.mem.Input;
 import se.lth.cs.docforia.io.mem.Output;
 
-import java.io.IOError;
-import java.io.IOException;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -76,77 +70,14 @@ public class PropertyMapRef extends CoreRef {
 
     @Override
     public byte[] binaryValue() {
-        Output writer = new Output(512,2<<29);
-        write(writer);
-        return writer.toBytes();
-    }
-
-    public static PropertyMapRef read(Input reader) {
-        int numProperties = reader.readVarInt(true);
-        String[] keys = new String[numProperties];
-        for (int i = 0; i < keys.length; i++) {
-            keys[i] = reader.readString();
-        }
-
-        PropertyMap map = new PropertyMap();
-
-        for (String key : keys) {
-            map.putProperty(key, CoreRefType.fromByteValue(reader.readByte()).read(reader));
-        }
-
-        return new PropertyMapRef(map);
-    }
-
-    public static PropertyMapRef readJson(JsonNode node) {
-        node = node.path("prop");
-        PropertyMap map = new PropertyMap();
-
-        Iterator<Map.Entry<String, JsonNode>> fieldIter = node.fields();
-        while(fieldIter.hasNext()) {
-            Map.Entry<String, JsonNode> entry = fieldIter.next();
-            map.putProperty(entry.getKey(), CoreRefType.fromJsonValue(entry.getValue()).readJson(entry.getValue()));
-        }
-
-        return new PropertyMapRef(map);
+        BinaryCoreWriter writer = new BinaryCoreWriter(new Output(512,2<<29));
+        writer.write(map);
+        return writer.getWriter().toBytes();
     }
 
     @Override
-    public void write(Output writer) {
-        writer.writeVarInt(map.properties.size(), true);
-        map.properties.keySet().forEach(writer::writeString);
-
-        for (String s : map.properties.keySet()) {
-            DataRef ref = map.properties.get(s);
-            if(ref instanceof CoreRef) {
-                writer.writeByte(((CoreRef) ref).id().value);
-                ((CoreRef) ref).write(writer);
-            } else {
-                throw new UnsupportedOperationException("Only core properties are supported with PropertyMap!");
-            }
-        }
-    }
-
-    @Override
-    public void write(JsonGenerator jsonWriter) {
-        try {
-            jsonWriter.writeStartObject();
-            jsonWriter.writeObjectFieldStart("prop");
-            jsonWriter.writeStartObject();
-            for (String s : map.properties.keySet()) {
-                jsonWriter.writeObjectFieldStart(s);
-
-                DataRef ref = map.properties.get(s);
-                if(ref instanceof CoreRef) {
-                    ((CoreRef) ref).write(jsonWriter);
-                } else {
-                    throw new UnsupportedOperationException("Only core properties are supported with PropertyMap!");
-                }
-            }
-            jsonWriter.writeEndObject();
-            jsonWriter.writeEndObject();
-        } catch (IOException e) {
-            throw new IOError(e);
-        }
+    public void write(CoreRefWriter writer) {
+        writer.write(map);
     }
 
     @Override

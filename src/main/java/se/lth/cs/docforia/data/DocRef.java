@@ -15,15 +15,10 @@ package se.lth.cs.docforia.data;
  * limitations under the License.
  */
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonNode;
 import se.lth.cs.docforia.Document;
-import se.lth.cs.docforia.io.mem.Input;
-import se.lth.cs.docforia.io.mem.Output;
-import se.lth.cs.docforia.memstore.*;
-
-import java.io.IOError;
-import java.io.IOException;
+import se.lth.cs.docforia.memstore.MemoryBinary;
+import se.lth.cs.docforia.memstore.MemoryDocument;
+import se.lth.cs.docforia.memstore.MemoryDocumentFactory;
 
 /**
  * Document container
@@ -79,14 +74,6 @@ public class DocRef extends CoreRef{
         return unpack();
     }
 
-    public static DocRef read(Input reader) {
-        return new DocRef(reader.readBytes(reader.readVarInt(true)));
-    }
-
-    public static DocRef readJson(JsonNode node) {
-        return new DocRef(MemoryJson.decodeJson(node.path("doc")));
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -115,29 +102,8 @@ public class DocRef extends CoreRef{
     }
 
     @Override
-    public void write(Output writer) {
-        if(packed != null) {
-            writer.writeVarInt(packed.length, true);
-            writer.writeBytes(packed);
-        } else {
-            byte[] data = doc.toBytes();
-            writer.writeVarInt(data.length,true);
-            writer.writeBytes(data);
-        }
-    }
-
-    @Override
-    public void write(JsonGenerator jsonWriter) {
-        try {
-            jsonWriter.writeStartObject();
-            jsonWriter.writeFieldName("doc");
-
-            MemoryJsonLevel0Codec.INSTANCE.encode(doc, jsonWriter);
-
-            jsonWriter.writeEndObject();
-        } catch (IOException e) {
-            throw new IOError(e);
-        }
+    public void write(CoreRefWriter writer) {
+        writer.write((MemoryDocument)documentValue());
     }
 
     @Override

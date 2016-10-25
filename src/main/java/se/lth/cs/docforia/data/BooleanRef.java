@@ -15,14 +15,6 @@ package se.lth.cs.docforia.data;
  * limitations under the License.
  */
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonNode;
-import se.lth.cs.docforia.io.mem.Input;
-import se.lth.cs.docforia.io.mem.Output;
-
-import java.io.IOError;
-import java.io.IOException;
-
 /** boolean container */
 public class BooleanRef extends CoreRef {
     public final static BooleanRef TRUE = new BooleanRef(true);
@@ -61,25 +53,8 @@ public class BooleanRef extends CoreRef {
     }
 
     @Override
-    public void write(Output writer) {
-        writer.writeByte(value ? 1 : 0);
-    }
-
-    @Override
-    public void write(JsonGenerator jsonWriter) {
-        try {
-            jsonWriter.writeBoolean(value);
-        } catch (IOException e) {
-            throw new IOError(e);
-        }
-    }
-
-    public static BooleanRef read(Input reader) {
-        return reader.readByte() == 1 ? TRUE : FALSE;
-    }
-
-    public static BooleanRef readJson(JsonNode node) {
-        return node.asBoolean() ? TRUE : FALSE;
+    public void write(CoreRefWriter writer) {
+        writer.write(value);
     }
 
     @Override

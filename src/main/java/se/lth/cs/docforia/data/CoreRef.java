@@ -15,12 +15,10 @@ package se.lth.cs.docforia.data;
  * limitations under the License.
  */
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import se.lth.cs.docforia.io.mem.Output;
-
 /** Container supported by document model */
 public abstract class CoreRef extends DataRef {
     public abstract CoreRefType id();
-    public abstract void write(Output writer);
-    public abstract void write(JsonGenerator jsonWriter);
+    public abstract void write(CoreRefWriter writer);
+    /*public abstract void write(Output writer);
+    public abstract void write(JsonGenerator jsonWriter);*/
 }

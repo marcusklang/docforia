@@ -15,14 +15,6 @@ package se.lth.cs.docforia.data;
  * limitations under the License.
  */
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonNode;
-import se.lth.cs.docforia.io.mem.Input;
-import se.lth.cs.docforia.io.mem.Output;
-
-import java.io.IOError;
-import java.io.IOException;
-
 /**
  * int container
  */
@@ -83,26 +75,9 @@ public class IntRef extends CoreRef {
         return buf;
     }
 
-    public static IntRef read(Input reader) {
-        return new IntRef(reader.readInt());
-    }
-
-    public static IntRef readJson(JsonNode node) {
-        return new IntRef(node.intValue());
-    }
-
     @Override
-    public void write(Output writer) {
-        writer.writeInt(value);
-    }
-
-    @Override
-    public void write(JsonGenerator jsonWriter) {
-        try {
-            jsonWriter.writeNumber(value);
-        } catch (IOException e) {
-            throw new IOError(e);
-        }
+    public void write(CoreRefWriter writer) {
+        writer.write(value);
     }
 
     @Override

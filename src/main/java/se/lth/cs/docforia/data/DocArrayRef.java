@@ -15,17 +15,14 @@ package se.lth.cs.docforia.data;
  * limitations under the License.
  */
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonNode;
 import se.lth.cs.docforia.Document;
 import se.lth.cs.docforia.io.mem.Input;
 import se.lth.cs.docforia.io.mem.Output;
-import se.lth.cs.docforia.memstore.*;
+import se.lth.cs.docforia.memstore.MemoryBinary;
+import se.lth.cs.docforia.memstore.MemoryDocument;
+import se.lth.cs.docforia.memstore.MemoryDocumentFactory;
 
-import java.io.IOError;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.Iterator;
 
 /**
  * Document[] container
@@ -99,69 +96,15 @@ public class DocArrayRef extends CoreRef {
         if(packed != null)
             return packed;
         else {
-            Output writer = new Output(512,2<<29); //512 byte - 1 GB
-            write(writer);
-            return writer.toBytes();
-        }
-    }
-
-    public static DocArrayRef read(Input reader) {
-        int count = reader.readVarInt(true);
-        int size = reader.readVarInt(true);
-        return new DocArrayRef(reader.readBytes(size), count);
-    }
-
-    public static DocArrayRef readJson(JsonNode node) {
-        node = node.path("docarray");
-        MemoryDocument[] array = new MemoryDocument[node.size()];
-        Iterator<JsonNode> iter = node.elements();
-        int i = 0;
-        while(iter.hasNext()) {
-            array[i++] = MemoryJson.decodeJson(iter.next());
-        }
-
-        return new DocArrayRef(array);
-    }
-
-
-    @Override
-    public void write(Output writer) {
-        if(packed != null) {
-            writer.writeVarInt(count, true);
-            writer.writeVarInt(packed.length, true);
-            writer.writeBytes(packed);
-        } else {
-            writer.writeVarInt(docs.length, true);
-
-            Output docwriter = new Output(512,2<<29);
-            for (MemoryDocument doc : docs) {
-                byte[] docs = doc.toBytes();
-                docwriter.writeVarInt(docs.length, true);
-                docwriter.writeBytes(docs);
-            }
-
-            writer.writeVarInt(docwriter.position(), true);
-            docwriter.writeTo(writer);
+            BinaryCoreWriter writer = new BinaryCoreWriter(new Output(512,2<<29)); //512 byte - 1 GB
+            writer.writeDocumentArray((MemoryDocument[])arrayValue());
+            return writer.getWriter().toBytes();
         }
     }
 
     @Override
-    public void write(JsonGenerator jsonWriter) {
-        try {
-            jsonWriter.writeStartObject();
-            jsonWriter.writeObjectFieldStart("docarray");
-
-            jsonWriter.writeStartArray(docs.length);
-            for (Document document : unpack()) {
-                MemoryJsonLevel0Codec.INSTANCE.encode((MemoryDocument)document, jsonWriter);
-            }
-            jsonWriter.writeEndArray();
-
-            jsonWriter.writeEndObject();
-            jsonWriter.writeEndObject();
-        } catch (IOException e) {
-            throw new IOError(e);
-        }
+    public void write(CoreRefWriter writer) {
+        writer.writeDocumentArray((MemoryDocument[])arrayValue());
     }
 
     @Override

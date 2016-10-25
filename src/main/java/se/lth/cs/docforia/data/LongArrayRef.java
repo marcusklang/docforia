@@ -15,15 +15,7 @@ package se.lth.cs.docforia.data;
  * limitations under the License.
  */
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonNode;
-import se.lth.cs.docforia.io.mem.Input;
-import se.lth.cs.docforia.io.mem.Output;
-
-import java.io.IOError;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.Iterator;
 
 /**
  * long[] container
@@ -57,49 +49,9 @@ public class LongArrayRef extends CoreRef {
         return values;
     }
 
-    public static LongArrayRef read(Input reader) {
-        long[] data = new long[reader.readVarInt(true)];
-        for (int i = 0; i < data.length; i++) {
-            data[i] = reader.readLong();
-        }
-        return new LongArrayRef(data);
-    }
-
     @Override
-    public void write(Output writer) {
-        writer.writeVarInt(values.length, true);
-        for (long value : values) {
-            writer.writeLong(value);
-        }
-    }
-
-    public static LongArrayRef readJson(JsonNode node) {
-        node = node.path("longarray");
-        long[] array = new long[node.size()];
-        Iterator<JsonNode> iter = node.elements();
-        int i = 0;
-        while(iter.hasNext()) {
-            array[i++] = iter.next().asLong();
-        }
-
-        return new LongArrayRef(array);
-    }
-
-    @Override
-    public void write(JsonGenerator jsonWriter) {
-        try {
-            jsonWriter.writeStartObject();
-            jsonWriter.writeArrayFieldStart("longarray");
-
-            for (long value : values) {
-                jsonWriter.writeNumber(value);
-            }
-
-            jsonWriter.writeEndArray();
-            jsonWriter.writeEndObject();
-        } catch (IOException e) {
-            throw new IOError(e);
-        }
+    public void write(CoreRefWriter writer) {
+        writer.writeLongArray(values);
     }
 
     @Override

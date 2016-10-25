@@ -15,15 +15,7 @@ package se.lth.cs.docforia.data;
  * limitations under the License.
  */
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonNode;
-import se.lth.cs.docforia.io.mem.Input;
-import se.lth.cs.docforia.io.mem.Output;
-
-import java.io.IOError;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.Iterator;
 
 /**
  * String[] container
@@ -57,48 +49,9 @@ public class StringArrayRef extends CoreRef {
         return Arrays.toString(data);
     }
 
-    public static StringArrayRef read(Input reader) {
-        String[] data = new String[reader.readVarInt(true)];
-        for (int i = 0; i < data.length; i++) {
-            data[i] = reader.readString();
-        }
-        return new StringArrayRef(data);
-    }
-
     @Override
-    public void write(Output writer) {
-        writer.writeVarInt(data.length, true);
-        for (String s : data) {
-            writer.writeString(s);
-        }
-    }
-
-    public static StringArrayRef readJson(JsonNode node) {
-        node = node.path("stringarray");
-        String[] array = new String[node.size()];
-        Iterator<JsonNode> iter = node.elements();
-        int i = 0;
-        while(iter.hasNext()) {
-            array[i++] = iter.next().asText();
-        }
-
-        return new StringArrayRef(array);
-    }
-
-    @Override
-    public void write(JsonGenerator jsonWriter) {
-        try {
-            jsonWriter.writeStartObject();
-            jsonWriter.writeFieldName("stringarray");
-            jsonWriter.writeStartArray(data.length);
-            for (String s : data) {
-                jsonWriter.writeString(s);
-            }
-            jsonWriter.writeEndArray();
-            jsonWriter.writeEndObject();
-        } catch (IOException e) {
-            throw new IOError(e);
-        }
+    public void write(CoreRefWriter writer) {
+        writer.writeStringArray(data);
     }
 
     @Override

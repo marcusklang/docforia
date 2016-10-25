@@ -21,10 +21,7 @@ import se.lth.cs.docforia.EdgeRef;
 import se.lth.cs.docforia.NodeRef;
 import se.lth.cs.docforia.PropertyStore;
 import se.lth.cs.docforia.StoreRef;
-import se.lth.cs.docforia.data.CoreRef;
-import se.lth.cs.docforia.data.CoreRefType;
-import se.lth.cs.docforia.data.DataRef;
-import se.lth.cs.docforia.data.StringRef;
+import se.lth.cs.docforia.data.*;
 import se.lth.cs.docforia.io.mem.Input;
 import se.lth.cs.docforia.io.mem.Output;
 
@@ -69,392 +66,415 @@ public class MemoryBinaryV1L1Codec extends MemoryBinaryCodec {
         }
     }
 
-    private void writeMagic(Output writer) {
-        writer.writeByte((byte)'D');
-        writer.writeByte((byte)'M');
-        writer.writeByte((byte)'1');
-        writer.writeByte((byte)'1');
-    }
+    public static class Writer {
+        private final Output writer;
+        private final BinaryCoreWriter propwriter;
+        private final MemoryDocument doc;
 
-    private void writeProperties(Object2ObjectOpenHashMap<String,DataRef> props, Output writer) {
-        writer.writeVarInt(props.size(), true);
-        for (Object2ObjectMap.Entry<String, DataRef> entry : props.object2ObjectEntrySet()) {
-            writer.writeString(entry.getKey());
-            if(entry.getValue() instanceof CoreRef) {
-                CoreRef prop =  (CoreRef)(entry.getValue());
-                writer.writeByte(prop.id().value);
-                prop.write(writer);
-            }
-            else
-                throw new UnsupportedOperationException("Only CoreRefs are supported for encoding.");
-        }
-    }
-
-    private void writeEscapedProperty(Output output, CoreRef ref) {
-        Output data = new Output(32,2<<29);
-        switch (ref.id()) {
-            case STRING:
-                StringRef stringRef = (StringRef)ref;
-                data.writeString(stringRef.stringValue());
-                break;
-            default:
-                ref.write(data);
-                break;
+        public Writer(Output writer, MemoryDocument doc) {
+            this.writer = writer;
+            this.propwriter = new BinaryCoreWriter(writer);
+            this.doc = doc;
         }
 
-        if(data.getBuffer()[0] == 0x00) {
-            output.writeByte((byte)0xFF);
-        }
-        else if(data.getBuffer()[0] == 0xFF) {
-            output.writeByte((byte)0xFF);
+        private void writeMagic() {
+            writer.writeByte((byte) 'D');
+            writer.writeByte((byte) 'M');
+            writer.writeByte((byte) '1');
+            writer.writeByte((byte) '1');
         }
 
-        data.writeTo(output);
-    }
-
-    private void writeProperties(Object2IntLinkedOpenHashMap<PropertyKey> propertyKeys, Object2ObjectOpenHashMap<String,DataRef> props, Output writer) {
-        //0x00 == skip, 0xFF == escaped byte follows
-        for (Object2IntMap.Entry<PropertyKey> entry : propertyKeys.object2IntEntrySet()) {
-            if(props.containsKey(entry.getKey().key)) {
-                CoreRef prop = (CoreRef)props.get(entry.getKey().key);
-                if(prop.id() == entry.getKey().type) {
-                    writeEscapedProperty(writer, prop);
-                } else {
-                    writer.writeByte(0);
-                }
-            } else {
-                writer.writeByte(0);
-            }
-        }
-    }
-
-    private void writeAllProperties(Iterable<? extends StoreRef> properties, Output writer) {
-        Object2IntLinkedOpenHashMap<PropertyKey> propertyKeys = new Object2IntLinkedOpenHashMap<>();
-        for (StoreRef entry : properties) {
-            for (Map.Entry<String, DataRef> propEntry : entry.get().properties()) {
-                if(propEntry.getValue() instanceof CoreRef) {
-                    CoreRef prop = (CoreRef)propEntry.getValue();
-                    PropertyKey pkey = new PropertyKey(propEntry.getKey(), prop.id());
-                    if(!propertyKeys.containsKey(pkey)) {
-                        propertyKeys.put(pkey, propertyKeys.size());
-                    }
-                }
-                else
+        private void writeProperties(Object2ObjectOpenHashMap<String, DataRef> props) {
+            writer.writeVarInt(props.size(), true);
+            for (Object2ObjectMap.Entry<String, DataRef> entry : props.object2ObjectEntrySet()) {
+                writer.writeString(entry.getKey());
+                if (entry.getValue() instanceof CoreRef) {
+                    CoreRef prop = (CoreRef) (entry.getValue());
+                    writer.writeByte(prop.id().value);
+                    prop.write(propwriter);
+                } else
                     throw new UnsupportedOperationException("Only CoreRefs are supported for encoding.");
             }
         }
 
-        writer.writeVarInt(propertyKeys.size(),true);
-        for (Object2IntMap.Entry<PropertyKey> entry : propertyKeys.object2IntEntrySet()) {
-            writer.writeByte(entry.getKey().type.value);
-            writer.writeString(entry.getKey().key);
-        }
-
-        for (StoreRef entry : properties) {
-            if(entry instanceof MemoryNode) {
-                writeProperties(propertyKeys, ((MemoryNode)entry).properties, writer);
+        private void writeEscapedProperty(CoreRef ref) {
+            Output data = new Output(32, 2 << 29);
+            switch (ref.id()) {
+                case STRING:
+                    StringRef stringRef = (StringRef) ref;
+                    data.writeString(stringRef.stringValue());
+                    break;
+                default:
+                    BinaryCoreWriter propwriter = new BinaryCoreWriter(data);
+                    ref.write(propwriter);
+                    break;
             }
-            else if(entry instanceof MemoryEdge) {
-                writeProperties(propertyKeys, ((MemoryEdge)entry).properties, writer);
+
+            if (data.getBuffer()[0] == 0x00) {
+                writer.writeByte((byte) 0xFF);
+            } else if (data.getBuffer()[0] == 0xFF) {
+                writer.writeByte((byte) 0xFF);
             }
-            else
-                throw new RuntimeException("BUG!");
-        }
-    }
 
-    private DataRef readProperty(PropertyKey pkey, Input reader) {
-        switch (pkey.type) {
-            case STRING:
-                return new StringRef(reader.readString());
-            default:
-                return pkey.type.read(reader);
-        }
-    }
-
-    private void readAllProperties(Iterable<? extends StoreRef> entries, Input reader) {
-        final int numPropertyKeys = reader.readVarInt(true);
-        PropertyKey[] pkeys = new PropertyKey[numPropertyKeys];
-
-        for (int i = 0; i < numPropertyKeys; i++) {
-            byte id = reader.readByte();
-            String pkey = reader.readString();
-            pkeys[i] = new PropertyKey(pkey, CoreRefType.fromByteValue(id));
+            data.writeTo(writer);
         }
 
-        for (StoreRef entry : entries) {
-            PropertyStore store = entry.get();
-            for (PropertyKey pkey : pkeys) {
-                int firstByte = Byte.toUnsignedInt(reader.readByte());
-                if(firstByte == 0)
-                    continue;
-                else if(firstByte != 0xFF) {
-                    reader.setPosition(reader.position()-1);
+        private void writeProperties(Object2IntLinkedOpenHashMap<PropertyKey> propertyKeys, Object2ObjectOpenHashMap<String, DataRef> props) {
+            //0x00 == skip, 0xFF == escaped byte follows
+            for (Object2IntMap.Entry<PropertyKey> entry : propertyKeys.object2IntEntrySet()) {
+                if (props.containsKey(entry.getKey().key)) {
+                    CoreRef prop = (CoreRef) props.get(entry.getKey().key);
+                    if (prop.id() == entry.getKey().type) {
+                        writeEscapedProperty(prop);
+                    } else {
+                        writer.writeByte(0);
+                    }
+                } else {
+                    writer.writeByte(0);
+                }
+            }
+        }
+
+        private void writeAllProperties(Iterable<? extends StoreRef> properties) {
+            Object2IntLinkedOpenHashMap<PropertyKey> propertyKeys = new Object2IntLinkedOpenHashMap<>();
+            for (StoreRef entry : properties) {
+                for (Map.Entry<String, DataRef> propEntry : entry.get().properties()) {
+                    if (propEntry.getValue() instanceof CoreRef) {
+                        CoreRef prop = (CoreRef) propEntry.getValue();
+                        PropertyKey pkey = new PropertyKey(propEntry.getKey(), prop.id());
+                        if (!propertyKeys.containsKey(pkey)) {
+                            propertyKeys.put(pkey, propertyKeys.size());
+                        }
+                    } else
+                        throw new UnsupportedOperationException("Only CoreRefs are supported for encoding.");
+                }
+            }
+
+            writer.writeVarInt(propertyKeys.size(), true);
+            for (Object2IntMap.Entry<PropertyKey> entry : propertyKeys.object2IntEntrySet()) {
+                writer.writeByte(entry.getKey().type.value);
+                writer.writeString(entry.getKey().key);
+            }
+
+            for (StoreRef entry : properties) {
+                if (entry instanceof MemoryNode) {
+                    writeProperties(propertyKeys, ((MemoryNode) entry).properties);
+                } else if (entry instanceof MemoryEdge) {
+                    writeProperties(propertyKeys, ((MemoryEdge) entry).properties);
+                } else
+                    throw new RuntimeException("BUG!");
+            }
+        }
+
+
+        private int writeNodes(int idcounter, MemoryNodeCollection collection, Reference2IntOpenHashMap<NodeRef> refs) {
+            int numPureNodes = 0;
+            int numRangeNodes = 0;
+
+            Output nodeDataWriter = new Output(512,2<<29);
+
+            int lastRange = 0;
+            for (NodeRef nodeRef : collection) {
+                MemoryNode nodeStore = (MemoryNode) nodeRef.get();
+                if (!nodeStore.isAnnotation()) {
+                    numPureNodes++;
+                } else {
+                    nodeDataWriter.writeVarInt(nodeStore.start-lastRange, true);
+                    nodeDataWriter.writeVarInt(nodeStore.end-nodeStore.start, true);
+                    lastRange = nodeStore.end;
+                    numRangeNodes++;
                 }
 
-                store.putProperty(pkey.key, readProperty(pkey, reader));
+                //writeProperties(nodeStore.properties, nodeDataWriter);
+                refs.put(nodeStore, idcounter++);
             }
+
+            writer.writeVarInt(numPureNodes, true);
+            writer.writeVarInt(numRangeNodes, true);
+            nodeDataWriter.writeTo(writer);
+
+            writeAllProperties(collection);
+            return idcounter;
         }
-    }
 
-    private int writeNodes(int idcounter, MemoryNodeCollection collection, Output writer, Reference2IntOpenHashMap<NodeRef> refs) {
-        int numPureNodes = 0;
-        int numRangeNodes = 0;
-
-        Output nodeDataWriter = new Output(512,2<<29);
-
-        int lastRange = 0;
-        for (NodeRef nodeRef : collection) {
-            MemoryNode nodeStore = (MemoryNode) nodeRef.get();
-            if (!nodeStore.isAnnotation()) {
-                numPureNodes++;
+        private int writeNodeLayer(int idcounter, ArrayList<MemoryNodeCollection> layerGroup, Reference2IntOpenHashMap<NodeRef> refs) {
+            int id = MemoryCoreNodeLayer.fromLayerName(layerGroup.get(0).getKey().layer).id;
+            if(id == -1) {
+                writer.writeByte(0x7F);
+                writer.writeString(layerGroup.get(0).getKey().layer);
             } else {
-                nodeDataWriter.writeVarInt(nodeStore.start-lastRange, true);
-                nodeDataWriter.writeVarInt(nodeStore.end-nodeStore.start, true);
-                lastRange = nodeStore.end;
-                numRangeNodes++;
+                writer.writeByte(id);
             }
 
-            //writeProperties(nodeStore.properties, nodeDataWriter);
-            refs.put(nodeStore, idcounter++);
+            writer.writeVarInt(layerGroup.size(), true);
+
+            for (MemoryNodeCollection collection : layerGroup) {
+                writer.writeString(collection.key.getVariant() == null ? "" : collection.key.getVariant());
+                idcounter = writeNodes(idcounter, collection, refs);
+            }
+
+            return idcounter;
         }
 
-        writer.writeVarInt(numPureNodes, true);
-        writer.writeVarInt(numRangeNodes, true);
-        nodeDataWriter.writeTo(writer);
+        private void writeEdges(MemoryEdgeCollection collection, Output writer, Reference2IntOpenHashMap<NodeRef> refs) {
+            writer.writeVarInt(collection.edges.size(),true);
 
-        writeAllProperties(collection, writer);
-        return idcounter;
+            for (EdgeRef edgeRef : collection) {
+                MemoryEdge edge = (MemoryEdge)edgeRef.get();
+
+                writer.writeVarInt(refs.getInt(edge.head),true);
+                writer.writeVarInt(refs.getInt(edge.tail),true);
+            }
+
+            writeAllProperties(collection);
+        }
+
+        private void writeEdgeLayer(ArrayList<MemoryEdgeCollection> layerGroup, Reference2IntOpenHashMap<NodeRef> refs) {
+            int id = MemoryCoreEdgeLayer.fromLayerName(layerGroup.get(0).getKey().layer).id;
+            if(id == -1) {
+                writer.writeByte(0xFF);
+                writer.writeString(layerGroup.get(0).getKey().layer);
+            } else {
+                writer.writeByte(id | 0x80);
+            }
+
+            writer.writeVarInt(layerGroup.size(),true);
+            for (MemoryEdgeCollection collection : layerGroup) {
+                writer.writeString(collection.key.getVariant() == null ? "" : collection.key.getVariant());
+                writeEdges(collection, writer, refs);
+            }
+        }
+
+        private void writeEdgeLayers(Reference2IntOpenHashMap<NodeRef> refs) {
+            String lastLayer = "";
+            ArrayList<MemoryEdgeCollection> layerCollections = new ArrayList<>();
+
+            for (Object2ReferenceMap.Entry<MemoryEdgeCollection.Key, MemoryEdgeCollection> entry : doc.store.edges.object2ReferenceEntrySet()) {
+                if(lastLayer.equals("")) {
+                    layerCollections.add(entry.getValue());
+                    lastLayer = entry.getKey().layer;
+                }
+                else if(lastLayer.equals(entry.getKey().layer)) {
+                    layerCollections.add(entry.getValue());
+                    lastLayer = entry.getKey().layer;
+                }
+                else {
+                    writeEdgeLayer(layerCollections, refs);
+                    layerCollections.clear();
+                    lastLayer = entry.getKey().layer;
+                    layerCollections.add(entry.getValue());
+                }
+            }
+
+            if(!layerCollections.isEmpty()) {
+                writeEdgeLayer(layerCollections, refs);
+            }
+        }
+
+        private int writeNodeLayers(Reference2IntOpenHashMap<NodeRef> refs) {
+            String lastLayer = "";
+            ArrayList<MemoryNodeCollection> layerCollections = new ArrayList<>();
+            int idcounter = 0;
+
+            for (Object2ReferenceMap.Entry<MemoryNodeCollection.Key, MemoryNodeCollection> entry : doc.store.nodes.object2ReferenceEntrySet()) {
+                if(lastLayer.equals("")) {
+                    layerCollections.add(entry.getValue());
+                    lastLayer = entry.getKey().layer;
+                }
+                else if(lastLayer.equals(entry.getKey().layer)) {
+                    layerCollections.add(entry.getValue());
+                    lastLayer = entry.getKey().layer;
+                }
+                else {
+                    idcounter = writeNodeLayer(idcounter, layerCollections, refs);
+                    layerCollections.clear();
+                    lastLayer = entry.getKey().layer;
+                    layerCollections.add(entry.getValue());
+                }
+            }
+
+            if(!layerCollections.isEmpty()) {
+                idcounter = writeNodeLayer(idcounter, layerCollections, refs);
+            }
+
+            return idcounter;
+        }
     }
 
-    private int writeNodeLayer(int idcounter, MemoryDocument doc, Output writer, ArrayList<MemoryNodeCollection> layerGroup, Reference2IntOpenHashMap<NodeRef> refs) {
-        int id = MemoryCoreNodeLayer.fromLayerName(layerGroup.get(0).getKey().layer).id;
-        if(id == -1) {
-            writer.writeByte(0x7F);
-            writer.writeString(layerGroup.get(0).getKey().layer);
-        } else {
-            writer.writeByte(id);
+    public static class Reader {
+        private Input reader;
+        private BinaryCoreReader propreader;
+
+        public Reader(Input reader) {
+            this.reader = reader;
+            this.propreader = new BinaryCoreReader(reader);
         }
 
-        writer.writeVarInt(layerGroup.size(), true);
-
-        for (MemoryNodeCollection collection : layerGroup) {
-            writer.writeString(collection.key.getVariant() == null ? "" : collection.key.getVariant());
-            idcounter = writeNodes(idcounter, collection, writer, refs);
-        }
-
-        return idcounter;
-    }
-
-    private void writeEdges(MemoryEdgeCollection collection, Output writer, Reference2IntOpenHashMap<NodeRef> refs) {
-        writer.writeVarInt(collection.edges.size(),true);
-
-        for (EdgeRef edgeRef : collection) {
-            MemoryEdge edge = (MemoryEdge)edgeRef.get();
-
-            writer.writeVarInt(refs.getInt(edge.head),true);
-            writer.writeVarInt(refs.getInt(edge.tail),true);
-        }
-
-        writeAllProperties(collection, writer);
-    }
-
-    private void writeEdgeLayer(MemoryDocument doc, Output writer, ArrayList<MemoryEdgeCollection> layerGroup, Reference2IntOpenHashMap<NodeRef> refs) {
-        int id = MemoryCoreEdgeLayer.fromLayerName(layerGroup.get(0).getKey().layer).id;
-        if(id == -1) {
-            writer.writeByte(0xFF);
-            writer.writeString(layerGroup.get(0).getKey().layer);
-        } else {
-            writer.writeByte(id | 0x80);
-        }
-
-        writer.writeVarInt(layerGroup.size(),true);
-        for (MemoryEdgeCollection collection : layerGroup) {
-            writer.writeString(collection.key.getVariant() == null ? "" : collection.key.getVariant());
-            writeEdges(collection, writer, refs);
-        }
-    }
-
-    private void writeEdgeLayers(MemoryDocument doc, Output writer, Reference2IntOpenHashMap<NodeRef> refs) {
-        String lastLayer = "";
-        ArrayList<MemoryEdgeCollection> layerCollections = new ArrayList<>();
-
-        for (Object2ReferenceMap.Entry<MemoryEdgeCollection.Key, MemoryEdgeCollection> entry : doc.store.edges.object2ReferenceEntrySet()) {
-            if(lastLayer.equals("")) {
-                layerCollections.add(entry.getValue());
-                lastLayer = entry.getKey().layer;
-            }
-            else if(lastLayer.equals(entry.getKey().layer)) {
-                layerCollections.add(entry.getValue());
-                lastLayer = entry.getKey().layer;
-            }
-            else {
-                writeEdgeLayer(doc, writer, layerCollections, refs);
-                layerCollections.clear();
-                lastLayer = entry.getKey().layer;
-                layerCollections.add(entry.getValue());
+        private DataRef readProperty(PropertyKey pkey) {
+            switch (pkey.type) {
+                case STRING:
+                    return new StringRef(reader.readString());
+                default:
+                    return propreader.read(pkey.type);
             }
         }
 
-        if(!layerCollections.isEmpty()) {
-            writeEdgeLayer(doc, writer, layerCollections, refs);
-        }
-    }
+        private void readAllProperties(Iterable<? extends StoreRef> entries) {
+            final int numPropertyKeys = reader.readVarInt(true);
+            PropertyKey[] pkeys = new PropertyKey[numPropertyKeys];
 
-    private int writeNodeLayers(MemoryDocument doc, Output writer, Reference2IntOpenHashMap<NodeRef> refs) {
-        String lastLayer = "";
-        ArrayList<MemoryNodeCollection> layerCollections = new ArrayList<>();
-        int idcounter = 0;
+            for (int i = 0; i < numPropertyKeys; i++) {
+                byte id = reader.readByte();
+                String pkey = reader.readString();
+                pkeys[i] = new PropertyKey(pkey, BinaryCoreReader.fromByteValue(id));
+            }
 
-        for (Object2ReferenceMap.Entry<MemoryNodeCollection.Key, MemoryNodeCollection> entry : doc.store.nodes.object2ReferenceEntrySet()) {
-            if(lastLayer.equals("")) {
-                layerCollections.add(entry.getValue());
-                lastLayer = entry.getKey().layer;
-            }
-            else if(lastLayer.equals(entry.getKey().layer)) {
-                layerCollections.add(entry.getValue());
-                lastLayer = entry.getKey().layer;
-            }
-            else {
-                idcounter = writeNodeLayer(idcounter, doc, writer, layerCollections, refs);
-                layerCollections.clear();
-                lastLayer = entry.getKey().layer;
-                layerCollections.add(entry.getValue());
+            for (StoreRef entry : entries) {
+                PropertyStore store = entry.get();
+                for (PropertyKey pkey : pkeys) {
+                    int firstByte = Byte.toUnsignedInt(reader.readByte());
+                    if(firstByte == 0)
+                        continue;
+                    else if(firstByte != 0xFF) {
+                        reader.setPosition(reader.position()-1);
+                    }
+
+                    store.putProperty(pkey.key, readProperty(pkey));
+                }
             }
         }
 
-        if(!layerCollections.isEmpty()) {
-            idcounter = writeNodeLayer(idcounter, doc, writer, layerCollections, refs);
+        private Object2ObjectOpenHashMap<String,DataRef> readProperties() {
+            Object2ObjectOpenHashMap<String,DataRef> props = new Object2ObjectOpenHashMap<>();
+            int numProperties = reader.readVarInt(true);
+            for(int i = 0; i < numProperties; i++) {
+                String key = reader.readString();
+
+                DataRef value = propreader.read();
+                props.put(key, value);
+            }
+
+            return props;
         }
 
-        return idcounter;
+        private void readNodes(MemoryNodeCollection collection, Int2ReferenceOpenHashMap<NodeRef> nodeRefs)
+        {
+            int numPureNodes = reader.readVarInt(true);
+            int numRangeNodes = reader.readVarInt(true);
+
+            for(int i = 0; i < numPureNodes; i++) {
+                MemoryNode node = collection.create();
+                node.properties = readProperties();
+                nodeRefs.put(nodeRefs.size(), node);
+            }
+
+            int last = 0;
+
+            ArrayList<MemoryNode> memoryNodes = new ArrayList<>(numPureNodes+numRangeNodes);
+            for(int i = 0; i < numRangeNodes; i++) {
+                int start = reader.readVarInt(true)+last;
+                int end = reader.readVarInt(true)+start;
+                last = end;
+
+                MemoryNode node = collection.create(start, end);
+                nodeRefs.put(nodeRefs.size(), node);
+                memoryNodes.add(node);
+            }
+
+            readAllProperties(memoryNodes);
+        }
+
+        private void readNodeLayer(int id, MemoryDocumentStore store, Int2ReferenceOpenHashMap<NodeRef> nodeRefs) {
+            String layer = MemoryCoreNodeLayer.fromId(id).layer;
+            if(layer == null) {
+                layer = reader.readString();
+            }
+
+            int numVariants = reader.readVarInt(true);
+
+            for(int i = 0; i < numVariants; i++) {
+                String variant = reader.readString();
+                if(variant.equals(""))
+                    variant = null;
+
+                readNodes(store.getNodeCollection(layer, variant), nodeRefs);
+            }
+        }
+
+        private void readEdges(MemoryEdgeCollection store, Int2ReferenceOpenHashMap<NodeRef> nodeRefs) {
+            int edgeSize = reader.readVarInt(true);
+
+            ArrayList<MemoryEdge> memoryEdges = new ArrayList<>(edgeSize);
+            for(int i = 0; i < edgeSize; i++) {
+                int head = reader.readVarInt(true);
+                int tail = reader.readVarInt(true);
+
+                MemoryEdge edge = store.create();
+
+                edge.connect(nodeRefs.get(tail), nodeRefs.get(head));
+                memoryEdges.add(edge);
+            }
+
+            readAllProperties(memoryEdges);
+        }
+
+        private void readEdgeLayer(int id, MemoryDocumentStore store, Int2ReferenceOpenHashMap<NodeRef> nodeRefs) {
+            String layer = MemoryCoreEdgeLayer.fromId(id).layer;
+            if(layer == null) {
+                layer = reader.readString();
+            }
+
+            int numVariants = reader.readVarInt(true);
+            for (int i = 0; i < numVariants; i++) {
+                String variant = reader.readString();
+                if(variant.equals(""))
+                    variant = null;
+
+                readEdges(store.getEdgeCollection(layer, variant), nodeRefs);
+            }
+        }
     }
 
     @Override
-    public void encode(MemoryDocument doc, Output writer, MemoryBinary.DocumentIndex index) {
-        writeMagic(writer);
-        writeProperties(doc.store.properties, writer);
+    public void encode(MemoryDocument doc, Output output, MemoryBinary.DocumentIndex index) {
+        Writer writer = new Writer(output, doc);
+        writer.writeMagic();
+        writer.writeProperties(doc.store.properties);
 
-        writer.writeString(doc.store.text != null ? doc.store.text : "");
+        output.writeString(doc.store.text != null ? doc.store.text : "");
 
         Reference2IntOpenHashMap<NodeRef> refs = new Reference2IntOpenHashMap<>();
 
-        int layerStart = writer.reserve(4);
-        writeNodeLayers(doc, writer, refs);
-        writeEdgeLayers(doc, writer, refs);
-        int currentPos = writer.position();
+        int layerStart = output.reserve(4);
+        writer.writeNodeLayers(refs);
+        writer.writeEdgeLayers(refs);
+        int currentPos = output.position();
 
-        writer.setPosition(layerStart);
-        writer.writeInt(currentPos-layerStart-4);
-        writer.setPosition(currentPos);
+        output.setPosition(layerStart);
+        output.writeInt(currentPos-layerStart-4);
+        output.setPosition(currentPos);
     }
 
-    private Object2ObjectOpenHashMap<String,DataRef> readProperties(Input reader) {
-        Object2ObjectOpenHashMap<String,DataRef> props = new Object2ObjectOpenHashMap<>();
-        int numProperties = reader.readVarInt(true);
-        for(int i = 0; i < numProperties; i++) {
-            String key = reader.readString();
-
-            DataRef value = CoreRefType.fromByteValue(reader.readByte()).read(reader);
-            props.put(key, value);
-        }
-
-        return props;
-    }
-
-    private void readNodes(MemoryNodeCollection collection, Input reader, Int2ReferenceOpenHashMap<NodeRef> nodeRefs)
-    {
-        int numPureNodes = reader.readVarInt(true);
-        int numRangeNodes = reader.readVarInt(true);
-
-        for(int i = 0; i < numPureNodes; i++) {
-            MemoryNode node = collection.create();
-            node.properties = readProperties(reader);
-            nodeRefs.put(nodeRefs.size(), node);
-        }
-
-        int last = 0;
-
-        ArrayList<MemoryNode> memoryNodes = new ArrayList<>(numPureNodes+numRangeNodes);
-        for(int i = 0; i < numRangeNodes; i++) {
-            int start = reader.readVarInt(true)+last;
-            int end = reader.readVarInt(true)+start;
-            last = end;
-
-            MemoryNode node = collection.create(start, end);
-            nodeRefs.put(nodeRefs.size(), node);
-            memoryNodes.add(node);
-        }
-
-        readAllProperties(memoryNodes, reader);
-    }
-
-    private void readNodeLayer(int id, Input reader, MemoryDocumentStore store, Int2ReferenceOpenHashMap<NodeRef> nodeRefs) {
-        String layer = MemoryCoreNodeLayer.fromId(id).layer;
-        if(layer == null) {
-            layer = reader.readString();
-        }
-
-        int numVariants = reader.readVarInt(true);
-
-        for(int i = 0; i < numVariants; i++) {
-            String variant = reader.readString();
-            if(variant.equals(""))
-                variant = null;
-
-            readNodes(store.getNodeCollection(layer, variant), reader, nodeRefs);
-        }
-    }
-
-    private void readEdges(Input reader, MemoryEdgeCollection store, Int2ReferenceOpenHashMap<NodeRef> nodeRefs) {
-        int edgeSize = reader.readVarInt(true);
-
-        ArrayList<MemoryEdge> memoryEdges = new ArrayList<>(edgeSize);
-        for(int i = 0; i < edgeSize; i++) {
-            int head = reader.readVarInt(true);
-            int tail = reader.readVarInt(true);
-
-            MemoryEdge edge = store.create();
-
-            edge.connect(nodeRefs.get(tail), nodeRefs.get(head));
-            memoryEdges.add(edge);
-        }
-
-        readAllProperties(memoryEdges, reader);
-    }
-
-    private void readEdgeLayer(int id, Input reader, MemoryDocumentStore store, Int2ReferenceOpenHashMap<NodeRef> nodeRefs) {
-        String layer = MemoryCoreEdgeLayer.fromId(id).layer;
-        if(layer == null) {
-            layer = reader.readString();
-        }
-
-        int numVariants = reader.readVarInt(true);
-        for (int i = 0; i < numVariants; i++) {
-            String variant = reader.readString();
-            if(variant.equals(""))
-                variant = null;
-
-            readEdges(reader, store.getEdgeCollection(layer, variant), nodeRefs);
-        }
-    }
 
     @Override
-    public MemoryDocument decode(Input reader) {
+    public MemoryDocument decode(Input input) {
         MemoryDocumentStore store = new MemoryDocumentStore();
-        store.properties = readProperties(reader);
-        store.text = reader.readString();
+        Reader reader = new Reader(input);
+
+        store.properties = reader.readProperties();
+        store.text = input.readString();
 
         Int2ReferenceOpenHashMap<NodeRef> nodeRefs = new Int2ReferenceOpenHashMap<>();
 
-        int layerEnd = reader.readInt();
-        layerEnd += reader.position();
+        int layerEnd = input.readInt();
+        layerEnd += input.position();
 
-        while(reader.position() < layerEnd) {
-            int id = Byte.toUnsignedInt(reader.readByte());
+        while(input.position() < layerEnd) {
+            int id = Byte.toUnsignedInt(input.readByte());
             if((id & 0x80) == 0) {
-                readNodeLayer(id, reader, store, nodeRefs);
+                reader.readNodeLayer(id, store, nodeRefs);
             } else {
-                readEdgeLayer(id & ~0x80, reader, store, nodeRefs);
+                reader.readEdgeLayer(id & ~0x80, store, nodeRefs);
             }
         }
 

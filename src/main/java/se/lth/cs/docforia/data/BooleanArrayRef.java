@@ -15,15 +15,7 @@ package se.lth.cs.docforia.data;
  * limitations under the License.
  */
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonNode;
-import se.lth.cs.docforia.io.mem.Input;
-import se.lth.cs.docforia.io.mem.Output;
-
-import java.io.IOError;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.Iterator;
 
 /** boolean[] container */
 public class BooleanArrayRef extends CoreRef {
@@ -65,49 +57,9 @@ public class BooleanArrayRef extends CoreRef {
         return array;
     }
 
-    public static BooleanArrayRef read(Input reader) {
-        int size = reader.readVarInt(true);
-        boolean[] data = new boolean[size];
-        for (int i = 0; i < size; i++) {
-            data[i] = reader.readByte() == 1;
-        }
-        return new BooleanArrayRef(data);
-    }
-
-    public static BooleanArrayRef readJson(JsonNode node) {
-        node = node.path("boolarray");
-        boolean[] array = new boolean[node.size()];
-        Iterator<JsonNode> iter = node.elements();
-        int i = 0;
-        while(iter.hasNext()) {
-            array[i++] = iter.next().asInt() == 1;
-        }
-
-        return new BooleanArrayRef(array);
-    }
-
     @Override
-    public void write(Output writer) {
-        writer.writeVarInt(array.length, true);
-        for (boolean b : array) {
-            writer.writeByte(b ? 1 : 0);
-        }
-    }
-
-    @Override
-    public void write(JsonGenerator jsonWriter) {
-        try {
-            jsonWriter.writeStartObject();
-            jsonWriter.writeObjectFieldStart("boolarray");
-            jsonWriter.writeStartArray(array.length);
-            for (boolean b : array) {
-                jsonWriter.writeNumber(b ? 1 : 0);
-            }
-            jsonWriter.writeEndArray();
-            jsonWriter.writeEndObject();
-        } catch (IOException e) {
-            throw new IOError(e);
-        }
+    public void write(CoreRefWriter writer) {
+        writer.writeBooleanArray(array);
     }
 
     @Override

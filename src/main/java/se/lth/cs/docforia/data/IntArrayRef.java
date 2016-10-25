@@ -15,15 +15,7 @@ package se.lth.cs.docforia.data;
  * limitations under the License.
  */
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonNode;
-import se.lth.cs.docforia.io.mem.Input;
-import se.lth.cs.docforia.io.mem.Output;
-
-import java.io.IOError;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.Iterator;
 
 /**
  * int[] container
@@ -57,50 +49,9 @@ public class IntArrayRef extends CoreRef{
         return values;
     }
 
-    public static IntArrayRef read(Input reader) {
-        int[] data = new int[reader.readVarInt(true)];
-        for (int i = 0; i < data.length; i++) {
-            data[i] = reader.readInt();
-        }
-
-        return new IntArrayRef(data);
-    }
-
-    public static IntArrayRef readJson(JsonNode node) {
-        node = node.path("intarray");
-        int[] array = new int[node.size()];
-        Iterator<JsonNode> iter = node.elements();
-        int i = 0;
-        while(iter.hasNext()) {
-            array[i++] = iter.next().intValue();
-        }
-
-        return new IntArrayRef(array);
-    }
-
     @Override
-    public void write(Output writer) {
-        writer.writeVarInt(values.length, true);
-        for (int value : values) {
-            writer.writeInt(value);
-        }
-    }
-
-    @Override
-    public void write(JsonGenerator jsonWriter) {
-        try {
-            jsonWriter.writeStartObject();
-            jsonWriter.writeArrayFieldStart("intarray");
-
-            for (int value : values) {
-                jsonWriter.writeNumber(value);
-            }
-
-            jsonWriter.writeEndArray();
-            jsonWriter.writeEndObject();
-        } catch (IOException e) {
-            throw new IOError(e);
-        }
+    public void write(CoreRefWriter writer) {
+        writer.writeIntArray(values);
     }
 
     @Override

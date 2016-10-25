@@ -49,7 +49,8 @@ public class MultipartReaderV1 {
             case BOOLEAN:
                 return value.getBoolValue() ? BooleanRef.TRUE : BooleanRef.FALSE;
             default:
-                return CoreRefType.fromByteValue((byte)type.getNumber()).read(new Input(value.getBinaryValue().toByteArray()));
+                BinaryCoreReader reader = new BinaryCoreReader(new Input(value.getBinaryValue().toByteArray()));
+                return reader.read((byte)type.getNumber());
         }
     }
 
@@ -62,7 +63,8 @@ public class MultipartReaderV1 {
         final String key = column.getKey();
         Int2ObjectArrayMap<DataRef> outputs = new Int2ObjectArrayMap<>();
         Input input = new Input(column.getData().toByteArray());
-        CoreRefType type = CoreRefType.fromByteValue((byte)column.getType().getNumber());
+        CoreRefType type = BinaryCoreReader.fromByteValue((byte)column.getType().getNumber());
+        BinaryCoreReader propreader = new BinaryCoreReader(input);
         int i = 0;
         while(!input.eof()) {
             byte b = input.readByte();
@@ -70,14 +72,14 @@ public class MultipartReaderV1 {
                 i++;
             }
             else if(b == (byte)0xFF) {
-                entries.get(i).get().putProperty(key, type.read(input));
+                entries.get(i).get().putProperty(key, propreader.read(type));
                 i++;
             }
             else if(b == (byte)0xFE) {
                 i += input.readVarInt(true);
             } else {
                 input.setPosition(input.position()-1);
-                entries.get(i).get().putProperty(key, type.read(input));
+                entries.get(i).get().putProperty(key, propreader.read(type));
                 i++;
             }
         }

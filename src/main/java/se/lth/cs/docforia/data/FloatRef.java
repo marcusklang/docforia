@@ -15,14 +15,6 @@ package se.lth.cs.docforia.data;
  * limitations under the License.
  */
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonNode;
-import se.lth.cs.docforia.io.mem.Input;
-import se.lth.cs.docforia.io.mem.Output;
-
-import java.io.IOError;
-import java.io.IOException;
-
 /**
  * float container
  */
@@ -84,26 +76,9 @@ public class FloatRef extends CoreRef {
         return buf;
     }
 
-    public static FloatRef read(Input reader) {
-        return new FloatRef(reader.readFloat());
-    }
-
-    public static FloatRef readJson(JsonNode jsonNode) {
-        return new FloatRef(jsonNode.floatValue());
-    }
-
     @Override
-    public void write(Output writer) {
-        writer.writeFloat(value);
-    }
-
-    @Override
-    public void write(JsonGenerator jsonWriter) {
-        try {
-            jsonWriter.writeNumber(value);
-        } catch (IOException e) {
-            throw new IOError(e);
-        }
+    public void write(CoreRefWriter writer) {
+        writer.write(value);
     }
 
     @Override

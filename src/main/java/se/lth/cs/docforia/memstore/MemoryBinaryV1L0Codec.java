@@ -22,8 +22,9 @@ import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import se.lth.cs.docforia.EdgeRef;
 import se.lth.cs.docforia.NodeRef;
+import se.lth.cs.docforia.data.BinaryCoreReader;
+import se.lth.cs.docforia.data.BinaryCoreWriter;
 import se.lth.cs.docforia.data.CoreRef;
-import se.lth.cs.docforia.data.CoreRefType;
 import se.lth.cs.docforia.data.DataRef;
 import se.lth.cs.docforia.io.mem.Input;
 import se.lth.cs.docforia.io.mem.Output;
@@ -44,13 +45,14 @@ public class MemoryBinaryV1L0Codec extends MemoryBinaryCodec {
     }
 
     private void writeProperties(Object2ObjectOpenHashMap<String,DataRef> props, Output writer) {
+        BinaryCoreWriter propwriter = new BinaryCoreWriter(writer);
         writer.writeInt(props.size());
         for (Object2ObjectMap.Entry<String, DataRef> entry : props.object2ObjectEntrySet()) {
             writer.writeString(entry.getKey());
             if(entry.getValue() instanceof CoreRef) {
                 CoreRef prop =  (CoreRef)(entry.getValue());
                 writer.writeByte(prop.id().value);
-                prop.write(writer);
+                prop.write(propwriter);
             }
             else
                 throw new UnsupportedOperationException("Only CoreRefs are supported for encoding.");
@@ -221,12 +223,13 @@ public class MemoryBinaryV1L0Codec extends MemoryBinaryCodec {
     }
 
     private Object2ObjectOpenHashMap<String,DataRef> readProperties(Input reader) {
+        BinaryCoreReader propreader = new BinaryCoreReader(reader);
         Object2ObjectOpenHashMap<String,DataRef> props = new Object2ObjectOpenHashMap<>();
         int numProperties = reader.readInt();
         for(int i = 0; i < numProperties; i++) {
             String key = reader.readString();
 
-            DataRef value = CoreRefType.fromByteValue(reader.readByte()).read(reader);
+            DataRef value = propreader.read();
             props.put(key, value);
         }
 

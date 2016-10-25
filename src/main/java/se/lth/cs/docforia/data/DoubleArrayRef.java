@@ -15,15 +15,7 @@ package se.lth.cs.docforia.data;
  * limitations under the License.
  */
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonNode;
-import se.lth.cs.docforia.io.mem.Input;
-import se.lth.cs.docforia.io.mem.Output;
-
-import java.io.IOError;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.Iterator;
 
 /**
  * double[] container
@@ -57,48 +49,9 @@ public class DoubleArrayRef extends CoreRef {
         return values;
     }
 
-    public static DoubleArrayRef read(Input reader) {
-        double[] data = new double[reader.readVarInt(true)];
-        for (int i = 0; i < data.length; i++) {
-            data[i] = reader.readDouble();
-        }
-
-        return new DoubleArrayRef(data);
-    }
-
-    public static DoubleArrayRef readJson(JsonNode node) {
-        node = node.path("doublearray");
-        double[] array = new double[node.size()];
-        Iterator<JsonNode> iter = node.elements();
-        int i = 0;
-        while(iter.hasNext()) {
-            array[i++] = iter.next().doubleValue();
-        }
-
-        return new DoubleArrayRef(array);
-    }
-
     @Override
-    public void write(Output writer) {
-        writer.writeVarInt(values.length,true);
-        for (double value : values) {
-            writer.writeDouble(value);
-        }
-    }
-
-    @Override
-    public void write(JsonGenerator jsonWriter) {
-        try {
-            jsonWriter.writeStartObject();
-            jsonWriter.writeArrayFieldStart("doublearray");
-            for (double value : values) {
-                jsonWriter.writeNumber(value);
-            }
-            jsonWriter.writeEndArray();
-            jsonWriter.writeEndObject();
-        } catch (IOException e) {
-            throw new IOError(e);
-        }
+    public void write(CoreRefWriter writer) {
+        writer.writeDoubleArray(values);
     }
 
     @Override

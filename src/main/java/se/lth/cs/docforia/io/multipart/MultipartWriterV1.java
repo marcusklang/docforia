@@ -16,10 +16,10 @@ package se.lth.cs.docforia.io.multipart;
  */
 
 import com.google.protobuf.ByteString;
-import com.google.protobuf.ProtocolStringList;
 import it.unimi.dsi.fastutil.ints.*;
 import it.unimi.dsi.fastutil.objects.*;
 import se.lth.cs.docforia.*;
+import se.lth.cs.docforia.data.BinaryCoreWriter;
 import se.lth.cs.docforia.data.CoreRef;
 import se.lth.cs.docforia.data.DataRef;
 import se.lth.cs.docforia.data.StringRef;
@@ -159,9 +159,9 @@ public class MultipartWriterV1 implements Serializable {
                 valueBuilder.setDoubleValue(corevalue.doubleValue());
                 break;
             default:
-                Output binaryData = new Output(32, 1<<30);
-                corevalue.write(binaryData);
-                valueBuilder.setBinaryValue(ByteString.copyFrom(binaryData.getBuffer(), 0, binaryData.position()));
+                BinaryCoreWriter writer = new BinaryCoreWriter(new Output(32, 1<<30));
+                corevalue.write(writer);
+                valueBuilder.setBinaryValue(ByteString.copyFrom(writer.getWriter().getBuffer(), 0, writer.getWriter().position()));
                 break;
         }
 
@@ -189,7 +189,7 @@ public class MultipartWriterV1 implements Serializable {
         builder.setLength(doc.length());
 
         if(prevheader != null) {
-            ProtocolStringList nodeLayerList = prevheader.getNodeLayerList();
+            List<String> nodeLayerList = prevheader.getNodeLayerList();
             for (int i = 0; i < nodeLayerList.size(); i++) {
                 context.nodeLayers.add(nodeLayerList.get(i), i);
             }
@@ -239,7 +239,8 @@ public class MultipartWriterV1 implements Serializable {
                 data.writeString(stringRef.stringValue());
                 break;
             default:
-                ref.write(data);
+                BinaryCoreWriter writer = new BinaryCoreWriter(data);
+                ref.write(writer);
                 break;
         }
 

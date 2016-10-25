@@ -15,13 +15,6 @@ package se.lth.cs.docforia.data;
  * limitations under the License.
  */
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonNode;
-import se.lth.cs.docforia.io.mem.Input;
-import se.lth.cs.docforia.io.mem.Output;
-
-import java.io.IOError;
-import java.io.IOException;
 import java.util.Arrays;
 
 /** byte[] container */
@@ -59,37 +52,9 @@ public class BinaryRef extends CoreRef {
         return data;
     }
 
-    public static BinaryRef read(Input reader) {
-        int size = reader.readVarInt(true);
-        byte[] data = new byte[size];
-        reader.readBytes(data);
-        return new BinaryRef(data);
-    }
-
-    public static BinaryRef readJson(JsonNode node) {
-        try {
-            return new BinaryRef(node.path("binary").binaryValue());
-        } catch (IOException e) {
-            throw new IOError(e);
-        }
-    }
-
     @Override
-    public void write(Output writer) {
-        writer.writeVarInt(data.length, true);
-        writer.writeBytes(data);
-    }
-
-
-    @Override
-    public void write(JsonGenerator jsonWriter) {
-        try {
-            jsonWriter.writeStartObject();
-            jsonWriter.writeBinaryField("binary", data);
-            jsonWriter.writeEndObject();
-        } catch (IOException e) {
-            throw new IOError(e);
-        }
+    public void write(CoreRefWriter writer) {
+        writer.write(data);
     }
 
     @Override
