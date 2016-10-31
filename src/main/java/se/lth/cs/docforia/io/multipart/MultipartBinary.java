@@ -16,67 +16,67 @@ public final class MultipartBinary {
     /**
      * <code>BINARY = 1;</code>
      */
-    BINARY(1),
+    BINARY(0, 1),
     /**
      * <code>STRING = 2;</code>
      */
-    STRING(2),
+    STRING(1, 2),
     /**
      * <code>INT = 3;</code>
      */
-    INT(3),
+    INT(2, 3),
     /**
      * <code>LONG = 4;</code>
      */
-    LONG(4),
+    LONG(3, 4),
     /**
      * <code>FLOAT = 5;</code>
      */
-    FLOAT(5),
+    FLOAT(4, 5),
     /**
      * <code>DOUBLE = 6;</code>
      */
-    DOUBLE(6),
+    DOUBLE(5, 6),
     /**
      * <code>BOOLEAN = 7;</code>
      */
-    BOOLEAN(7),
+    BOOLEAN(6, 7),
     /**
      * <code>STRING_ARRAY = 8;</code>
      */
-    STRING_ARRAY(8),
+    STRING_ARRAY(7, 8),
     /**
      * <code>INT_ARRAY = 9;</code>
      */
-    INT_ARRAY(9),
+    INT_ARRAY(8, 9),
     /**
      * <code>LONG_ARRAY = 10;</code>
      */
-    LONG_ARRAY(10),
+    LONG_ARRAY(9, 10),
     /**
      * <code>FLOAT_ARRAY = 11;</code>
      */
-    FLOAT_ARRAY(11),
+    FLOAT_ARRAY(10, 11),
     /**
      * <code>DOUBLE_ARRAY = 12;</code>
      */
-    DOUBLE_ARRAY(12),
+    DOUBLE_ARRAY(11, 12),
     /**
      * <code>BOOLEAN_ARRAY = 13;</code>
      */
-    BOOLEAN_ARRAY(13),
+    BOOLEAN_ARRAY(12, 13),
     /**
      * <code>PROPERTY_MAP = 14;</code>
      */
-    PROPERTY_MAP(14),
+    PROPERTY_MAP(13, 14),
     /**
      * <code>DOCUMENT = 15;</code>
      */
-    DOCUMENT(15),
+    DOCUMENT(14, 15),
     /**
      * <code>DOCUMENT_ARRAY = 16;</code>
      */
-    DOCUMENT_ARRAY(16),
+    DOCUMENT_ARRAY(15, 16),
     ;
 
     /**
@@ -145,19 +145,9 @@ public final class MultipartBinary {
     public static final int DOCUMENT_ARRAY_VALUE = 16;
 
 
-    public final int getNumber() {
-      return value;
-    }
+    public final int getNumber() { return value; }
 
-    /**
-     * @deprecated Use {@link #forNumber(int)} instead.
-     */
-    @java.lang.Deprecated
     public static ValueType valueOf(int value) {
-      return forNumber(value);
-    }
-
-    public static ValueType forNumber(int value) {
       switch (value) {
         case 1: return BINARY;
         case 2: return STRING;
@@ -183,17 +173,17 @@ public final class MultipartBinary {
         internalGetValueMap() {
       return internalValueMap;
     }
-    private static final com.google.protobuf.Internal.EnumLiteMap<
-        ValueType> internalValueMap =
+    private static com.google.protobuf.Internal.EnumLiteMap<ValueType>
+        internalValueMap =
           new com.google.protobuf.Internal.EnumLiteMap<ValueType>() {
             public ValueType findValueByNumber(int number) {
-              return ValueType.forNumber(number);
+              return ValueType.valueOf(number);
             }
           };
 
     private final int value;
 
-    private ValueType(int value) {
+    private ValueType(int index, int value) {
       this.value = value;
     }
 
@@ -214,19 +204,19 @@ public final class MultipartBinary {
     se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType getType();
 
     /**
+     * <code>optional bytes binaryValue = 2;</code>
+     *
      * <pre>
      *fallback for all unsupported types
      * </pre>
-     *
-     * <code>optional bytes binaryValue = 2;</code>
      */
     boolean hasBinaryValue();
     /**
+     * <code>optional bytes binaryValue = 2;</code>
+     *
      * <pre>
      *fallback for all unsupported types
      * </pre>
-     *
-     * <code>optional bytes binaryValue = 2;</code>
      */
     com.google.protobuf.ByteString getBinaryValue();
 
@@ -288,20 +278,138 @@ public final class MultipartBinary {
      * <code>optional bool boolValue = 8;</code>
      */
     boolean getBoolValue();
-
-    public se.lth.cs.docforia.io.multipart.MultipartBinary.Value.ValueCase getValueCase();
   }
   /**
    * Protobuf type {@code Value}
    */
-  public  static final class Value extends
-      com.google.protobuf.GeneratedMessageLite<
-          Value, Value.Builder> implements
+  public static final class Value extends
+      com.google.protobuf.GeneratedMessageLite implements
       // @@protoc_insertion_point(message_implements:Value)
       ValueOrBuilder {
-    private Value() {
-      type_ = 1;
+    // Use Value.newBuilder() to construct.
+    private Value(com.google.protobuf.GeneratedMessageLite.Builder builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
+    private Value(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
+
+    private static final Value defaultInstance;
+    public static Value getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public Value getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.ByteString unknownFields;
+    private Value(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.ByteString.Output unknownFieldsOutput =
+          com.google.protobuf.ByteString.newOutput();
+      com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          com.google.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput);
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              int rawValue = input.readEnum();
+              se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType value = se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType.valueOf(rawValue);
+              if (value == null) {
+                unknownFieldsCodedOutput.writeRawVarint32(tag);
+                unknownFieldsCodedOutput.writeRawVarint32(rawValue);
+              } else {
+                bitField0_ |= 0x00000001;
+                type_ = value;
+              }
+              break;
+            }
+            case 18: {
+              valueCase_ = 2;
+              value_ = input.readBytes();
+              break;
+            }
+            case 26: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              valueCase_ = 3;
+              value_ = bs;
+              break;
+            }
+            case 32: {
+              valueCase_ = 4;
+              value_ = input.readSInt32();
+              break;
+            }
+            case 40: {
+              valueCase_ = 5;
+              value_ = input.readSInt64();
+              break;
+            }
+            case 53: {
+              valueCase_ = 6;
+              value_ = input.readFloat();
+              break;
+            }
+            case 57: {
+              valueCase_ = 7;
+              value_ = input.readDouble();
+              break;
+            }
+            case 64: {
+              valueCase_ = 8;
+              value_ = input.readBool();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
+        }
+        makeExtensionsImmutable();
+      }
+    }
+    public static com.google.protobuf.Parser<Value> PARSER =
+        new com.google.protobuf.AbstractParser<Value>() {
+      public Value parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Value(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Value> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     private int valueCase_ = 0;
     private java.lang.Object value_;
@@ -315,19 +423,11 @@ public final class MultipartBinary {
       DOUBLEVALUE(7),
       BOOLVALUE(8),
       VALUE_NOT_SET(0);
-      private final int value;
+      private int value = 0;
       private ValueCase(int value) {
         this.value = value;
       }
-      /**
-       * @deprecated Use {@link #forNumber(int)} instead.
-       */
-      @java.lang.Deprecated
       public static ValueCase valueOf(int value) {
-        return forNumber(value);
-      }
-
-      public static ValueCase forNumber(int value) {
         switch (value) {
           case 2: return BINARYVALUE;
           case 3: return STRINGVALUE;
@@ -337,7 +437,8 @@ public final class MultipartBinary {
           case 7: return DOUBLEVALUE;
           case 8: return BOOLVALUE;
           case 0: return VALUE_NOT_SET;
-          default: return null;
+          default: throw new java.lang.IllegalArgumentException(
+            "Value is undefined for this oneof enum.");
         }
       }
       public int getNumber() {
@@ -347,17 +448,12 @@ public final class MultipartBinary {
 
     public ValueCase
     getValueCase() {
-      return ValueCase.forNumber(
+      return ValueCase.valueOf(
           valueCase_);
     }
 
-    private void clearValue() {
-      valueCase_ = 0;
-      value_ = null;
-    }
-
     public static final int TYPE_FIELD_NUMBER = 1;
-    private int type_;
+    private se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType type_;
     /**
      * <code>required .ValueType type = 1;</code>
      */
@@ -368,77 +464,32 @@ public final class MultipartBinary {
      * <code>required .ValueType type = 1;</code>
      */
     public se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType getType() {
-      se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType result = se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType.forNumber(type_);
-      return result == null ? se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType.BINARY : result;
-    }
-    /**
-     * <code>required .ValueType type = 1;</code>
-     */
-    private void setType(se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      bitField0_ |= 0x00000001;
-      type_ = value.getNumber();
-    }
-    /**
-     * <code>required .ValueType type = 1;</code>
-     */
-    private void clearType() {
-      bitField0_ = (bitField0_ & ~0x00000001);
-      type_ = 1;
+      return type_;
     }
 
     public static final int BINARYVALUE_FIELD_NUMBER = 2;
     /**
+     * <code>optional bytes binaryValue = 2;</code>
+     *
      * <pre>
      *fallback for all unsupported types
      * </pre>
-     *
-     * <code>optional bytes binaryValue = 2;</code>
      */
     public boolean hasBinaryValue() {
       return valueCase_ == 2;
     }
     /**
+     * <code>optional bytes binaryValue = 2;</code>
+     *
      * <pre>
      *fallback for all unsupported types
      * </pre>
-     *
-     * <code>optional bytes binaryValue = 2;</code>
      */
     public com.google.protobuf.ByteString getBinaryValue() {
       if (valueCase_ == 2) {
         return (com.google.protobuf.ByteString) value_;
       }
       return com.google.protobuf.ByteString.EMPTY;
-    }
-    /**
-     * <pre>
-     *fallback for all unsupported types
-     * </pre>
-     *
-     * <code>optional bytes binaryValue = 2;</code>
-     */
-    private void setBinaryValue(com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  valueCase_ = 2;
-      value_ = value;
-    }
-    /**
-     * <pre>
-     *fallback for all unsupported types
-     * </pre>
-     *
-     * <code>optional bytes binaryValue = 2;</code>
-     */
-    private void clearBinaryValue() {
-      if (valueCase_ == 2) {
-        valueCase_ = 0;
-        value_ = null;
-      }
     }
 
     public static final int STRINGVALUE_FIELD_NUMBER = 3;
@@ -452,53 +503,42 @@ public final class MultipartBinary {
      * <code>optional string stringValue = 3;</code>
      */
     public java.lang.String getStringValue() {
-      java.lang.String ref = "";
+      java.lang.Object ref = "";
       if (valueCase_ == 3) {
-        ref = (java.lang.String) value_;
+        ref = value_;
       }
-      return ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8() && (valueCase_ == 3)) {
+          value_ = s;
+        }
+        return s;
+      }
     }
     /**
      * <code>optional string stringValue = 3;</code>
      */
     public com.google.protobuf.ByteString
         getStringValueBytes() {
-      java.lang.String ref = "";
+      java.lang.Object ref = "";
       if (valueCase_ == 3) {
-        ref = (java.lang.String) value_;
+        ref = value_;
       }
-      return com.google.protobuf.ByteString.copyFromUtf8(ref);
-    }
-    /**
-     * <code>optional string stringValue = 3;</code>
-     */
-    private void setStringValue(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  valueCase_ = 3;
-      value_ = value;
-    }
-    /**
-     * <code>optional string stringValue = 3;</code>
-     */
-    private void clearStringValue() {
-      if (valueCase_ == 3) {
-        valueCase_ = 0;
-        value_ = null;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        if (valueCase_ == 3) {
+          value_ = b;
+        }
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
       }
-    }
-    /**
-     * <code>optional string stringValue = 3;</code>
-     */
-    private void setStringValueBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  valueCase_ = 3;
-      value_ = value.toStringUtf8();
     }
 
     public static final int INTVALUE_FIELD_NUMBER = 4;
@@ -517,22 +557,6 @@ public final class MultipartBinary {
       }
       return 0;
     }
-    /**
-     * <code>optional sint32 intValue = 4;</code>
-     */
-    private void setIntValue(int value) {
-      valueCase_ = 4;
-      value_ = value;
-    }
-    /**
-     * <code>optional sint32 intValue = 4;</code>
-     */
-    private void clearIntValue() {
-      if (valueCase_ == 4) {
-        valueCase_ = 0;
-        value_ = null;
-      }
-    }
 
     public static final int LONGVALUE_FIELD_NUMBER = 5;
     /**
@@ -549,22 +573,6 @@ public final class MultipartBinary {
         return (java.lang.Long) value_;
       }
       return 0L;
-    }
-    /**
-     * <code>optional sint64 longValue = 5;</code>
-     */
-    private void setLongValue(long value) {
-      valueCase_ = 5;
-      value_ = value;
-    }
-    /**
-     * <code>optional sint64 longValue = 5;</code>
-     */
-    private void clearLongValue() {
-      if (valueCase_ == 5) {
-        valueCase_ = 0;
-        value_ = null;
-      }
     }
 
     public static final int FLOATVALUE_FIELD_NUMBER = 6;
@@ -583,22 +591,6 @@ public final class MultipartBinary {
       }
       return 0F;
     }
-    /**
-     * <code>optional float floatValue = 6;</code>
-     */
-    private void setFloatValue(float value) {
-      valueCase_ = 6;
-      value_ = value;
-    }
-    /**
-     * <code>optional float floatValue = 6;</code>
-     */
-    private void clearFloatValue() {
-      if (valueCase_ == 6) {
-        valueCase_ = 0;
-        value_ = null;
-      }
-    }
 
     public static final int DOUBLEVALUE_FIELD_NUMBER = 7;
     /**
@@ -615,22 +607,6 @@ public final class MultipartBinary {
         return (java.lang.Double) value_;
       }
       return 0D;
-    }
-    /**
-     * <code>optional double doubleValue = 7;</code>
-     */
-    private void setDoubleValue(double value) {
-      valueCase_ = 7;
-      value_ = value;
-    }
-    /**
-     * <code>optional double doubleValue = 7;</code>
-     */
-    private void clearDoubleValue() {
-      if (valueCase_ == 7) {
-        valueCase_ = 0;
-        value_ = null;
-      }
     }
 
     public static final int BOOLVALUE_FIELD_NUMBER = 8;
@@ -649,34 +625,36 @@ public final class MultipartBinary {
       }
       return false;
     }
-    /**
-     * <code>optional bool boolValue = 8;</code>
-     */
-    private void setBoolValue(boolean value) {
-      valueCase_ = 8;
-      value_ = value;
+
+    private void initFields() {
+      type_ = se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType.BINARY;
     }
-    /**
-     * <code>optional bool boolValue = 8;</code>
-     */
-    private void clearBoolValue() {
-      if (valueCase_ == 8) {
-        valueCase_ = 0;
-        value_ = null;
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasType()) {
+        memoizedIsInitialized = 0;
+        return false;
       }
+      memoizedIsInitialized = 1;
+      return true;
     }
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeEnum(1, type_);
+        output.writeEnum(1, type_.getNumber());
       }
       if (valueCase_ == 2) {
         output.writeBytes(
             2, (com.google.protobuf.ByteString)((com.google.protobuf.ByteString) value_));
       }
       if (valueCase_ == 3) {
-        output.writeString(3, getStringValue());
+        output.writeBytes(3, getStringValueBytes());
       }
       if (valueCase_ == 4) {
         output.writeSInt32(
@@ -698,9 +676,10 @@ public final class MultipartBinary {
         output.writeBool(
             8, (boolean)((java.lang.Boolean) value_));
       }
-      unknownFields.writeTo(output);
+      output.writeRawBytes(unknownFields);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
@@ -708,7 +687,7 @@ public final class MultipartBinary {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(1, type_);
+          .computeEnumSize(1, type_.getNumber());
       }
       if (valueCase_ == 2) {
         size += com.google.protobuf.CodedOutputStream
@@ -717,7 +696,7 @@ public final class MultipartBinary {
       }
       if (valueCase_ == 3) {
         size += com.google.protobuf.CodedOutputStream
-          .computeStringSize(3, getStringValue());
+          .computeBytesSize(3, getStringValueBytes());
       }
       if (valueCase_ == 4) {
         size += com.google.protobuf.CodedOutputStream
@@ -744,175 +723,330 @@ public final class MultipartBinary {
           .computeBoolSize(
               8, (boolean)((java.lang.Boolean) value_));
       }
-      size += unknownFields.getSerializedSize();
+      size += unknownFields.size();
       memoizedSerializedSize = size;
       return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Value parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Value parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Value parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Value parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Value parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return PARSER.parseFrom(input);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Value parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Value parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Value parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Value parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return PARSER.parseFrom(input);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Value parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(se.lth.cs.docforia.io.multipart.MultipartBinary.Value prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
+    public Builder toBuilder() { return newBuilder(this); }
 
     /**
      * Protobuf type {@code Value}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.Builder<
-          se.lth.cs.docforia.io.multipart.MultipartBinary.Value, Builder> implements
+          se.lth.cs.docforia.io.multipart.MultipartBinary.Value, Builder>
+        implements
         // @@protoc_insertion_point(builder_implements:Value)
         se.lth.cs.docforia.io.multipart.MultipartBinary.ValueOrBuilder {
       // Construct using se.lth.cs.docforia.io.multipart.MultipartBinary.Value.newBuilder()
       private Builder() {
-        super(DEFAULT_INSTANCE);
+        maybeForceBuilderInitialization();
       }
 
-      public ValueCase
-          getValueCase() {
-        return instance.getValueCase();
+      private void maybeForceBuilderInitialization() {
+      }
+      private static Builder create() {
+        return new Builder();
       }
 
-      public Builder clearValue() {
-        copyOnWrite();
-        instance.clearValue();
+      public Builder clear() {
+        super.clear();
+        type_ = se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType.BINARY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        valueCase_ = 0;
+        value_ = null;
         return this;
       }
 
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
 
+      public se.lth.cs.docforia.io.multipart.MultipartBinary.Value getDefaultInstanceForType() {
+        return se.lth.cs.docforia.io.multipart.MultipartBinary.Value.getDefaultInstance();
+      }
+
+      public se.lth.cs.docforia.io.multipart.MultipartBinary.Value build() {
+        se.lth.cs.docforia.io.multipart.MultipartBinary.Value result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public se.lth.cs.docforia.io.multipart.MultipartBinary.Value buildPartial() {
+        se.lth.cs.docforia.io.multipart.MultipartBinary.Value result = new se.lth.cs.docforia.io.multipart.MultipartBinary.Value(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.type_ = type_;
+        if (valueCase_ == 2) {
+          result.value_ = value_;
+        }
+        if (valueCase_ == 3) {
+          result.value_ = value_;
+        }
+        if (valueCase_ == 4) {
+          result.value_ = value_;
+        }
+        if (valueCase_ == 5) {
+          result.value_ = value_;
+        }
+        if (valueCase_ == 6) {
+          result.value_ = value_;
+        }
+        if (valueCase_ == 7) {
+          result.value_ = value_;
+        }
+        if (valueCase_ == 8) {
+          result.value_ = value_;
+        }
+        result.bitField0_ = to_bitField0_;
+        result.valueCase_ = valueCase_;
+        return result;
+      }
+
+      public Builder mergeFrom(se.lth.cs.docforia.io.multipart.MultipartBinary.Value other) {
+        if (other == se.lth.cs.docforia.io.multipart.MultipartBinary.Value.getDefaultInstance()) return this;
+        if (other.hasType()) {
+          setType(other.getType());
+        }
+        switch (other.getValueCase()) {
+          case BINARYVALUE: {
+            setBinaryValue(other.getBinaryValue());
+            break;
+          }
+          case STRINGVALUE: {
+            valueCase_ = 3;
+            value_ = other.value_;
+
+            break;
+          }
+          case INTVALUE: {
+            setIntValue(other.getIntValue());
+            break;
+          }
+          case LONGVALUE: {
+            setLongValue(other.getLongValue());
+            break;
+          }
+          case FLOATVALUE: {
+            setFloatValue(other.getFloatValue());
+            break;
+          }
+          case DOUBLEVALUE: {
+            setDoubleValue(other.getDoubleValue());
+            break;
+          }
+          case BOOLVALUE: {
+            setBoolValue(other.getBoolValue());
+            break;
+          }
+          case VALUE_NOT_SET: {
+            break;
+          }
+        }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasType()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        se.lth.cs.docforia.io.multipart.MultipartBinary.Value parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (se.lth.cs.docforia.io.multipart.MultipartBinary.Value) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int valueCase_ = 0;
+      private java.lang.Object value_;
+      public ValueCase
+          getValueCase() {
+        return ValueCase.valueOf(
+            valueCase_);
+      }
+
+      public Builder clearValue() {
+        valueCase_ = 0;
+        value_ = null;
+        return this;
+      }
+
+      private int bitField0_;
+
+      private se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType type_ = se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType.BINARY;
       /**
        * <code>required .ValueType type = 1;</code>
        */
       public boolean hasType() {
-        return instance.hasType();
+        return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
        * <code>required .ValueType type = 1;</code>
        */
       public se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType getType() {
-        return instance.getType();
+        return type_;
       }
       /**
        * <code>required .ValueType type = 1;</code>
        */
       public Builder setType(se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType value) {
-        copyOnWrite();
-        instance.setType(value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000001;
+        type_ = value;
+        
         return this;
       }
       /**
        * <code>required .ValueType type = 1;</code>
        */
       public Builder clearType() {
-        copyOnWrite();
-        instance.clearType();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        type_ = se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType.BINARY;
+        
         return this;
       }
 
       /**
+       * <code>optional bytes binaryValue = 2;</code>
+       *
        * <pre>
        *fallback for all unsupported types
        * </pre>
-       *
-       * <code>optional bytes binaryValue = 2;</code>
        */
       public boolean hasBinaryValue() {
-        return instance.hasBinaryValue();
+        return valueCase_ == 2;
       }
       /**
+       * <code>optional bytes binaryValue = 2;</code>
+       *
        * <pre>
        *fallback for all unsupported types
        * </pre>
-       *
-       * <code>optional bytes binaryValue = 2;</code>
        */
       public com.google.protobuf.ByteString getBinaryValue() {
-        return instance.getBinaryValue();
+        if (valueCase_ == 2) {
+          return (com.google.protobuf.ByteString) value_;
+        }
+        return com.google.protobuf.ByteString.EMPTY;
       }
       /**
+       * <code>optional bytes binaryValue = 2;</code>
+       *
        * <pre>
        *fallback for all unsupported types
        * </pre>
-       *
-       * <code>optional bytes binaryValue = 2;</code>
        */
       public Builder setBinaryValue(com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setBinaryValue(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  valueCase_ = 2;
+        value_ = value;
+        
         return this;
       }
       /**
+       * <code>optional bytes binaryValue = 2;</code>
+       *
        * <pre>
        *fallback for all unsupported types
        * </pre>
-       *
-       * <code>optional bytes binaryValue = 2;</code>
        */
       public Builder clearBinaryValue() {
-        copyOnWrite();
-        instance.clearBinaryValue();
+        if (valueCase_ == 2) {
+          valueCase_ = 0;
+          value_ = null;
+          
+        }
         return this;
       }
 
@@ -920,36 +1054,73 @@ public final class MultipartBinary {
        * <code>optional string stringValue = 3;</code>
        */
       public boolean hasStringValue() {
-        return instance.hasStringValue();
+        return valueCase_ == 3;
       }
       /**
        * <code>optional string stringValue = 3;</code>
        */
       public java.lang.String getStringValue() {
-        return instance.getStringValue();
+        java.lang.Object ref = "";
+        if (valueCase_ == 3) {
+          ref = value_;
+        }
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (valueCase_ == 3) {
+            if (bs.isValidUtf8()) {
+              value_ = s;
+            }
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
        * <code>optional string stringValue = 3;</code>
        */
       public com.google.protobuf.ByteString
           getStringValueBytes() {
-        return instance.getStringValueBytes();
+        java.lang.Object ref = "";
+        if (valueCase_ == 3) {
+          ref = value_;
+        }
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          if (valueCase_ == 3) {
+            value_ = b;
+          }
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
        * <code>optional string stringValue = 3;</code>
        */
       public Builder setStringValue(
           java.lang.String value) {
-        copyOnWrite();
-        instance.setStringValue(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  valueCase_ = 3;
+        value_ = value;
+        
         return this;
       }
       /**
        * <code>optional string stringValue = 3;</code>
        */
       public Builder clearStringValue() {
-        copyOnWrite();
-        instance.clearStringValue();
+        if (valueCase_ == 3) {
+          valueCase_ = 0;
+          value_ = null;
+          
+        }
         return this;
       }
       /**
@@ -957,8 +1128,12 @@ public final class MultipartBinary {
        */
       public Builder setStringValueBytes(
           com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setStringValueBytes(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  valueCase_ = 3;
+        value_ = value;
+        
         return this;
       }
 
@@ -966,28 +1141,35 @@ public final class MultipartBinary {
        * <code>optional sint32 intValue = 4;</code>
        */
       public boolean hasIntValue() {
-        return instance.hasIntValue();
+        return valueCase_ == 4;
       }
       /**
        * <code>optional sint32 intValue = 4;</code>
        */
       public int getIntValue() {
-        return instance.getIntValue();
+        if (valueCase_ == 4) {
+          return (java.lang.Integer) value_;
+        }
+        return 0;
       }
       /**
        * <code>optional sint32 intValue = 4;</code>
        */
       public Builder setIntValue(int value) {
-        copyOnWrite();
-        instance.setIntValue(value);
+        valueCase_ = 4;
+        value_ = value;
+        
         return this;
       }
       /**
        * <code>optional sint32 intValue = 4;</code>
        */
       public Builder clearIntValue() {
-        copyOnWrite();
-        instance.clearIntValue();
+        if (valueCase_ == 4) {
+          valueCase_ = 0;
+          value_ = null;
+          
+        }
         return this;
       }
 
@@ -995,28 +1177,35 @@ public final class MultipartBinary {
        * <code>optional sint64 longValue = 5;</code>
        */
       public boolean hasLongValue() {
-        return instance.hasLongValue();
+        return valueCase_ == 5;
       }
       /**
        * <code>optional sint64 longValue = 5;</code>
        */
       public long getLongValue() {
-        return instance.getLongValue();
+        if (valueCase_ == 5) {
+          return (java.lang.Long) value_;
+        }
+        return 0L;
       }
       /**
        * <code>optional sint64 longValue = 5;</code>
        */
       public Builder setLongValue(long value) {
-        copyOnWrite();
-        instance.setLongValue(value);
+        valueCase_ = 5;
+        value_ = value;
+        
         return this;
       }
       /**
        * <code>optional sint64 longValue = 5;</code>
        */
       public Builder clearLongValue() {
-        copyOnWrite();
-        instance.clearLongValue();
+        if (valueCase_ == 5) {
+          valueCase_ = 0;
+          value_ = null;
+          
+        }
         return this;
       }
 
@@ -1024,28 +1213,35 @@ public final class MultipartBinary {
        * <code>optional float floatValue = 6;</code>
        */
       public boolean hasFloatValue() {
-        return instance.hasFloatValue();
+        return valueCase_ == 6;
       }
       /**
        * <code>optional float floatValue = 6;</code>
        */
       public float getFloatValue() {
-        return instance.getFloatValue();
+        if (valueCase_ == 6) {
+          return (java.lang.Float) value_;
+        }
+        return 0F;
       }
       /**
        * <code>optional float floatValue = 6;</code>
        */
       public Builder setFloatValue(float value) {
-        copyOnWrite();
-        instance.setFloatValue(value);
+        valueCase_ = 6;
+        value_ = value;
+        
         return this;
       }
       /**
        * <code>optional float floatValue = 6;</code>
        */
       public Builder clearFloatValue() {
-        copyOnWrite();
-        instance.clearFloatValue();
+        if (valueCase_ == 6) {
+          valueCase_ = 0;
+          value_ = null;
+          
+        }
         return this;
       }
 
@@ -1053,28 +1249,35 @@ public final class MultipartBinary {
        * <code>optional double doubleValue = 7;</code>
        */
       public boolean hasDoubleValue() {
-        return instance.hasDoubleValue();
+        return valueCase_ == 7;
       }
       /**
        * <code>optional double doubleValue = 7;</code>
        */
       public double getDoubleValue() {
-        return instance.getDoubleValue();
+        if (valueCase_ == 7) {
+          return (java.lang.Double) value_;
+        }
+        return 0D;
       }
       /**
        * <code>optional double doubleValue = 7;</code>
        */
       public Builder setDoubleValue(double value) {
-        copyOnWrite();
-        instance.setDoubleValue(value);
+        valueCase_ = 7;
+        value_ = value;
+        
         return this;
       }
       /**
        * <code>optional double doubleValue = 7;</code>
        */
       public Builder clearDoubleValue() {
-        copyOnWrite();
-        instance.clearDoubleValue();
+        if (valueCase_ == 7) {
+          valueCase_ = 0;
+          value_ = null;
+          
+        }
         return this;
       }
 
@@ -1082,228 +1285,47 @@ public final class MultipartBinary {
        * <code>optional bool boolValue = 8;</code>
        */
       public boolean hasBoolValue() {
-        return instance.hasBoolValue();
+        return valueCase_ == 8;
       }
       /**
        * <code>optional bool boolValue = 8;</code>
        */
       public boolean getBoolValue() {
-        return instance.getBoolValue();
+        if (valueCase_ == 8) {
+          return (java.lang.Boolean) value_;
+        }
+        return false;
       }
       /**
        * <code>optional bool boolValue = 8;</code>
        */
       public Builder setBoolValue(boolean value) {
-        copyOnWrite();
-        instance.setBoolValue(value);
+        valueCase_ = 8;
+        value_ = value;
+        
         return this;
       }
       /**
        * <code>optional bool boolValue = 8;</code>
        */
       public Builder clearBoolValue() {
-        copyOnWrite();
-        instance.clearBoolValue();
+        if (valueCase_ == 8) {
+          valueCase_ = 0;
+          value_ = null;
+          
+        }
         return this;
       }
 
       // @@protoc_insertion_point(builder_scope:Value)
     }
-    private byte memoizedIsInitialized = -1;
-    protected final Object dynamicMethod(
-        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        Object arg0, Object arg1) {
-      switch (method) {
-        case NEW_MUTABLE_INSTANCE: {
-          return new se.lth.cs.docforia.io.multipart.MultipartBinary.Value();
-        }
-        case IS_INITIALIZED: {
-          byte isInitialized = memoizedIsInitialized;
-          if (isInitialized == 1) return DEFAULT_INSTANCE;
-          if (isInitialized == 0) return null;
 
-          boolean shouldMemoize = ((Boolean) arg0).booleanValue();
-          if (!hasType()) {
-            if (shouldMemoize) {
-              memoizedIsInitialized = 0;
-            }
-            return null;
-          }
-          if (shouldMemoize) memoizedIsInitialized = 1;
-          return DEFAULT_INSTANCE;
-
-        }
-        case MAKE_IMMUTABLE: {
-          return null;
-        }
-        case NEW_BUILDER: {
-          return new Builder();
-        }
-        case VISIT: {
-          Visitor visitor = (Visitor) arg0;
-          se.lth.cs.docforia.io.multipart.MultipartBinary.Value other = (se.lth.cs.docforia.io.multipart.MultipartBinary.Value) arg1;
-          type_ = visitor.visitInt(hasType(), type_,
-              other.hasType(), other.type_);
-          switch (other.getValueCase()) {
-            case BINARYVALUE: {
-              value_ = visitor.visitOneofByteString(
-                  valueCase_ == 2, value_, other.value_);
-              break;
-            }
-            case STRINGVALUE: {
-              value_ = visitor.visitOneofString(
-                 valueCase_ == 3, value_, other.value_);
-              break;
-            }
-            case INTVALUE: {
-              value_ = visitor.visitOneofInt(
-                  valueCase_ == 4, value_, other.value_);
-              break;
-            }
-            case LONGVALUE: {
-              value_ = visitor.visitOneofLong(
-                  valueCase_ == 5, value_, other.value_);
-              break;
-            }
-            case FLOATVALUE: {
-              value_ = visitor.visitOneofFloat(
-                  valueCase_ == 6, value_, other.value_);
-              break;
-            }
-            case DOUBLEVALUE: {
-              value_ = visitor.visitOneofDouble(
-                  valueCase_ == 7, value_, other.value_);
-              break;
-            }
-            case BOOLVALUE: {
-              value_ = visitor.visitOneofBoolean(
-                  valueCase_ == 8, value_, other.value_);
-              break;
-            }
-            case VALUE_NOT_SET: {
-              visitor.visitOneofNotSet(valueCase_ != 0);
-              break;
-            }
-          }
-          if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-              .INSTANCE) {
-            if (other.valueCase_ != 0) {
-              valueCase_ = other.valueCase_;
-            }
-            bitField0_ |= other.bitField0_;
-          }
-          return this;
-        }
-        case MERGE_FROM_STREAM: {
-          com.google.protobuf.CodedInputStream input =
-              (com.google.protobuf.CodedInputStream) arg0;
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-              (com.google.protobuf.ExtensionRegistryLite) arg1;
-          try {
-            boolean done = false;
-            while (!done) {
-              int tag = input.readTag();
-              switch (tag) {
-                case 0:
-                  done = true;
-                  break;
-                default: {
-                  if (!parseUnknownField(tag, input)) {
-                    done = true;
-                  }
-                  break;
-                }
-                case 8: {
-                  int rawValue = input.readEnum();
-                  se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType value = se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType.forNumber(rawValue);
-                  if (value == null) {
-                    super.mergeVarintField(1, rawValue);
-                  } else {
-                    bitField0_ |= 0x00000001;
-                    type_ = rawValue;
-                  }
-                  break;
-                }
-                case 18: {
-                  valueCase_ = 2;
-                  value_ = input.readBytes();
-                  break;
-                }
-                case 26: {
-                  String s = input.readString();
-                  valueCase_ = 3;
-                  value_ = s;
-                  break;
-                }
-                case 32: {
-                  valueCase_ = 4;
-                  value_ = input.readSInt32();
-                  break;
-                }
-                case 40: {
-                  valueCase_ = 5;
-                  value_ = input.readSInt64();
-                  break;
-                }
-                case 53: {
-                  valueCase_ = 6;
-                  value_ = input.readFloat();
-                  break;
-                }
-                case 57: {
-                  valueCase_ = 7;
-                  value_ = input.readDouble();
-                  break;
-                }
-                case 64: {
-                  valueCase_ = 8;
-                  value_ = input.readBool();
-                  break;
-                }
-              }
-            }
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw new RuntimeException(e.setUnfinishedMessage(this));
-          } catch (java.io.IOException e) {
-            throw new RuntimeException(
-                new com.google.protobuf.InvalidProtocolBufferException(
-                    e.getMessage()).setUnfinishedMessage(this));
-          } finally {
-          }
-        }
-        case GET_DEFAULT_INSTANCE: {
-          return DEFAULT_INSTANCE;
-        }
-        case GET_PARSER: {
-          if (PARSER == null) {    synchronized (se.lth.cs.docforia.io.multipart.MultipartBinary.Value.class) {
-              if (PARSER == null) {
-                PARSER = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-              }
-            }
-          }
-          return PARSER;
-        }
-      }
-      throw new UnsupportedOperationException();
+    static {
+      defaultInstance = new Value(true);
+      defaultInstance.initFields();
     }
-
 
     // @@protoc_insertion_point(class_scope:Value)
-    private static final se.lth.cs.docforia.io.multipart.MultipartBinary.Value DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new Value();
-      DEFAULT_INSTANCE.makeImmutable();
-    }
-
-    public static se.lth.cs.docforia.io.multipart.MultipartBinary.Value getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static volatile com.google.protobuf.Parser<Value> PARSER;
-
-    public static com.google.protobuf.Parser<Value> parser() {
-      return DEFAULT_INSTANCE.getParserForType();
-    }
   }
 
   public interface PropertiesOrBuilder extends
@@ -1327,14 +1349,97 @@ public final class MultipartBinary {
   /**
    * Protobuf type {@code Properties}
    */
-  public  static final class Properties extends
-      com.google.protobuf.GeneratedMessageLite<
-          Properties, Properties.Builder> implements
+  public static final class Properties extends
+      com.google.protobuf.GeneratedMessageLite implements
       // @@protoc_insertion_point(message_implements:Properties)
       PropertiesOrBuilder {
-    private Properties() {
-      entry_ = emptyProtobufList();
+    // Use Properties.newBuilder() to construct.
+    private Properties(com.google.protobuf.GeneratedMessageLite.Builder builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
+    private Properties(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
+
+    private static final Properties defaultInstance;
+    public static Properties getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public Properties getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.ByteString unknownFields;
+    private Properties(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.ByteString.Output unknownFieldsOutput =
+          com.google.protobuf.ByteString.newOutput();
+      com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          com.google.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput);
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                entry_ = new java.util.ArrayList<se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              entry_.add(input.readMessage(se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          entry_ = java.util.Collections.unmodifiableList(entry_);
+        }
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
+        }
+        makeExtensionsImmutable();
+      }
+    }
+    public static com.google.protobuf.Parser<Properties> PARSER =
+        new com.google.protobuf.AbstractParser<Properties>() {
+      public Properties parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Properties(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Properties> getParserForType() {
+      return PARSER;
+    }
+
     public interface EntryOrBuilder extends
         // @@protoc_insertion_point(interface_extends:Properties.Entry)
         com.google.protobuf.MessageLiteOrBuilder {
@@ -1365,17 +1470,108 @@ public final class MultipartBinary {
     /**
      * Protobuf type {@code Properties.Entry}
      */
-    public  static final class Entry extends
-        com.google.protobuf.GeneratedMessageLite<
-            Entry, Entry.Builder> implements
+    public static final class Entry extends
+        com.google.protobuf.GeneratedMessageLite implements
         // @@protoc_insertion_point(message_implements:Properties.Entry)
         EntryOrBuilder {
-      private Entry() {
-        key_ = "";
+      // Use Entry.newBuilder() to construct.
+      private Entry(com.google.protobuf.GeneratedMessageLite.Builder builder) {
+        super(builder);
+        this.unknownFields = builder.getUnknownFields();
       }
+      private Entry(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
+
+      private static final Entry defaultInstance;
+      public static Entry getDefaultInstance() {
+        return defaultInstance;
+      }
+
+      public Entry getDefaultInstanceForType() {
+        return defaultInstance;
+      }
+
+      private final com.google.protobuf.ByteString unknownFields;
+      private Entry(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        initFields();
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.ByteString.Output unknownFieldsOutput =
+            com.google.protobuf.ByteString.newOutput();
+        com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+            com.google.protobuf.CodedOutputStream.newInstance(
+                unknownFieldsOutput);
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownField(input, unknownFieldsCodedOutput,
+                                       extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+              case 10: {
+                com.google.protobuf.ByteString bs = input.readBytes();
+                bitField0_ |= 0x00000001;
+                key_ = bs;
+                break;
+              }
+              case 18: {
+                se.lth.cs.docforia.io.multipart.MultipartBinary.Value.Builder subBuilder = null;
+                if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                  subBuilder = value_.toBuilder();
+                }
+                value_ = input.readMessage(se.lth.cs.docforia.io.multipart.MultipartBinary.Value.PARSER, extensionRegistry);
+                if (subBuilder != null) {
+                  subBuilder.mergeFrom(value_);
+                  value_ = subBuilder.buildPartial();
+                }
+                bitField0_ |= 0x00000002;
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e.getMessage()).setUnfinishedMessage(this);
+        } finally {
+          try {
+            unknownFieldsCodedOutput.flush();
+          } catch (java.io.IOException e) {
+          // Should not happen
+          } finally {
+            unknownFields = unknownFieldsOutput.toByteString();
+          }
+          makeExtensionsImmutable();
+        }
+      }
+      public static com.google.protobuf.Parser<Entry> PARSER =
+          new com.google.protobuf.AbstractParser<Entry>() {
+        public Entry parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new Entry(input, extensionRegistry);
+        }
+      };
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<Entry> getParserForType() {
+        return PARSER;
+      }
+
       private int bitField0_;
       public static final int KEY_FIELD_NUMBER = 1;
-      private java.lang.String key_;
+      private java.lang.Object key_;
       /**
        * <code>required string key = 1;</code>
        */
@@ -1386,43 +1582,34 @@ public final class MultipartBinary {
        * <code>required string key = 1;</code>
        */
       public java.lang.String getKey() {
-        return key_;
+        java.lang.Object ref = key_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            key_ = s;
+          }
+          return s;
+        }
       }
       /**
        * <code>required string key = 1;</code>
        */
       public com.google.protobuf.ByteString
           getKeyBytes() {
-        return com.google.protobuf.ByteString.copyFromUtf8(key_);
-      }
-      /**
-       * <code>required string key = 1;</code>
-       */
-      private void setKey(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        key_ = value;
-      }
-      /**
-       * <code>required string key = 1;</code>
-       */
-      private void clearKey() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        key_ = getDefaultInstance().getKey();
-      }
-      /**
-       * <code>required string key = 1;</code>
-       */
-      private void setKeyBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        key_ = value.toStringUtf8();
+        java.lang.Object ref = key_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          key_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
 
       public static final int VALUE_FIELD_NUMBER = 2;
@@ -1437,57 +1624,48 @@ public final class MultipartBinary {
        * <code>required .Value value = 2;</code>
        */
       public se.lth.cs.docforia.io.multipart.MultipartBinary.Value getValue() {
-        return value_ == null ? se.lth.cs.docforia.io.multipart.MultipartBinary.Value.getDefaultInstance() : value_;
+        return value_;
       }
-      /**
-       * <code>required .Value value = 2;</code>
-       */
-      private void setValue(se.lth.cs.docforia.io.multipart.MultipartBinary.Value value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        value_ = value;
-        bitField0_ |= 0x00000002;
-        }
-      /**
-       * <code>required .Value value = 2;</code>
-       */
-      private void setValue(
-          se.lth.cs.docforia.io.multipart.MultipartBinary.Value.Builder builderForValue) {
-        value_ = builderForValue.build();
-        bitField0_ |= 0x00000002;
+
+      private void initFields() {
+        key_ = "";
+        value_ = se.lth.cs.docforia.io.multipart.MultipartBinary.Value.getDefaultInstance();
       }
-      /**
-       * <code>required .Value value = 2;</code>
-       */
-      private void mergeValue(se.lth.cs.docforia.io.multipart.MultipartBinary.Value value) {
-        if (value_ != null &&
-            value_ != se.lth.cs.docforia.io.multipart.MultipartBinary.Value.getDefaultInstance()) {
-          value_ =
-            se.lth.cs.docforia.io.multipart.MultipartBinary.Value.newBuilder(value_).mergeFrom(value).buildPartial();
-        } else {
-          value_ = value;
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        if (!hasKey()) {
+          memoizedIsInitialized = 0;
+          return false;
         }
-        bitField0_ |= 0x00000002;
-      }
-      /**
-       * <code>required .Value value = 2;</code>
-       */
-      private void clearValue() {  value_ = null;
-        bitField0_ = (bitField0_ & ~0x00000002);
+        if (!hasValue()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        if (!getValue().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        memoizedIsInitialized = 1;
+        return true;
       }
 
       public void writeTo(com.google.protobuf.CodedOutputStream output)
                           throws java.io.IOException {
+        getSerializedSize();
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          output.writeString(1, getKey());
+          output.writeBytes(1, getKeyBytes());
         }
         if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          output.writeMessage(2, getValue());
+          output.writeMessage(2, value_);
         }
-        unknownFields.writeTo(output);
+        output.writeRawBytes(unknownFields);
       }
 
+      private int memoizedSerializedSize = -1;
       public int getSerializedSize() {
         int size = memoizedSerializedSize;
         if (size != -1) return size;
@@ -1495,133 +1673,255 @@ public final class MultipartBinary {
         size = 0;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           size += com.google.protobuf.CodedOutputStream
-            .computeStringSize(1, getKey());
+            .computeBytesSize(1, getKeyBytes());
         }
         if (((bitField0_ & 0x00000002) == 0x00000002)) {
           size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(2, getValue());
+            .computeMessageSize(2, value_);
         }
-        size += unknownFields.getSerializedSize();
+        size += unknownFields.size();
         memoizedSerializedSize = size;
         return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected java.lang.Object writeReplace()
+          throws java.io.ObjectStreamException {
+        return super.writeReplace();
       }
 
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry parseFrom(
           com.google.protobuf.ByteString data)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, data);
+        return PARSER.parseFrom(data);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry parseFrom(
           com.google.protobuf.ByteString data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, data, extensionRegistry);
+        return PARSER.parseFrom(data, extensionRegistry);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry parseFrom(byte[] data)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, data);
+        return PARSER.parseFrom(data);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry parseFrom(
           byte[] data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, data, extensionRegistry);
+        return PARSER.parseFrom(data, extensionRegistry);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry parseFrom(java.io.InputStream input)
           throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, input);
+        return PARSER.parseFrom(input);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry parseFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, input, extensionRegistry);
+        return PARSER.parseFrom(input, extensionRegistry);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
-        return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+        return PARSER.parseDelimitedFrom(input);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry parseDelimitedFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+        return PARSER.parseDelimitedFrom(input, extensionRegistry);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry parseFrom(
           com.google.protobuf.CodedInputStream input)
           throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, input);
+        return PARSER.parseFrom(input);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry parseFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, input, extensionRegistry);
+        return PARSER.parseFrom(input, extensionRegistry);
       }
 
-      public static Builder newBuilder() {
-        return DEFAULT_INSTANCE.toBuilder();
-      }
+      public static Builder newBuilder() { return Builder.create(); }
+      public Builder newBuilderForType() { return newBuilder(); }
       public static Builder newBuilder(se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry prototype) {
-        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+        return newBuilder().mergeFrom(prototype);
       }
+      public Builder toBuilder() { return newBuilder(this); }
 
       /**
        * Protobuf type {@code Properties.Entry}
        */
       public static final class Builder extends
           com.google.protobuf.GeneratedMessageLite.Builder<
-            se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry, Builder> implements
+            se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry, Builder>
+          implements
           // @@protoc_insertion_point(builder_implements:Properties.Entry)
           se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.EntryOrBuilder {
         // Construct using se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry.newBuilder()
         private Builder() {
-          super(DEFAULT_INSTANCE);
+          maybeForceBuilderInitialization();
         }
 
+        private void maybeForceBuilderInitialization() {
+        }
+        private static Builder create() {
+          return new Builder();
+        }
 
+        public Builder clear() {
+          super.clear();
+          key_ = "";
+          bitField0_ = (bitField0_ & ~0x00000001);
+          value_ = se.lth.cs.docforia.io.multipart.MultipartBinary.Value.getDefaultInstance();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          return this;
+        }
+
+        public Builder clone() {
+          return create().mergeFrom(buildPartial());
+        }
+
+        public se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry getDefaultInstanceForType() {
+          return se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry.getDefaultInstance();
+        }
+
+        public se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry build() {
+          se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry buildPartial() {
+          se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry result = new se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry(this);
+          int from_bitField0_ = bitField0_;
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
+          }
+          result.key_ = key_;
+          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+            to_bitField0_ |= 0x00000002;
+          }
+          result.value_ = value_;
+          result.bitField0_ = to_bitField0_;
+          return result;
+        }
+
+        public Builder mergeFrom(se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry other) {
+          if (other == se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry.getDefaultInstance()) return this;
+          if (other.hasKey()) {
+            bitField0_ |= 0x00000001;
+            key_ = other.key_;
+            
+          }
+          if (other.hasValue()) {
+            mergeValue(other.getValue());
+          }
+          setUnknownFields(
+              getUnknownFields().concat(other.unknownFields));
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          if (!hasKey()) {
+            
+            return false;
+          }
+          if (!hasValue()) {
+            
+            return false;
+          }
+          if (!getValue().isInitialized()) {
+            
+            return false;
+          }
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry) e.getUnfinishedMessage();
+            throw e;
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        private java.lang.Object key_ = "";
         /**
          * <code>required string key = 1;</code>
          */
         public boolean hasKey() {
-          return instance.hasKey();
+          return ((bitField0_ & 0x00000001) == 0x00000001);
         }
         /**
          * <code>required string key = 1;</code>
          */
         public java.lang.String getKey() {
-          return instance.getKey();
+          java.lang.Object ref = key_;
+          if (!(ref instanceof java.lang.String)) {
+            com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            if (bs.isValidUtf8()) {
+              key_ = s;
+            }
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
         }
         /**
          * <code>required string key = 1;</code>
          */
         public com.google.protobuf.ByteString
             getKeyBytes() {
-          return instance.getKeyBytes();
+          java.lang.Object ref = key_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            key_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
         }
         /**
          * <code>required string key = 1;</code>
          */
         public Builder setKey(
             java.lang.String value) {
-          copyOnWrite();
-          instance.setKey(value);
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          key_ = value;
+          
           return this;
         }
         /**
          * <code>required string key = 1;</code>
          */
         public Builder clearKey() {
-          copyOnWrite();
-          instance.clearKey();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          key_ = getDefaultInstance().getKey();
+          
           return this;
         }
         /**
@@ -1629,199 +1929,88 @@ public final class MultipartBinary {
          */
         public Builder setKeyBytes(
             com.google.protobuf.ByteString value) {
-          copyOnWrite();
-          instance.setKeyBytes(value);
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          key_ = value;
+          
           return this;
         }
 
+        private se.lth.cs.docforia.io.multipart.MultipartBinary.Value value_ = se.lth.cs.docforia.io.multipart.MultipartBinary.Value.getDefaultInstance();
         /**
          * <code>required .Value value = 2;</code>
          */
         public boolean hasValue() {
-          return instance.hasValue();
+          return ((bitField0_ & 0x00000002) == 0x00000002);
         }
         /**
          * <code>required .Value value = 2;</code>
          */
         public se.lth.cs.docforia.io.multipart.MultipartBinary.Value getValue() {
-          return instance.getValue();
+          return value_;
         }
         /**
          * <code>required .Value value = 2;</code>
          */
         public Builder setValue(se.lth.cs.docforia.io.multipart.MultipartBinary.Value value) {
-          copyOnWrite();
-          instance.setValue(value);
-          return this;
+          if (value == null) {
+            throw new NullPointerException();
           }
+          value_ = value;
+
+          bitField0_ |= 0x00000002;
+          return this;
+        }
         /**
          * <code>required .Value value = 2;</code>
          */
         public Builder setValue(
             se.lth.cs.docforia.io.multipart.MultipartBinary.Value.Builder builderForValue) {
-          copyOnWrite();
-          instance.setValue(builderForValue);
+          value_ = builderForValue.build();
+
+          bitField0_ |= 0x00000002;
           return this;
         }
         /**
          * <code>required .Value value = 2;</code>
          */
         public Builder mergeValue(se.lth.cs.docforia.io.multipart.MultipartBinary.Value value) {
-          copyOnWrite();
-          instance.mergeValue(value);
+          if (((bitField0_ & 0x00000002) == 0x00000002) &&
+              value_ != se.lth.cs.docforia.io.multipart.MultipartBinary.Value.getDefaultInstance()) {
+            value_ =
+              se.lth.cs.docforia.io.multipart.MultipartBinary.Value.newBuilder(value_).mergeFrom(value).buildPartial();
+          } else {
+            value_ = value;
+          }
+
+          bitField0_ |= 0x00000002;
           return this;
         }
         /**
          * <code>required .Value value = 2;</code>
          */
-        public Builder clearValue() {  copyOnWrite();
-          instance.clearValue();
+        public Builder clearValue() {
+          value_ = se.lth.cs.docforia.io.multipart.MultipartBinary.Value.getDefaultInstance();
+
+          bitField0_ = (bitField0_ & ~0x00000002);
           return this;
         }
 
         // @@protoc_insertion_point(builder_scope:Properties.Entry)
       }
-      private byte memoizedIsInitialized = -1;
-      protected final Object dynamicMethod(
-          com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-          Object arg0, Object arg1) {
-        switch (method) {
-          case NEW_MUTABLE_INSTANCE: {
-            return new se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry();
-          }
-          case IS_INITIALIZED: {
-            byte isInitialized = memoizedIsInitialized;
-            if (isInitialized == 1) return DEFAULT_INSTANCE;
-            if (isInitialized == 0) return null;
 
-            boolean shouldMemoize = ((Boolean) arg0).booleanValue();
-            if (!hasKey()) {
-              if (shouldMemoize) {
-                memoizedIsInitialized = 0;
-              }
-              return null;
-            }
-            if (!hasValue()) {
-              if (shouldMemoize) {
-                memoizedIsInitialized = 0;
-              }
-              return null;
-            }
-            if (!getValue().isInitialized()) {
-              if (shouldMemoize) {
-                memoizedIsInitialized = 0;
-              }
-              return null;
-            }
-            if (shouldMemoize) memoizedIsInitialized = 1;
-            return DEFAULT_INSTANCE;
-
-          }
-          case MAKE_IMMUTABLE: {
-            return null;
-          }
-          case NEW_BUILDER: {
-            return new Builder();
-          }
-          case VISIT: {
-            Visitor visitor = (Visitor) arg0;
-            se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry other = (se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry) arg1;
-            key_ = visitor.visitString(
-                hasKey(), key_,
-                other.hasKey(), other.key_);
-            value_ = visitor.visitMessage(value_, other.value_);
-            if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-                .INSTANCE) {
-              bitField0_ |= other.bitField0_;
-            }
-            return this;
-          }
-          case MERGE_FROM_STREAM: {
-            com.google.protobuf.CodedInputStream input =
-                (com.google.protobuf.CodedInputStream) arg0;
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-                (com.google.protobuf.ExtensionRegistryLite) arg1;
-            try {
-              boolean done = false;
-              while (!done) {
-                int tag = input.readTag();
-                switch (tag) {
-                  case 0:
-                    done = true;
-                    break;
-                  default: {
-                    if (!parseUnknownField(tag, input)) {
-                      done = true;
-                    }
-                    break;
-                  }
-                  case 10: {
-                    String s = input.readString();
-                    bitField0_ |= 0x00000001;
-                    key_ = s;
-                    break;
-                  }
-                  case 18: {
-                    se.lth.cs.docforia.io.multipart.MultipartBinary.Value.Builder subBuilder = null;
-                    if (((bitField0_ & 0x00000002) == 0x00000002)) {
-                      subBuilder = value_.toBuilder();
-                    }
-                    value_ = input.readMessage(se.lth.cs.docforia.io.multipart.MultipartBinary.Value.parser(), extensionRegistry);
-                    if (subBuilder != null) {
-                      subBuilder.mergeFrom(value_);
-                      value_ = subBuilder.buildPartial();
-                    }
-                    bitField0_ |= 0x00000002;
-                    break;
-                  }
-                }
-              }
-            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-              throw new RuntimeException(e.setUnfinishedMessage(this));
-            } catch (java.io.IOException e) {
-              throw new RuntimeException(
-                  new com.google.protobuf.InvalidProtocolBufferException(
-                      e.getMessage()).setUnfinishedMessage(this));
-            } finally {
-            }
-          }
-          case GET_DEFAULT_INSTANCE: {
-            return DEFAULT_INSTANCE;
-          }
-          case GET_PARSER: {
-            if (PARSER == null) {    synchronized (se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry.class) {
-                if (PARSER == null) {
-                  PARSER = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-                }
-              }
-            }
-            return PARSER;
-          }
-        }
-        throw new UnsupportedOperationException();
+      static {
+        defaultInstance = new Entry(true);
+        defaultInstance.initFields();
       }
-
 
       // @@protoc_insertion_point(class_scope:Properties.Entry)
-      private static final se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry DEFAULT_INSTANCE;
-      static {
-        DEFAULT_INSTANCE = new Entry();
-        DEFAULT_INSTANCE.makeImmutable();
-      }
-
-      public static se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry getDefaultInstance() {
-        return DEFAULT_INSTANCE;
-      }
-
-      private static volatile com.google.protobuf.Parser<Entry> PARSER;
-
-      public static com.google.protobuf.Parser<Entry> parser() {
-        return DEFAULT_INSTANCE.getParserForType();
-      }
     }
 
     public static final int ENTRY_FIELD_NUMBER = 1;
-    private com.google.protobuf.Internal.ProtobufList<se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry> entry_;
+    private java.util.List<se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry> entry_;
     /**
      * <code>repeated .Properties.Entry entry = 1;</code>
      */
@@ -1854,100 +2043,36 @@ public final class MultipartBinary {
         int index) {
       return entry_.get(index);
     }
-    private void ensureEntryIsMutable() {
-      if (!entry_.isModifiable()) {
-        entry_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(entry_);
-       }
-    }
 
-    /**
-     * <code>repeated .Properties.Entry entry = 1;</code>
-     */
-    private void setEntry(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry value) {
-      if (value == null) {
-        throw new NullPointerException();
+    private void initFields() {
+      entry_ = java.util.Collections.emptyList();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      for (int i = 0; i < getEntryCount(); i++) {
+        if (!getEntry(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
       }
-      ensureEntryIsMutable();
-      entry_.set(index, value);
-    }
-    /**
-     * <code>repeated .Properties.Entry entry = 1;</code>
-     */
-    private void setEntry(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry.Builder builderForValue) {
-      ensureEntryIsMutable();
-      entry_.set(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .Properties.Entry entry = 1;</code>
-     */
-    private void addEntry(se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureEntryIsMutable();
-      entry_.add(value);
-    }
-    /**
-     * <code>repeated .Properties.Entry entry = 1;</code>
-     */
-    private void addEntry(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureEntryIsMutable();
-      entry_.add(index, value);
-    }
-    /**
-     * <code>repeated .Properties.Entry entry = 1;</code>
-     */
-    private void addEntry(
-        se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry.Builder builderForValue) {
-      ensureEntryIsMutable();
-      entry_.add(builderForValue.build());
-    }
-    /**
-     * <code>repeated .Properties.Entry entry = 1;</code>
-     */
-    private void addEntry(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry.Builder builderForValue) {
-      ensureEntryIsMutable();
-      entry_.add(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .Properties.Entry entry = 1;</code>
-     */
-    private void addAllEntry(
-        java.lang.Iterable<? extends se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry> values) {
-      ensureEntryIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, entry_);
-    }
-    /**
-     * <code>repeated .Properties.Entry entry = 1;</code>
-     */
-    private void clearEntry() {
-      entry_ = emptyProtobufList();
-    }
-    /**
-     * <code>repeated .Properties.Entry entry = 1;</code>
-     */
-    private void removeEntry(int index) {
-      ensureEntryIsMutable();
-      entry_.remove(index);
+      memoizedIsInitialized = 1;
+      return true;
     }
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       for (int i = 0; i < entry_.size(); i++) {
         output.writeMessage(1, entry_.get(i));
       }
-      unknownFields.writeTo(output);
+      output.writeRawBytes(unknownFields);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
@@ -1957,118 +2082,216 @@ public final class MultipartBinary {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(1, entry_.get(i));
       }
-      size += unknownFields.getSerializedSize();
+      size += unknownFields.size();
       memoizedSerializedSize = size;
       return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Properties parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Properties parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Properties parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Properties parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Properties parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return PARSER.parseFrom(input);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Properties parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Properties parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Properties parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Properties parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return PARSER.parseFrom(input);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Properties parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(se.lth.cs.docforia.io.multipart.MultipartBinary.Properties prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
+    public Builder toBuilder() { return newBuilder(this); }
 
     /**
      * Protobuf type {@code Properties}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.Builder<
-          se.lth.cs.docforia.io.multipart.MultipartBinary.Properties, Builder> implements
+          se.lth.cs.docforia.io.multipart.MultipartBinary.Properties, Builder>
+        implements
         // @@protoc_insertion_point(builder_implements:Properties)
         se.lth.cs.docforia.io.multipart.MultipartBinary.PropertiesOrBuilder {
       // Construct using se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.newBuilder()
       private Builder() {
-        super(DEFAULT_INSTANCE);
+        maybeForceBuilderInitialization();
       }
 
+      private void maybeForceBuilderInitialization() {
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        entry_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public se.lth.cs.docforia.io.multipart.MultipartBinary.Properties getDefaultInstanceForType() {
+        return se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.getDefaultInstance();
+      }
+
+      public se.lth.cs.docforia.io.multipart.MultipartBinary.Properties build() {
+        se.lth.cs.docforia.io.multipart.MultipartBinary.Properties result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public se.lth.cs.docforia.io.multipart.MultipartBinary.Properties buildPartial() {
+        se.lth.cs.docforia.io.multipart.MultipartBinary.Properties result = new se.lth.cs.docforia.io.multipart.MultipartBinary.Properties(this);
+        int from_bitField0_ = bitField0_;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          entry_ = java.util.Collections.unmodifiableList(entry_);
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.entry_ = entry_;
+        return result;
+      }
+
+      public Builder mergeFrom(se.lth.cs.docforia.io.multipart.MultipartBinary.Properties other) {
+        if (other == se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.getDefaultInstance()) return this;
+        if (!other.entry_.isEmpty()) {
+          if (entry_.isEmpty()) {
+            entry_ = other.entry_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureEntryIsMutable();
+            entry_.addAll(other.entry_);
+          }
+          
+        }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        for (int i = 0; i < getEntryCount(); i++) {
+          if (!getEntry(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        se.lth.cs.docforia.io.multipart.MultipartBinary.Properties parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (se.lth.cs.docforia.io.multipart.MultipartBinary.Properties) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry> entry_ =
+        java.util.Collections.emptyList();
+      private void ensureEntryIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          entry_ = new java.util.ArrayList<se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry>(entry_);
+          bitField0_ |= 0x00000001;
+         }
+      }
 
       /**
        * <code>repeated .Properties.Entry entry = 1;</code>
        */
       public java.util.List<se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry> getEntryList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getEntryList());
+        return java.util.Collections.unmodifiableList(entry_);
       }
       /**
        * <code>repeated .Properties.Entry entry = 1;</code>
        */
       public int getEntryCount() {
-        return instance.getEntryCount();
-      }/**
+        return entry_.size();
+      }
+      /**
        * <code>repeated .Properties.Entry entry = 1;</code>
        */
       public se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry getEntry(int index) {
-        return instance.getEntry(index);
+        return entry_.get(index);
       }
       /**
        * <code>repeated .Properties.Entry entry = 1;</code>
        */
       public Builder setEntry(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry value) {
-        copyOnWrite();
-        instance.setEntry(index, value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureEntryIsMutable();
+        entry_.set(index, value);
+
         return this;
       }
       /**
@@ -2076,16 +2299,21 @@ public final class MultipartBinary {
        */
       public Builder setEntry(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry.Builder builderForValue) {
-        copyOnWrite();
-        instance.setEntry(index, builderForValue);
+        ensureEntryIsMutable();
+        entry_.set(index, builderForValue.build());
+
         return this;
       }
       /**
        * <code>repeated .Properties.Entry entry = 1;</code>
        */
       public Builder addEntry(se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry value) {
-        copyOnWrite();
-        instance.addEntry(value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureEntryIsMutable();
+        entry_.add(value);
+
         return this;
       }
       /**
@@ -2093,8 +2321,12 @@ public final class MultipartBinary {
        */
       public Builder addEntry(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry value) {
-        copyOnWrite();
-        instance.addEntry(index, value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureEntryIsMutable();
+        entry_.add(index, value);
+
         return this;
       }
       /**
@@ -2102,8 +2334,9 @@ public final class MultipartBinary {
        */
       public Builder addEntry(
           se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry.Builder builderForValue) {
-        copyOnWrite();
-        instance.addEntry(builderForValue);
+        ensureEntryIsMutable();
+        entry_.add(builderForValue.build());
+
         return this;
       }
       /**
@@ -2111,8 +2344,9 @@ public final class MultipartBinary {
        */
       public Builder addEntry(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry.Builder builderForValue) {
-        copyOnWrite();
-        instance.addEntry(index, builderForValue);
+        ensureEntryIsMutable();
+        entry_.add(index, builderForValue.build());
+
         return this;
       }
       /**
@@ -2120,143 +2354,40 @@ public final class MultipartBinary {
        */
       public Builder addAllEntry(
           java.lang.Iterable<? extends se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry> values) {
-        copyOnWrite();
-        instance.addAllEntry(values);
+        ensureEntryIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, entry_);
+
         return this;
       }
       /**
        * <code>repeated .Properties.Entry entry = 1;</code>
        */
       public Builder clearEntry() {
-        copyOnWrite();
-        instance.clearEntry();
+        entry_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+
         return this;
       }
       /**
        * <code>repeated .Properties.Entry entry = 1;</code>
        */
       public Builder removeEntry(int index) {
-        copyOnWrite();
-        instance.removeEntry(index);
+        ensureEntryIsMutable();
+        entry_.remove(index);
+
         return this;
       }
 
       // @@protoc_insertion_point(builder_scope:Properties)
     }
-    private byte memoizedIsInitialized = -1;
-    protected final Object dynamicMethod(
-        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        Object arg0, Object arg1) {
-      switch (method) {
-        case NEW_MUTABLE_INSTANCE: {
-          return new se.lth.cs.docforia.io.multipart.MultipartBinary.Properties();
-        }
-        case IS_INITIALIZED: {
-          byte isInitialized = memoizedIsInitialized;
-          if (isInitialized == 1) return DEFAULT_INSTANCE;
-          if (isInitialized == 0) return null;
 
-          boolean shouldMemoize = ((Boolean) arg0).booleanValue();
-          for (int i = 0; i < getEntryCount(); i++) {
-            if (!getEntry(i).isInitialized()) {
-              if (shouldMemoize) {
-                memoizedIsInitialized = 0;
-              }
-              return null;
-            }
-          }
-          if (shouldMemoize) memoizedIsInitialized = 1;
-          return DEFAULT_INSTANCE;
-
-        }
-        case MAKE_IMMUTABLE: {
-          entry_.makeImmutable();
-          return null;
-        }
-        case NEW_BUILDER: {
-          return new Builder();
-        }
-        case VISIT: {
-          Visitor visitor = (Visitor) arg0;
-          se.lth.cs.docforia.io.multipart.MultipartBinary.Properties other = (se.lth.cs.docforia.io.multipart.MultipartBinary.Properties) arg1;
-          entry_= visitor.visitList(entry_, other.entry_);
-          if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-              .INSTANCE) {
-          }
-          return this;
-        }
-        case MERGE_FROM_STREAM: {
-          com.google.protobuf.CodedInputStream input =
-              (com.google.protobuf.CodedInputStream) arg0;
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-              (com.google.protobuf.ExtensionRegistryLite) arg1;
-          try {
-            boolean done = false;
-            while (!done) {
-              int tag = input.readTag();
-              switch (tag) {
-                case 0:
-                  done = true;
-                  break;
-                default: {
-                  if (!parseUnknownField(tag, input)) {
-                    done = true;
-                  }
-                  break;
-                }
-                case 10: {
-                  if (!entry_.isModifiable()) {
-                    entry_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(entry_);
-                  }
-                  entry_.add(
-                      input.readMessage(se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Entry.parser(), extensionRegistry));
-                  break;
-                }
-              }
-            }
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw new RuntimeException(e.setUnfinishedMessage(this));
-          } catch (java.io.IOException e) {
-            throw new RuntimeException(
-                new com.google.protobuf.InvalidProtocolBufferException(
-                    e.getMessage()).setUnfinishedMessage(this));
-          } finally {
-          }
-        }
-        case GET_DEFAULT_INSTANCE: {
-          return DEFAULT_INSTANCE;
-        }
-        case GET_PARSER: {
-          if (PARSER == null) {    synchronized (se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.class) {
-              if (PARSER == null) {
-                PARSER = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-              }
-            }
-          }
-          return PARSER;
-        }
-      }
-      throw new UnsupportedOperationException();
+    static {
+      defaultInstance = new Properties(true);
+      defaultInstance.initFields();
     }
-
 
     // @@protoc_insertion_point(class_scope:Properties)
-    private static final se.lth.cs.docforia.io.multipart.MultipartBinary.Properties DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new Properties();
-      DEFAULT_INSTANCE.makeImmutable();
-    }
-
-    public static se.lth.cs.docforia.io.multipart.MultipartBinary.Properties getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static volatile com.google.protobuf.Parser<Properties> PARSER;
-
-    public static com.google.protobuf.Parser<Properties> parser() {
-      return DEFAULT_INSTANCE.getParserForType();
-    }
   }
 
   public interface PropertyColumnOrBuilder extends
@@ -2298,19 +2429,112 @@ public final class MultipartBinary {
   /**
    * Protobuf type {@code PropertyColumn}
    */
-  public  static final class PropertyColumn extends
-      com.google.protobuf.GeneratedMessageLite<
-          PropertyColumn, PropertyColumn.Builder> implements
+  public static final class PropertyColumn extends
+      com.google.protobuf.GeneratedMessageLite implements
       // @@protoc_insertion_point(message_implements:PropertyColumn)
       PropertyColumnOrBuilder {
-    private PropertyColumn() {
-      key_ = "";
-      type_ = 1;
-      data_ = com.google.protobuf.ByteString.EMPTY;
+    // Use PropertyColumn.newBuilder() to construct.
+    private PropertyColumn(com.google.protobuf.GeneratedMessageLite.Builder builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
+    private PropertyColumn(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
+
+    private static final PropertyColumn defaultInstance;
+    public static PropertyColumn getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public PropertyColumn getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.ByteString unknownFields;
+    private PropertyColumn(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.ByteString.Output unknownFieldsOutput =
+          com.google.protobuf.ByteString.newOutput();
+      com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          com.google.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput);
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000001;
+              key_ = bs;
+              break;
+            }
+            case 16: {
+              int rawValue = input.readEnum();
+              se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType value = se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType.valueOf(rawValue);
+              if (value == null) {
+                unknownFieldsCodedOutput.writeRawVarint32(tag);
+                unknownFieldsCodedOutput.writeRawVarint32(rawValue);
+              } else {
+                bitField0_ |= 0x00000002;
+                type_ = value;
+              }
+              break;
+            }
+            case 26: {
+              bitField0_ |= 0x00000004;
+              data_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
+        }
+        makeExtensionsImmutable();
+      }
+    }
+    public static com.google.protobuf.Parser<PropertyColumn> PARSER =
+        new com.google.protobuf.AbstractParser<PropertyColumn>() {
+      public PropertyColumn parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new PropertyColumn(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<PropertyColumn> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     public static final int KEY_FIELD_NUMBER = 1;
-    private java.lang.String key_;
+    private java.lang.Object key_;
     /**
      * <code>required string key = 1;</code>
      */
@@ -2321,47 +2545,38 @@ public final class MultipartBinary {
      * <code>required string key = 1;</code>
      */
     public java.lang.String getKey() {
-      return key_;
+      java.lang.Object ref = key_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          key_ = s;
+        }
+        return s;
+      }
     }
     /**
      * <code>required string key = 1;</code>
      */
     public com.google.protobuf.ByteString
         getKeyBytes() {
-      return com.google.protobuf.ByteString.copyFromUtf8(key_);
-    }
-    /**
-     * <code>required string key = 1;</code>
-     */
-    private void setKey(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-      key_ = value;
-    }
-    /**
-     * <code>required string key = 1;</code>
-     */
-    private void clearKey() {
-      bitField0_ = (bitField0_ & ~0x00000001);
-      key_ = getDefaultInstance().getKey();
-    }
-    /**
-     * <code>required string key = 1;</code>
-     */
-    private void setKeyBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-      key_ = value.toStringUtf8();
+      java.lang.Object ref = key_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        key_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int TYPE_FIELD_NUMBER = 2;
-    private int type_;
+    private se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType type_;
     /**
      * <code>required .ValueType type = 2;</code>
      */
@@ -2372,25 +2587,7 @@ public final class MultipartBinary {
      * <code>required .ValueType type = 2;</code>
      */
     public se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType getType() {
-      se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType result = se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType.forNumber(type_);
-      return result == null ? se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType.BINARY : result;
-    }
-    /**
-     * <code>required .ValueType type = 2;</code>
-     */
-    private void setType(se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      bitField0_ |= 0x00000002;
-      type_ = value.getNumber();
-    }
-    /**
-     * <code>required .ValueType type = 2;</code>
-     */
-    private void clearType() {
-      bitField0_ = (bitField0_ & ~0x00000002);
-      type_ = 1;
+      return type_;
     }
 
     public static final int DATA_FIELD_NUMBER = 3;
@@ -2407,38 +2604,50 @@ public final class MultipartBinary {
     public com.google.protobuf.ByteString getData() {
       return data_;
     }
-    /**
-     * <code>required bytes data = 3;</code>
-     */
-    private void setData(com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-      data_ = value;
+
+    private void initFields() {
+      key_ = "";
+      type_ = se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType.BINARY;
+      data_ = com.google.protobuf.ByteString.EMPTY;
     }
-    /**
-     * <code>required bytes data = 3;</code>
-     */
-    private void clearData() {
-      bitField0_ = (bitField0_ & ~0x00000004);
-      data_ = getDefaultInstance().getData();
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasKey()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasType()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasData()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
     }
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeString(1, getKey());
+        output.writeBytes(1, getKeyBytes());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeEnum(2, type_);
+        output.writeEnum(2, type_.getNumber());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeBytes(3, data_);
       }
-      unknownFields.writeTo(output);
+      output.writeRawBytes(unknownFields);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
@@ -2446,137 +2655,268 @@ public final class MultipartBinary {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeStringSize(1, getKey());
+          .computeBytesSize(1, getKeyBytes());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, type_);
+          .computeEnumSize(2, type_.getNumber());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, data_);
       }
-      size += unknownFields.getSerializedSize();
+      size += unknownFields.size();
       memoizedSerializedSize = size;
       return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return PARSER.parseFrom(input);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return PARSER.parseFrom(input);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
+    public Builder toBuilder() { return newBuilder(this); }
 
     /**
      * Protobuf type {@code PropertyColumn}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.Builder<
-          se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn, Builder> implements
+          se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn, Builder>
+        implements
         // @@protoc_insertion_point(builder_implements:PropertyColumn)
         se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumnOrBuilder {
       // Construct using se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn.newBuilder()
       private Builder() {
-        super(DEFAULT_INSTANCE);
+        maybeForceBuilderInitialization();
       }
 
+      private void maybeForceBuilderInitialization() {
+      }
+      private static Builder create() {
+        return new Builder();
+      }
 
+      public Builder clear() {
+        super.clear();
+        key_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        type_ = se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType.BINARY;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        data_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn getDefaultInstanceForType() {
+        return se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn.getDefaultInstance();
+      }
+
+      public se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn build() {
+        se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn buildPartial() {
+        se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn result = new se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.key_ = key_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.type_ = type_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.data_ = data_;
+        result.bitField0_ = to_bitField0_;
+        return result;
+      }
+
+      public Builder mergeFrom(se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn other) {
+        if (other == se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn.getDefaultInstance()) return this;
+        if (other.hasKey()) {
+          bitField0_ |= 0x00000001;
+          key_ = other.key_;
+          
+        }
+        if (other.hasType()) {
+          setType(other.getType());
+        }
+        if (other.hasData()) {
+          setData(other.getData());
+        }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasKey()) {
+          
+          return false;
+        }
+        if (!hasType()) {
+          
+          return false;
+        }
+        if (!hasData()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object key_ = "";
       /**
        * <code>required string key = 1;</code>
        */
       public boolean hasKey() {
-        return instance.hasKey();
+        return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
        * <code>required string key = 1;</code>
        */
       public java.lang.String getKey() {
-        return instance.getKey();
+        java.lang.Object ref = key_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            key_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
        * <code>required string key = 1;</code>
        */
       public com.google.protobuf.ByteString
           getKeyBytes() {
-        return instance.getKeyBytes();
+        java.lang.Object ref = key_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          key_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
        * <code>required string key = 1;</code>
        */
       public Builder setKey(
           java.lang.String value) {
-        copyOnWrite();
-        instance.setKey(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        key_ = value;
+        
         return this;
       }
       /**
        * <code>required string key = 1;</code>
        */
       public Builder clearKey() {
-        copyOnWrite();
-        instance.clearKey();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        key_ = getDefaultInstance().getKey();
+        
         return this;
       }
       /**
@@ -2584,215 +2924,94 @@ public final class MultipartBinary {
        */
       public Builder setKeyBytes(
           com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setKeyBytes(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        key_ = value;
+        
         return this;
       }
 
+      private se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType type_ = se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType.BINARY;
       /**
        * <code>required .ValueType type = 2;</code>
        */
       public boolean hasType() {
-        return instance.hasType();
+        return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
        * <code>required .ValueType type = 2;</code>
        */
       public se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType getType() {
-        return instance.getType();
+        return type_;
       }
       /**
        * <code>required .ValueType type = 2;</code>
        */
       public Builder setType(se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType value) {
-        copyOnWrite();
-        instance.setType(value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000002;
+        type_ = value;
+        
         return this;
       }
       /**
        * <code>required .ValueType type = 2;</code>
        */
       public Builder clearType() {
-        copyOnWrite();
-        instance.clearType();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        type_ = se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType.BINARY;
+        
         return this;
       }
 
+      private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <code>required bytes data = 3;</code>
        */
       public boolean hasData() {
-        return instance.hasData();
+        return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
        * <code>required bytes data = 3;</code>
        */
       public com.google.protobuf.ByteString getData() {
-        return instance.getData();
+        return data_;
       }
       /**
        * <code>required bytes data = 3;</code>
        */
       public Builder setData(com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setData(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        data_ = value;
+        
         return this;
       }
       /**
        * <code>required bytes data = 3;</code>
        */
       public Builder clearData() {
-        copyOnWrite();
-        instance.clearData();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        data_ = getDefaultInstance().getData();
+        
         return this;
       }
 
       // @@protoc_insertion_point(builder_scope:PropertyColumn)
     }
-    private byte memoizedIsInitialized = -1;
-    protected final Object dynamicMethod(
-        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        Object arg0, Object arg1) {
-      switch (method) {
-        case NEW_MUTABLE_INSTANCE: {
-          return new se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn();
-        }
-        case IS_INITIALIZED: {
-          byte isInitialized = memoizedIsInitialized;
-          if (isInitialized == 1) return DEFAULT_INSTANCE;
-          if (isInitialized == 0) return null;
 
-          boolean shouldMemoize = ((Boolean) arg0).booleanValue();
-          if (!hasKey()) {
-            if (shouldMemoize) {
-              memoizedIsInitialized = 0;
-            }
-            return null;
-          }
-          if (!hasType()) {
-            if (shouldMemoize) {
-              memoizedIsInitialized = 0;
-            }
-            return null;
-          }
-          if (!hasData()) {
-            if (shouldMemoize) {
-              memoizedIsInitialized = 0;
-            }
-            return null;
-          }
-          if (shouldMemoize) memoizedIsInitialized = 1;
-          return DEFAULT_INSTANCE;
-
-        }
-        case MAKE_IMMUTABLE: {
-          return null;
-        }
-        case NEW_BUILDER: {
-          return new Builder();
-        }
-        case VISIT: {
-          Visitor visitor = (Visitor) arg0;
-          se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn other = (se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn) arg1;
-          key_ = visitor.visitString(
-              hasKey(), key_,
-              other.hasKey(), other.key_);
-          type_ = visitor.visitInt(hasType(), type_,
-              other.hasType(), other.type_);
-          data_ = visitor.visitByteString(
-              hasData(), data_,
-              other.hasData(), other.data_);
-          if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-              .INSTANCE) {
-            bitField0_ |= other.bitField0_;
-          }
-          return this;
-        }
-        case MERGE_FROM_STREAM: {
-          com.google.protobuf.CodedInputStream input =
-              (com.google.protobuf.CodedInputStream) arg0;
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-              (com.google.protobuf.ExtensionRegistryLite) arg1;
-          try {
-            boolean done = false;
-            while (!done) {
-              int tag = input.readTag();
-              switch (tag) {
-                case 0:
-                  done = true;
-                  break;
-                default: {
-                  if (!parseUnknownField(tag, input)) {
-                    done = true;
-                  }
-                  break;
-                }
-                case 10: {
-                  String s = input.readString();
-                  bitField0_ |= 0x00000001;
-                  key_ = s;
-                  break;
-                }
-                case 16: {
-                  int rawValue = input.readEnum();
-                  se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType value = se.lth.cs.docforia.io.multipart.MultipartBinary.ValueType.forNumber(rawValue);
-                  if (value == null) {
-                    super.mergeVarintField(2, rawValue);
-                  } else {
-                    bitField0_ |= 0x00000002;
-                    type_ = rawValue;
-                  }
-                  break;
-                }
-                case 26: {
-                  bitField0_ |= 0x00000004;
-                  data_ = input.readBytes();
-                  break;
-                }
-              }
-            }
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw new RuntimeException(e.setUnfinishedMessage(this));
-          } catch (java.io.IOException e) {
-            throw new RuntimeException(
-                new com.google.protobuf.InvalidProtocolBufferException(
-                    e.getMessage()).setUnfinishedMessage(this));
-          } finally {
-          }
-        }
-        case GET_DEFAULT_INSTANCE: {
-          return DEFAULT_INSTANCE;
-        }
-        case GET_PARSER: {
-          if (PARSER == null) {    synchronized (se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn.class) {
-              if (PARSER == null) {
-                PARSER = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-              }
-            }
-          }
-          return PARSER;
-        }
-      }
-      throw new UnsupportedOperationException();
+    static {
+      defaultInstance = new PropertyColumn(true);
+      defaultInstance.initFields();
     }
-
 
     // @@protoc_insertion_point(class_scope:PropertyColumn)
-    private static final se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new PropertyColumn();
-      DEFAULT_INSTANCE.makeImmutable();
-    }
-
-    public static se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static volatile com.google.protobuf.Parser<PropertyColumn> PARSER;
-
-    public static com.google.protobuf.Parser<PropertyColumn> parser() {
-      return DEFAULT_INSTANCE.getParserForType();
-    }
   }
 
   public interface HeaderOrBuilder extends
@@ -2820,7 +3039,7 @@ public final class MultipartBinary {
     /**
      * <code>repeated string nodeLayer = 3;</code>
      */
-    java.util.List<String>
+    com.google.protobuf.ProtocolStringList
         getNodeLayerList();
     /**
      * <code>repeated string nodeLayer = 3;</code>
@@ -2839,7 +3058,7 @@ public final class MultipartBinary {
     /**
      * <code>repeated string edgeLayer = 4;</code>
      */
-    java.util.List<String>
+    com.google.protobuf.ProtocolStringList
         getEdgeLayerList();
     /**
      * <code>repeated string edgeLayer = 4;</code>
@@ -2872,7 +3091,7 @@ public final class MultipartBinary {
     /**
      * <code>repeated string uri = 6;</code>
      */
-    java.util.List<String>
+    com.google.protobuf.ProtocolStringList
         getUriList();
     /**
      * <code>repeated string uri = 6;</code>
@@ -2933,20 +3152,169 @@ public final class MultipartBinary {
   /**
    * Protobuf type {@code Header}
    */
-  public  static final class Header extends
-      com.google.protobuf.GeneratedMessageLite<
-          Header, Header.Builder> implements
+  public static final class Header extends
+      com.google.protobuf.GeneratedMessageLite implements
       // @@protoc_insertion_point(message_implements:Header)
       HeaderOrBuilder {
-    private Header() {
-      nodeLayer_ = com.google.protobuf.GeneratedMessageLite.emptyProtobufList();
-      edgeLayer_ = com.google.protobuf.GeneratedMessageLite.emptyProtobufList();
-      edgeLayerDeps_ = emptyProtobufList();
-      uri_ = com.google.protobuf.GeneratedMessageLite.emptyProtobufList();
-      id_ = "";
-      lang_ = "";
-      type_ = "";
+    // Use Header.newBuilder() to construct.
+    private Header(com.google.protobuf.GeneratedMessageLite.Builder builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
+    private Header(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
+
+    private static final Header defaultInstance;
+    public static Header getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public Header getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.ByteString unknownFields;
+    private Header(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.ByteString.Output unknownFieldsOutput =
+          com.google.protobuf.ByteString.newOutput();
+      com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          com.google.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput);
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              length_ = input.readUInt32();
+              break;
+            }
+            case 18: {
+              se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                subBuilder = coreproperties_.toBuilder();
+              }
+              coreproperties_ = input.readMessage(se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(coreproperties_);
+                coreproperties_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000002;
+              break;
+            }
+            case 26: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                nodeLayer_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              nodeLayer_.add(bs);
+              break;
+            }
+            case 34: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                edgeLayer_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              edgeLayer_.add(bs);
+              break;
+            }
+            case 42: {
+              if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+                edgeLayerDeps_ = new java.util.ArrayList<se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency>();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              edgeLayerDeps_.add(input.readMessage(se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency.PARSER, extensionRegistry));
+              break;
+            }
+            case 50: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              if (!((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
+                uri_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000020;
+              }
+              uri_.add(bs);
+              break;
+            }
+            case 58: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000004;
+              id_ = bs;
+              break;
+            }
+            case 66: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000008;
+              lang_ = bs;
+              break;
+            }
+            case 74: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000010;
+              type_ = bs;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          nodeLayer_ = nodeLayer_.getUnmodifiableView();
+        }
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+          edgeLayer_ = edgeLayer_.getUnmodifiableView();
+        }
+        if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+          edgeLayerDeps_ = java.util.Collections.unmodifiableList(edgeLayerDeps_);
+        }
+        if (((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
+          uri_ = uri_.getUnmodifiableView();
+        }
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
+        }
+        makeExtensionsImmutable();
+      }
+    }
+    public static com.google.protobuf.Parser<Header> PARSER =
+        new com.google.protobuf.AbstractParser<Header>() {
+      public Header parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Header(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Header> getParserForType() {
+      return PARSER;
+    }
+
     public interface DependencyOrBuilder extends
         // @@protoc_insertion_point(interface_extends:Header.Dependency)
         com.google.protobuf.MessageLiteOrBuilder {
@@ -2967,16 +3335,112 @@ public final class MultipartBinary {
     /**
      * Protobuf type {@code Header.Dependency}
      */
-    public  static final class Dependency extends
-        com.google.protobuf.GeneratedMessageLite<
-            Dependency, Dependency.Builder> implements
+    public static final class Dependency extends
+        com.google.protobuf.GeneratedMessageLite implements
         // @@protoc_insertion_point(message_implements:Header.Dependency)
         DependencyOrBuilder {
-      private Dependency() {
-        nodeLayerId_ = emptyIntList();
+      // Use Dependency.newBuilder() to construct.
+      private Dependency(com.google.protobuf.GeneratedMessageLite.Builder builder) {
+        super(builder);
+        this.unknownFields = builder.getUnknownFields();
       }
+      private Dependency(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
+
+      private static final Dependency defaultInstance;
+      public static Dependency getDefaultInstance() {
+        return defaultInstance;
+      }
+
+      public Dependency getDefaultInstanceForType() {
+        return defaultInstance;
+      }
+
+      private final com.google.protobuf.ByteString unknownFields;
+      private Dependency(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        initFields();
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.ByteString.Output unknownFieldsOutput =
+            com.google.protobuf.ByteString.newOutput();
+        com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+            com.google.protobuf.CodedOutputStream.newInstance(
+                unknownFieldsOutput);
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownField(input, unknownFieldsCodedOutput,
+                                       extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+              case 8: {
+                if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                  nodeLayerId_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000001;
+                }
+                nodeLayerId_.add(input.readUInt32());
+                break;
+              }
+              case 10: {
+                int length = input.readRawVarint32();
+                int limit = input.pushLimit(length);
+                if (!((mutable_bitField0_ & 0x00000001) == 0x00000001) && input.getBytesUntilLimit() > 0) {
+                  nodeLayerId_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000001;
+                }
+                while (input.getBytesUntilLimit() > 0) {
+                  nodeLayerId_.add(input.readUInt32());
+                }
+                input.popLimit(limit);
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e.getMessage()).setUnfinishedMessage(this);
+        } finally {
+          if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+            nodeLayerId_ = java.util.Collections.unmodifiableList(nodeLayerId_);
+          }
+          try {
+            unknownFieldsCodedOutput.flush();
+          } catch (java.io.IOException e) {
+          // Should not happen
+          } finally {
+            unknownFields = unknownFieldsOutput.toByteString();
+          }
+          makeExtensionsImmutable();
+        }
+      }
+      public static com.google.protobuf.Parser<Dependency> PARSER =
+          new com.google.protobuf.AbstractParser<Dependency>() {
+        public Dependency parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new Dependency(input, extensionRegistry);
+        }
+      };
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<Dependency> getParserForType() {
+        return PARSER;
+      }
+
       public static final int NODELAYERID_FIELD_NUMBER = 1;
-      private com.google.protobuf.Internal.IntList nodeLayerId_;
+      private java.util.List<java.lang.Integer> nodeLayerId_;
       /**
        * <code>repeated uint32 nodeLayerId = 1;</code>
        */
@@ -2994,53 +3458,32 @@ public final class MultipartBinary {
        * <code>repeated uint32 nodeLayerId = 1;</code>
        */
       public int getNodeLayerId(int index) {
-        return nodeLayerId_.getInt(index);
+        return nodeLayerId_.get(index);
       }
-      private void ensureNodeLayerIdIsMutable() {
-        if (!nodeLayerId_.isModifiable()) {
-          nodeLayerId_ =
-              com.google.protobuf.GeneratedMessageLite.mutableCopy(nodeLayerId_);
-         }
+
+      private void initFields() {
+        nodeLayerId_ = java.util.Collections.emptyList();
       }
-      /**
-       * <code>repeated uint32 nodeLayerId = 1;</code>
-       */
-      private void setNodeLayerId(
-          int index, int value) {
-        ensureNodeLayerIdIsMutable();
-        nodeLayerId_.setInt(index, value);
-      }
-      /**
-       * <code>repeated uint32 nodeLayerId = 1;</code>
-       */
-      private void addNodeLayerId(int value) {
-        ensureNodeLayerIdIsMutable();
-        nodeLayerId_.addInt(value);
-      }
-      /**
-       * <code>repeated uint32 nodeLayerId = 1;</code>
-       */
-      private void addAllNodeLayerId(
-          java.lang.Iterable<? extends java.lang.Integer> values) {
-        ensureNodeLayerIdIsMutable();
-        com.google.protobuf.AbstractMessageLite.addAll(
-            values, nodeLayerId_);
-      }
-      /**
-       * <code>repeated uint32 nodeLayerId = 1;</code>
-       */
-      private void clearNodeLayerId() {
-        nodeLayerId_ = emptyIntList();
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
       }
 
       public void writeTo(com.google.protobuf.CodedOutputStream output)
                           throws java.io.IOException {
+        getSerializedSize();
         for (int i = 0; i < nodeLayerId_.size(); i++) {
-          output.writeUInt32(1, nodeLayerId_.getInt(i));
+          output.writeUInt32(1, nodeLayerId_.get(i));
         }
-        unknownFields.writeTo(output);
+        output.writeRawBytes(unknownFields);
       }
 
+      private int memoizedSerializedSize = -1;
       public int getSerializedSize() {
         int size = memoizedSerializedSize;
         if (size != -1) return size;
@@ -3050,133 +3493,220 @@ public final class MultipartBinary {
           int dataSize = 0;
           for (int i = 0; i < nodeLayerId_.size(); i++) {
             dataSize += com.google.protobuf.CodedOutputStream
-              .computeUInt32SizeNoTag(nodeLayerId_.getInt(i));
+              .computeUInt32SizeNoTag(nodeLayerId_.get(i));
           }
           size += dataSize;
           size += 1 * getNodeLayerIdList().size();
         }
-        size += unknownFields.getSerializedSize();
+        size += unknownFields.size();
         memoizedSerializedSize = size;
         return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected java.lang.Object writeReplace()
+          throws java.io.ObjectStreamException {
+        return super.writeReplace();
       }
 
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency parseFrom(
           com.google.protobuf.ByteString data)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, data);
+        return PARSER.parseFrom(data);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency parseFrom(
           com.google.protobuf.ByteString data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, data, extensionRegistry);
+        return PARSER.parseFrom(data, extensionRegistry);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency parseFrom(byte[] data)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, data);
+        return PARSER.parseFrom(data);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency parseFrom(
           byte[] data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, data, extensionRegistry);
+        return PARSER.parseFrom(data, extensionRegistry);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency parseFrom(java.io.InputStream input)
           throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, input);
+        return PARSER.parseFrom(input);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency parseFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, input, extensionRegistry);
+        return PARSER.parseFrom(input, extensionRegistry);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
-        return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+        return PARSER.parseDelimitedFrom(input);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency parseDelimitedFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+        return PARSER.parseDelimitedFrom(input, extensionRegistry);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency parseFrom(
           com.google.protobuf.CodedInputStream input)
           throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, input);
+        return PARSER.parseFrom(input);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency parseFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, input, extensionRegistry);
+        return PARSER.parseFrom(input, extensionRegistry);
       }
 
-      public static Builder newBuilder() {
-        return DEFAULT_INSTANCE.toBuilder();
-      }
+      public static Builder newBuilder() { return Builder.create(); }
+      public Builder newBuilderForType() { return newBuilder(); }
       public static Builder newBuilder(se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency prototype) {
-        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+        return newBuilder().mergeFrom(prototype);
       }
+      public Builder toBuilder() { return newBuilder(this); }
 
       /**
        * Protobuf type {@code Header.Dependency}
        */
       public static final class Builder extends
           com.google.protobuf.GeneratedMessageLite.Builder<
-            se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency, Builder> implements
+            se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency, Builder>
+          implements
           // @@protoc_insertion_point(builder_implements:Header.Dependency)
           se.lth.cs.docforia.io.multipart.MultipartBinary.Header.DependencyOrBuilder {
         // Construct using se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency.newBuilder()
         private Builder() {
-          super(DEFAULT_INSTANCE);
+          maybeForceBuilderInitialization();
         }
 
+        private void maybeForceBuilderInitialization() {
+        }
+        private static Builder create() {
+          return new Builder();
+        }
 
+        public Builder clear() {
+          super.clear();
+          nodeLayerId_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          return this;
+        }
+
+        public Builder clone() {
+          return create().mergeFrom(buildPartial());
+        }
+
+        public se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency getDefaultInstanceForType() {
+          return se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency.getDefaultInstance();
+        }
+
+        public se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency build() {
+          se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency buildPartial() {
+          se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency result = new se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency(this);
+          int from_bitField0_ = bitField0_;
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            nodeLayerId_ = java.util.Collections.unmodifiableList(nodeLayerId_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.nodeLayerId_ = nodeLayerId_;
+          return result;
+        }
+
+        public Builder mergeFrom(se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency other) {
+          if (other == se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency.getDefaultInstance()) return this;
+          if (!other.nodeLayerId_.isEmpty()) {
+            if (nodeLayerId_.isEmpty()) {
+              nodeLayerId_ = other.nodeLayerId_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureNodeLayerIdIsMutable();
+              nodeLayerId_.addAll(other.nodeLayerId_);
+            }
+            
+          }
+          setUnknownFields(
+              getUnknownFields().concat(other.unknownFields));
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency) e.getUnfinishedMessage();
+            throw e;
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        private java.util.List<java.lang.Integer> nodeLayerId_ = java.util.Collections.emptyList();
+        private void ensureNodeLayerIdIsMutable() {
+          if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+            nodeLayerId_ = new java.util.ArrayList<java.lang.Integer>(nodeLayerId_);
+            bitField0_ |= 0x00000001;
+           }
+        }
         /**
          * <code>repeated uint32 nodeLayerId = 1;</code>
          */
         public java.util.List<java.lang.Integer>
             getNodeLayerIdList() {
-          return java.util.Collections.unmodifiableList(
-              instance.getNodeLayerIdList());
+          return java.util.Collections.unmodifiableList(nodeLayerId_);
         }
         /**
          * <code>repeated uint32 nodeLayerId = 1;</code>
          */
         public int getNodeLayerIdCount() {
-          return instance.getNodeLayerIdCount();
+          return nodeLayerId_.size();
         }
         /**
          * <code>repeated uint32 nodeLayerId = 1;</code>
          */
         public int getNodeLayerId(int index) {
-          return instance.getNodeLayerId(index);
+          return nodeLayerId_.get(index);
         }
         /**
          * <code>repeated uint32 nodeLayerId = 1;</code>
          */
         public Builder setNodeLayerId(
             int index, int value) {
-          copyOnWrite();
-          instance.setNodeLayerId(index, value);
+          ensureNodeLayerIdIsMutable();
+          nodeLayerId_.set(index, value);
+          
           return this;
         }
         /**
          * <code>repeated uint32 nodeLayerId = 1;</code>
          */
         public Builder addNodeLayerId(int value) {
-          copyOnWrite();
-          instance.addNodeLayerId(value);
+          ensureNodeLayerIdIsMutable();
+          nodeLayerId_.add(value);
+          
           return this;
         }
         /**
@@ -3184,131 +3714,31 @@ public final class MultipartBinary {
          */
         public Builder addAllNodeLayerId(
             java.lang.Iterable<? extends java.lang.Integer> values) {
-          copyOnWrite();
-          instance.addAllNodeLayerId(values);
+          ensureNodeLayerIdIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, nodeLayerId_);
+          
           return this;
         }
         /**
          * <code>repeated uint32 nodeLayerId = 1;</code>
          */
         public Builder clearNodeLayerId() {
-          copyOnWrite();
-          instance.clearNodeLayerId();
+          nodeLayerId_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          
           return this;
         }
 
         // @@protoc_insertion_point(builder_scope:Header.Dependency)
       }
-      protected final Object dynamicMethod(
-          com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-          Object arg0, Object arg1) {
-        switch (method) {
-          case NEW_MUTABLE_INSTANCE: {
-            return new se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency();
-          }
-          case IS_INITIALIZED: {
-            return DEFAULT_INSTANCE;
-          }
-          case MAKE_IMMUTABLE: {
-            nodeLayerId_.makeImmutable();
-            return null;
-          }
-          case NEW_BUILDER: {
-            return new Builder();
-          }
-          case VISIT: {
-            Visitor visitor = (Visitor) arg0;
-            se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency other = (se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency) arg1;
-            nodeLayerId_= visitor.visitIntList(nodeLayerId_, other.nodeLayerId_);
-            if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-                .INSTANCE) {
-            }
-            return this;
-          }
-          case MERGE_FROM_STREAM: {
-            com.google.protobuf.CodedInputStream input =
-                (com.google.protobuf.CodedInputStream) arg0;
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-                (com.google.protobuf.ExtensionRegistryLite) arg1;
-            try {
-              boolean done = false;
-              while (!done) {
-                int tag = input.readTag();
-                switch (tag) {
-                  case 0:
-                    done = true;
-                    break;
-                  default: {
-                    if (!parseUnknownField(tag, input)) {
-                      done = true;
-                    }
-                    break;
-                  }
-                  case 8: {
-                    if (!nodeLayerId_.isModifiable()) {
-                      nodeLayerId_ =
-                          com.google.protobuf.GeneratedMessageLite.mutableCopy(nodeLayerId_);
-                    }
-                    nodeLayerId_.addInt(input.readUInt32());
-                    break;
-                  }
-                  case 10: {
-                    int length = input.readRawVarint32();
-                    int limit = input.pushLimit(length);
-                    if (!nodeLayerId_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                      nodeLayerId_ =
-                          com.google.protobuf.GeneratedMessageLite.mutableCopy(nodeLayerId_);
-                    }
-                    while (input.getBytesUntilLimit() > 0) {
-                      nodeLayerId_.addInt(input.readUInt32());
-                    }
-                    input.popLimit(limit);
-                    break;
-                  }
-                }
-              }
-            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-              throw new RuntimeException(e.setUnfinishedMessage(this));
-            } catch (java.io.IOException e) {
-              throw new RuntimeException(
-                  new com.google.protobuf.InvalidProtocolBufferException(
-                      e.getMessage()).setUnfinishedMessage(this));
-            } finally {
-            }
-          }
-          case GET_DEFAULT_INSTANCE: {
-            return DEFAULT_INSTANCE;
-          }
-          case GET_PARSER: {
-            if (PARSER == null) {    synchronized (se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency.class) {
-                if (PARSER == null) {
-                  PARSER = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-                }
-              }
-            }
-            return PARSER;
-          }
-        }
-        throw new UnsupportedOperationException();
-      }
 
+      static {
+        defaultInstance = new Dependency(true);
+        defaultInstance.initFields();
+      }
 
       // @@protoc_insertion_point(class_scope:Header.Dependency)
-      private static final se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency DEFAULT_INSTANCE;
-      static {
-        DEFAULT_INSTANCE = new Dependency();
-        DEFAULT_INSTANCE.makeImmutable();
-      }
-
-      public static se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency getDefaultInstance() {
-        return DEFAULT_INSTANCE;
-      }
-
-      private static volatile com.google.protobuf.Parser<Dependency> PARSER;
-
-      public static com.google.protobuf.Parser<Dependency> parser() {
-        return DEFAULT_INSTANCE.getParserForType();
-      }
     }
 
     private int bitField0_;
@@ -3326,20 +3756,6 @@ public final class MultipartBinary {
     public int getLength() {
       return length_;
     }
-    /**
-     * <code>required uint32 length = 1;</code>
-     */
-    private void setLength(int value) {
-      bitField0_ |= 0x00000001;
-      length_ = value;
-    }
-    /**
-     * <code>required uint32 length = 1;</code>
-     */
-    private void clearLength() {
-      bitField0_ = (bitField0_ & ~0x00000001);
-      length_ = 0;
-    }
 
     public static final int COREPROPERTIES_FIELD_NUMBER = 2;
     private se.lth.cs.docforia.io.multipart.MultipartBinary.Properties coreproperties_;
@@ -3353,52 +3769,16 @@ public final class MultipartBinary {
      * <code>required .Properties coreproperties = 2;</code>
      */
     public se.lth.cs.docforia.io.multipart.MultipartBinary.Properties getCoreproperties() {
-      return coreproperties_ == null ? se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.getDefaultInstance() : coreproperties_;
-    }
-    /**
-     * <code>required .Properties coreproperties = 2;</code>
-     */
-    private void setCoreproperties(se.lth.cs.docforia.io.multipart.MultipartBinary.Properties value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      coreproperties_ = value;
-      bitField0_ |= 0x00000002;
-      }
-    /**
-     * <code>required .Properties coreproperties = 2;</code>
-     */
-    private void setCoreproperties(
-        se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Builder builderForValue) {
-      coreproperties_ = builderForValue.build();
-      bitField0_ |= 0x00000002;
-    }
-    /**
-     * <code>required .Properties coreproperties = 2;</code>
-     */
-    private void mergeCoreproperties(se.lth.cs.docforia.io.multipart.MultipartBinary.Properties value) {
-      if (coreproperties_ != null &&
-          coreproperties_ != se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.getDefaultInstance()) {
-        coreproperties_ =
-          se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.newBuilder(coreproperties_).mergeFrom(value).buildPartial();
-      } else {
-        coreproperties_ = value;
-      }
-      bitField0_ |= 0x00000002;
-    }
-    /**
-     * <code>required .Properties coreproperties = 2;</code>
-     */
-    private void clearCoreproperties() {  coreproperties_ = null;
-      bitField0_ = (bitField0_ & ~0x00000002);
+      return coreproperties_;
     }
 
     public static final int NODELAYER_FIELD_NUMBER = 3;
-    private com.google.protobuf.Internal.ProtobufList<String> nodeLayer_;
+    private com.google.protobuf.LazyStringList nodeLayer_;
     /**
      * <code>repeated string nodeLayer = 3;</code>
      */
-    public java.util.List<String> getNodeLayerList() {
+    public com.google.protobuf.ProtocolStringList
+        getNodeLayerList() {
       return nodeLayer_;
     }
     /**
@@ -3418,70 +3798,16 @@ public final class MultipartBinary {
      */
     public com.google.protobuf.ByteString
         getNodeLayerBytes(int index) {
-      return com.google.protobuf.ByteString.copyFromUtf8(
-          nodeLayer_.get(index));
-    }
-    private void ensureNodeLayerIsMutable() {
-      if (!nodeLayer_.isModifiable()) {
-        nodeLayer_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(nodeLayer_);
-       }
-    }
-    /**
-     * <code>repeated string nodeLayer = 3;</code>
-     */
-    private void setNodeLayer(
-        int index, java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureNodeLayerIsMutable();
-      nodeLayer_.set(index, value);
-    }
-    /**
-     * <code>repeated string nodeLayer = 3;</code>
-     */
-    private void addNodeLayer(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureNodeLayerIsMutable();
-      nodeLayer_.add(value);
-    }
-    /**
-     * <code>repeated string nodeLayer = 3;</code>
-     */
-    private void addAllNodeLayer(
-        java.lang.Iterable<java.lang.String> values) {
-      ensureNodeLayerIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, nodeLayer_);
-    }
-    /**
-     * <code>repeated string nodeLayer = 3;</code>
-     */
-    private void clearNodeLayer() {
-      nodeLayer_ = com.google.protobuf.GeneratedMessageLite.emptyProtobufList();
-    }
-    /**
-     * <code>repeated string nodeLayer = 3;</code>
-     */
-    private void addNodeLayerBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureNodeLayerIsMutable();
-      nodeLayer_.add(value.toStringUtf8());
+      return nodeLayer_.getByteString(index);
     }
 
     public static final int EDGELAYER_FIELD_NUMBER = 4;
-    private com.google.protobuf.Internal.ProtobufList<String> edgeLayer_;
+    private com.google.protobuf.LazyStringList edgeLayer_;
     /**
      * <code>repeated string edgeLayer = 4;</code>
      */
-    public java.util.List<String> getEdgeLayerList() {
+    public com.google.protobuf.ProtocolStringList
+        getEdgeLayerList() {
       return edgeLayer_;
     }
     /**
@@ -3501,66 +3827,11 @@ public final class MultipartBinary {
      */
     public com.google.protobuf.ByteString
         getEdgeLayerBytes(int index) {
-      return com.google.protobuf.ByteString.copyFromUtf8(
-          edgeLayer_.get(index));
-    }
-    private void ensureEdgeLayerIsMutable() {
-      if (!edgeLayer_.isModifiable()) {
-        edgeLayer_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(edgeLayer_);
-       }
-    }
-    /**
-     * <code>repeated string edgeLayer = 4;</code>
-     */
-    private void setEdgeLayer(
-        int index, java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureEdgeLayerIsMutable();
-      edgeLayer_.set(index, value);
-    }
-    /**
-     * <code>repeated string edgeLayer = 4;</code>
-     */
-    private void addEdgeLayer(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureEdgeLayerIsMutable();
-      edgeLayer_.add(value);
-    }
-    /**
-     * <code>repeated string edgeLayer = 4;</code>
-     */
-    private void addAllEdgeLayer(
-        java.lang.Iterable<java.lang.String> values) {
-      ensureEdgeLayerIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, edgeLayer_);
-    }
-    /**
-     * <code>repeated string edgeLayer = 4;</code>
-     */
-    private void clearEdgeLayer() {
-      edgeLayer_ = com.google.protobuf.GeneratedMessageLite.emptyProtobufList();
-    }
-    /**
-     * <code>repeated string edgeLayer = 4;</code>
-     */
-    private void addEdgeLayerBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureEdgeLayerIsMutable();
-      edgeLayer_.add(value.toStringUtf8());
+      return edgeLayer_.getByteString(index);
     }
 
     public static final int EDGELAYERDEPS_FIELD_NUMBER = 5;
-    private com.google.protobuf.Internal.ProtobufList<se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency> edgeLayerDeps_;
+    private java.util.List<se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency> edgeLayerDeps_;
     /**
      * <code>repeated .Header.Dependency edgeLayerDeps = 5;</code>
      */
@@ -3593,98 +3864,14 @@ public final class MultipartBinary {
         int index) {
       return edgeLayerDeps_.get(index);
     }
-    private void ensureEdgeLayerDepsIsMutable() {
-      if (!edgeLayerDeps_.isModifiable()) {
-        edgeLayerDeps_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(edgeLayerDeps_);
-       }
-    }
-
-    /**
-     * <code>repeated .Header.Dependency edgeLayerDeps = 5;</code>
-     */
-    private void setEdgeLayerDeps(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureEdgeLayerDepsIsMutable();
-      edgeLayerDeps_.set(index, value);
-    }
-    /**
-     * <code>repeated .Header.Dependency edgeLayerDeps = 5;</code>
-     */
-    private void setEdgeLayerDeps(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency.Builder builderForValue) {
-      ensureEdgeLayerDepsIsMutable();
-      edgeLayerDeps_.set(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .Header.Dependency edgeLayerDeps = 5;</code>
-     */
-    private void addEdgeLayerDeps(se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureEdgeLayerDepsIsMutable();
-      edgeLayerDeps_.add(value);
-    }
-    /**
-     * <code>repeated .Header.Dependency edgeLayerDeps = 5;</code>
-     */
-    private void addEdgeLayerDeps(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureEdgeLayerDepsIsMutable();
-      edgeLayerDeps_.add(index, value);
-    }
-    /**
-     * <code>repeated .Header.Dependency edgeLayerDeps = 5;</code>
-     */
-    private void addEdgeLayerDeps(
-        se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency.Builder builderForValue) {
-      ensureEdgeLayerDepsIsMutable();
-      edgeLayerDeps_.add(builderForValue.build());
-    }
-    /**
-     * <code>repeated .Header.Dependency edgeLayerDeps = 5;</code>
-     */
-    private void addEdgeLayerDeps(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency.Builder builderForValue) {
-      ensureEdgeLayerDepsIsMutable();
-      edgeLayerDeps_.add(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .Header.Dependency edgeLayerDeps = 5;</code>
-     */
-    private void addAllEdgeLayerDeps(
-        java.lang.Iterable<? extends se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency> values) {
-      ensureEdgeLayerDepsIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, edgeLayerDeps_);
-    }
-    /**
-     * <code>repeated .Header.Dependency edgeLayerDeps = 5;</code>
-     */
-    private void clearEdgeLayerDeps() {
-      edgeLayerDeps_ = emptyProtobufList();
-    }
-    /**
-     * <code>repeated .Header.Dependency edgeLayerDeps = 5;</code>
-     */
-    private void removeEdgeLayerDeps(int index) {
-      ensureEdgeLayerDepsIsMutable();
-      edgeLayerDeps_.remove(index);
-    }
 
     public static final int URI_FIELD_NUMBER = 6;
-    private com.google.protobuf.Internal.ProtobufList<String> uri_;
+    private com.google.protobuf.LazyStringList uri_;
     /**
      * <code>repeated string uri = 6;</code>
      */
-    public java.util.List<String> getUriList() {
+    public com.google.protobuf.ProtocolStringList
+        getUriList() {
       return uri_;
     }
     /**
@@ -3704,66 +3891,11 @@ public final class MultipartBinary {
      */
     public com.google.protobuf.ByteString
         getUriBytes(int index) {
-      return com.google.protobuf.ByteString.copyFromUtf8(
-          uri_.get(index));
-    }
-    private void ensureUriIsMutable() {
-      if (!uri_.isModifiable()) {
-        uri_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(uri_);
-       }
-    }
-    /**
-     * <code>repeated string uri = 6;</code>
-     */
-    private void setUri(
-        int index, java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureUriIsMutable();
-      uri_.set(index, value);
-    }
-    /**
-     * <code>repeated string uri = 6;</code>
-     */
-    private void addUri(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureUriIsMutable();
-      uri_.add(value);
-    }
-    /**
-     * <code>repeated string uri = 6;</code>
-     */
-    private void addAllUri(
-        java.lang.Iterable<java.lang.String> values) {
-      ensureUriIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, uri_);
-    }
-    /**
-     * <code>repeated string uri = 6;</code>
-     */
-    private void clearUri() {
-      uri_ = com.google.protobuf.GeneratedMessageLite.emptyProtobufList();
-    }
-    /**
-     * <code>repeated string uri = 6;</code>
-     */
-    private void addUriBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureUriIsMutable();
-      uri_.add(value.toStringUtf8());
+      return uri_.getByteString(index);
     }
 
     public static final int ID_FIELD_NUMBER = 7;
-    private java.lang.String id_;
+    private java.lang.Object id_;
     /**
      * <code>optional string id = 7;</code>
      */
@@ -3774,47 +3906,38 @@ public final class MultipartBinary {
      * <code>optional string id = 7;</code>
      */
     public java.lang.String getId() {
-      return id_;
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          id_ = s;
+        }
+        return s;
+      }
     }
     /**
      * <code>optional string id = 7;</code>
      */
     public com.google.protobuf.ByteString
         getIdBytes() {
-      return com.google.protobuf.ByteString.copyFromUtf8(id_);
-    }
-    /**
-     * <code>optional string id = 7;</code>
-     */
-    private void setId(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-      id_ = value;
-    }
-    /**
-     * <code>optional string id = 7;</code>
-     */
-    private void clearId() {
-      bitField0_ = (bitField0_ & ~0x00000004);
-      id_ = getDefaultInstance().getId();
-    }
-    /**
-     * <code>optional string id = 7;</code>
-     */
-    private void setIdBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-      id_ = value.toStringUtf8();
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        id_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int LANG_FIELD_NUMBER = 8;
-    private java.lang.String lang_;
+    private java.lang.Object lang_;
     /**
      * <code>optional string lang = 8;</code>
      */
@@ -3825,47 +3948,38 @@ public final class MultipartBinary {
      * <code>optional string lang = 8;</code>
      */
     public java.lang.String getLang() {
-      return lang_;
+      java.lang.Object ref = lang_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          lang_ = s;
+        }
+        return s;
+      }
     }
     /**
      * <code>optional string lang = 8;</code>
      */
     public com.google.protobuf.ByteString
         getLangBytes() {
-      return com.google.protobuf.ByteString.copyFromUtf8(lang_);
-    }
-    /**
-     * <code>optional string lang = 8;</code>
-     */
-    private void setLang(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
-      lang_ = value;
-    }
-    /**
-     * <code>optional string lang = 8;</code>
-     */
-    private void clearLang() {
-      bitField0_ = (bitField0_ & ~0x00000008);
-      lang_ = getDefaultInstance().getLang();
-    }
-    /**
-     * <code>optional string lang = 8;</code>
-     */
-    private void setLangBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000008;
-      lang_ = value.toStringUtf8();
+      java.lang.Object ref = lang_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        lang_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int TYPE_FIELD_NUMBER = 9;
-    private java.lang.String type_;
+    private java.lang.Object type_;
     /**
      * <code>optional string type = 9;</code>
      */
@@ -3876,77 +3990,103 @@ public final class MultipartBinary {
      * <code>optional string type = 9;</code>
      */
     public java.lang.String getType() {
-      return type_;
+      java.lang.Object ref = type_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          type_ = s;
+        }
+        return s;
+      }
     }
     /**
      * <code>optional string type = 9;</code>
      */
     public com.google.protobuf.ByteString
         getTypeBytes() {
-      return com.google.protobuf.ByteString.copyFromUtf8(type_);
+      java.lang.Object ref = type_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        type_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
-    /**
-     * <code>optional string type = 9;</code>
-     */
-    private void setType(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
-      type_ = value;
+
+    private void initFields() {
+      length_ = 0;
+      coreproperties_ = se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.getDefaultInstance();
+      nodeLayer_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      edgeLayer_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      edgeLayerDeps_ = java.util.Collections.emptyList();
+      uri_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      id_ = "";
+      lang_ = "";
+      type_ = "";
     }
-    /**
-     * <code>optional string type = 9;</code>
-     */
-    private void clearType() {
-      bitField0_ = (bitField0_ & ~0x00000010);
-      type_ = getDefaultInstance().getType();
-    }
-    /**
-     * <code>optional string type = 9;</code>
-     */
-    private void setTypeBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
-      type_ = value.toStringUtf8();
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasLength()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasCoreproperties()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getCoreproperties().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
     }
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeUInt32(1, length_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeMessage(2, getCoreproperties());
+        output.writeMessage(2, coreproperties_);
       }
       for (int i = 0; i < nodeLayer_.size(); i++) {
-        output.writeString(3, nodeLayer_.get(i));
+        output.writeBytes(3, nodeLayer_.getByteString(i));
       }
       for (int i = 0; i < edgeLayer_.size(); i++) {
-        output.writeString(4, edgeLayer_.get(i));
+        output.writeBytes(4, edgeLayer_.getByteString(i));
       }
       for (int i = 0; i < edgeLayerDeps_.size(); i++) {
         output.writeMessage(5, edgeLayerDeps_.get(i));
       }
       for (int i = 0; i < uri_.size(); i++) {
-        output.writeString(6, uri_.get(i));
+        output.writeBytes(6, uri_.getByteString(i));
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeString(7, getId());
+        output.writeBytes(7, getIdBytes());
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeString(8, getLang());
+        output.writeBytes(8, getLangBytes());
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeString(9, getType());
+        output.writeBytes(9, getTypeBytes());
       }
-      unknownFields.writeTo(output);
+      output.writeRawBytes(unknownFields);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
@@ -3958,13 +4098,13 @@ public final class MultipartBinary {
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, getCoreproperties());
+          .computeMessageSize(2, coreproperties_);
       }
       {
         int dataSize = 0;
         for (int i = 0; i < nodeLayer_.size(); i++) {
           dataSize += com.google.protobuf.CodedOutputStream
-            .computeStringSizeNoTag(nodeLayer_.get(i));
+            .computeBytesSizeNoTag(nodeLayer_.getByteString(i));
         }
         size += dataSize;
         size += 1 * getNodeLayerList().size();
@@ -3973,7 +4113,7 @@ public final class MultipartBinary {
         int dataSize = 0;
         for (int i = 0; i < edgeLayer_.size(); i++) {
           dataSize += com.google.protobuf.CodedOutputStream
-            .computeStringSizeNoTag(edgeLayer_.get(i));
+            .computeBytesSizeNoTag(edgeLayer_.getByteString(i));
         }
         size += dataSize;
         size += 1 * getEdgeLayerList().size();
@@ -3986,218 +4126,441 @@ public final class MultipartBinary {
         int dataSize = 0;
         for (int i = 0; i < uri_.size(); i++) {
           dataSize += com.google.protobuf.CodedOutputStream
-            .computeStringSizeNoTag(uri_.get(i));
+            .computeBytesSizeNoTag(uri_.getByteString(i));
         }
         size += dataSize;
         size += 1 * getUriList().size();
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeStringSize(7, getId());
+          .computeBytesSize(7, getIdBytes());
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeStringSize(8, getLang());
+          .computeBytesSize(8, getLangBytes());
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeStringSize(9, getType());
+          .computeBytesSize(9, getTypeBytes());
       }
-      size += unknownFields.getSerializedSize();
+      size += unknownFields.size();
       memoizedSerializedSize = size;
       return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Header parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Header parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Header parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Header parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Header parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return PARSER.parseFrom(input);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Header parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Header parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Header parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Header parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return PARSER.parseFrom(input);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.Header parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(se.lth.cs.docforia.io.multipart.MultipartBinary.Header prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
+    public Builder toBuilder() { return newBuilder(this); }
 
     /**
      * Protobuf type {@code Header}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.Builder<
-          se.lth.cs.docforia.io.multipart.MultipartBinary.Header, Builder> implements
+          se.lth.cs.docforia.io.multipart.MultipartBinary.Header, Builder>
+        implements
         // @@protoc_insertion_point(builder_implements:Header)
         se.lth.cs.docforia.io.multipart.MultipartBinary.HeaderOrBuilder {
       // Construct using se.lth.cs.docforia.io.multipart.MultipartBinary.Header.newBuilder()
       private Builder() {
-        super(DEFAULT_INSTANCE);
+        maybeForceBuilderInitialization();
       }
 
+      private void maybeForceBuilderInitialization() {
+      }
+      private static Builder create() {
+        return new Builder();
+      }
 
+      public Builder clear() {
+        super.clear();
+        length_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        coreproperties_ = se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.getDefaultInstance();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        nodeLayer_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        edgeLayer_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        edgeLayerDeps_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000010);
+        uri_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000020);
+        id_ = "";
+        bitField0_ = (bitField0_ & ~0x00000040);
+        lang_ = "";
+        bitField0_ = (bitField0_ & ~0x00000080);
+        type_ = "";
+        bitField0_ = (bitField0_ & ~0x00000100);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public se.lth.cs.docforia.io.multipart.MultipartBinary.Header getDefaultInstanceForType() {
+        return se.lth.cs.docforia.io.multipart.MultipartBinary.Header.getDefaultInstance();
+      }
+
+      public se.lth.cs.docforia.io.multipart.MultipartBinary.Header build() {
+        se.lth.cs.docforia.io.multipart.MultipartBinary.Header result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public se.lth.cs.docforia.io.multipart.MultipartBinary.Header buildPartial() {
+        se.lth.cs.docforia.io.multipart.MultipartBinary.Header result = new se.lth.cs.docforia.io.multipart.MultipartBinary.Header(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.length_ = length_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.coreproperties_ = coreproperties_;
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          nodeLayer_ = nodeLayer_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.nodeLayer_ = nodeLayer_;
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          edgeLayer_ = edgeLayer_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000008);
+        }
+        result.edgeLayer_ = edgeLayer_;
+        if (((bitField0_ & 0x00000010) == 0x00000010)) {
+          edgeLayerDeps_ = java.util.Collections.unmodifiableList(edgeLayerDeps_);
+          bitField0_ = (bitField0_ & ~0x00000010);
+        }
+        result.edgeLayerDeps_ = edgeLayerDeps_;
+        if (((bitField0_ & 0x00000020) == 0x00000020)) {
+          uri_ = uri_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000020);
+        }
+        result.uri_ = uri_;
+        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.id_ = id_;
+        if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.lang_ = lang_;
+        if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.type_ = type_;
+        result.bitField0_ = to_bitField0_;
+        return result;
+      }
+
+      public Builder mergeFrom(se.lth.cs.docforia.io.multipart.MultipartBinary.Header other) {
+        if (other == se.lth.cs.docforia.io.multipart.MultipartBinary.Header.getDefaultInstance()) return this;
+        if (other.hasLength()) {
+          setLength(other.getLength());
+        }
+        if (other.hasCoreproperties()) {
+          mergeCoreproperties(other.getCoreproperties());
+        }
+        if (!other.nodeLayer_.isEmpty()) {
+          if (nodeLayer_.isEmpty()) {
+            nodeLayer_ = other.nodeLayer_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureNodeLayerIsMutable();
+            nodeLayer_.addAll(other.nodeLayer_);
+          }
+          
+        }
+        if (!other.edgeLayer_.isEmpty()) {
+          if (edgeLayer_.isEmpty()) {
+            edgeLayer_ = other.edgeLayer_;
+            bitField0_ = (bitField0_ & ~0x00000008);
+          } else {
+            ensureEdgeLayerIsMutable();
+            edgeLayer_.addAll(other.edgeLayer_);
+          }
+          
+        }
+        if (!other.edgeLayerDeps_.isEmpty()) {
+          if (edgeLayerDeps_.isEmpty()) {
+            edgeLayerDeps_ = other.edgeLayerDeps_;
+            bitField0_ = (bitField0_ & ~0x00000010);
+          } else {
+            ensureEdgeLayerDepsIsMutable();
+            edgeLayerDeps_.addAll(other.edgeLayerDeps_);
+          }
+          
+        }
+        if (!other.uri_.isEmpty()) {
+          if (uri_.isEmpty()) {
+            uri_ = other.uri_;
+            bitField0_ = (bitField0_ & ~0x00000020);
+          } else {
+            ensureUriIsMutable();
+            uri_.addAll(other.uri_);
+          }
+          
+        }
+        if (other.hasId()) {
+          bitField0_ |= 0x00000040;
+          id_ = other.id_;
+          
+        }
+        if (other.hasLang()) {
+          bitField0_ |= 0x00000080;
+          lang_ = other.lang_;
+          
+        }
+        if (other.hasType()) {
+          bitField0_ |= 0x00000100;
+          type_ = other.type_;
+          
+        }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasLength()) {
+          
+          return false;
+        }
+        if (!hasCoreproperties()) {
+          
+          return false;
+        }
+        if (!getCoreproperties().isInitialized()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        se.lth.cs.docforia.io.multipart.MultipartBinary.Header parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (se.lth.cs.docforia.io.multipart.MultipartBinary.Header) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private int length_ ;
       /**
        * <code>required uint32 length = 1;</code>
        */
       public boolean hasLength() {
-        return instance.hasLength();
+        return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
        * <code>required uint32 length = 1;</code>
        */
       public int getLength() {
-        return instance.getLength();
+        return length_;
       }
       /**
        * <code>required uint32 length = 1;</code>
        */
       public Builder setLength(int value) {
-        copyOnWrite();
-        instance.setLength(value);
+        bitField0_ |= 0x00000001;
+        length_ = value;
+        
         return this;
       }
       /**
        * <code>required uint32 length = 1;</code>
        */
       public Builder clearLength() {
-        copyOnWrite();
-        instance.clearLength();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        length_ = 0;
+        
         return this;
       }
 
+      private se.lth.cs.docforia.io.multipart.MultipartBinary.Properties coreproperties_ = se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.getDefaultInstance();
       /**
        * <code>required .Properties coreproperties = 2;</code>
        */
       public boolean hasCoreproperties() {
-        return instance.hasCoreproperties();
+        return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
        * <code>required .Properties coreproperties = 2;</code>
        */
       public se.lth.cs.docforia.io.multipart.MultipartBinary.Properties getCoreproperties() {
-        return instance.getCoreproperties();
+        return coreproperties_;
       }
       /**
        * <code>required .Properties coreproperties = 2;</code>
        */
       public Builder setCoreproperties(se.lth.cs.docforia.io.multipart.MultipartBinary.Properties value) {
-        copyOnWrite();
-        instance.setCoreproperties(value);
-        return this;
+        if (value == null) {
+          throw new NullPointerException();
         }
+        coreproperties_ = value;
+
+        bitField0_ |= 0x00000002;
+        return this;
+      }
       /**
        * <code>required .Properties coreproperties = 2;</code>
        */
       public Builder setCoreproperties(
           se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Builder builderForValue) {
-        copyOnWrite();
-        instance.setCoreproperties(builderForValue);
+        coreproperties_ = builderForValue.build();
+
+        bitField0_ |= 0x00000002;
         return this;
       }
       /**
        * <code>required .Properties coreproperties = 2;</code>
        */
       public Builder mergeCoreproperties(se.lth.cs.docforia.io.multipart.MultipartBinary.Properties value) {
-        copyOnWrite();
-        instance.mergeCoreproperties(value);
+        if (((bitField0_ & 0x00000002) == 0x00000002) &&
+            coreproperties_ != se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.getDefaultInstance()) {
+          coreproperties_ =
+            se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.newBuilder(coreproperties_).mergeFrom(value).buildPartial();
+        } else {
+          coreproperties_ = value;
+        }
+
+        bitField0_ |= 0x00000002;
         return this;
       }
       /**
        * <code>required .Properties coreproperties = 2;</code>
        */
-      public Builder clearCoreproperties() {  copyOnWrite();
-        instance.clearCoreproperties();
+      public Builder clearCoreproperties() {
+        coreproperties_ = se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.getDefaultInstance();
+
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
+      private com.google.protobuf.LazyStringList nodeLayer_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureNodeLayerIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          nodeLayer_ = new com.google.protobuf.LazyStringArrayList(nodeLayer_);
+          bitField0_ |= 0x00000004;
+         }
+      }
       /**
        * <code>repeated string nodeLayer = 3;</code>
        */
-      public java.util.List<String>
+      public com.google.protobuf.ProtocolStringList
           getNodeLayerList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getNodeLayerList());
+        return nodeLayer_.getUnmodifiableView();
       }
       /**
        * <code>repeated string nodeLayer = 3;</code>
        */
       public int getNodeLayerCount() {
-        return instance.getNodeLayerCount();
+        return nodeLayer_.size();
       }
       /**
        * <code>repeated string nodeLayer = 3;</code>
        */
       public java.lang.String getNodeLayer(int index) {
-        return instance.getNodeLayer(index);
+        return nodeLayer_.get(index);
       }
       /**
        * <code>repeated string nodeLayer = 3;</code>
        */
       public com.google.protobuf.ByteString
           getNodeLayerBytes(int index) {
-        return instance.getNodeLayerBytes(index);
+        return nodeLayer_.getByteString(index);
       }
       /**
        * <code>repeated string nodeLayer = 3;</code>
        */
       public Builder setNodeLayer(
           int index, java.lang.String value) {
-        copyOnWrite();
-        instance.setNodeLayer(index, value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureNodeLayerIsMutable();
+        nodeLayer_.set(index, value);
+        
         return this;
       }
       /**
@@ -4205,8 +4568,12 @@ public final class MultipartBinary {
        */
       public Builder addNodeLayer(
           java.lang.String value) {
-        copyOnWrite();
-        instance.addNodeLayer(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureNodeLayerIsMutable();
+        nodeLayer_.add(value);
+        
         return this;
       }
       /**
@@ -4214,16 +4581,19 @@ public final class MultipartBinary {
        */
       public Builder addAllNodeLayer(
           java.lang.Iterable<java.lang.String> values) {
-        copyOnWrite();
-        instance.addAllNodeLayer(values);
+        ensureNodeLayerIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, nodeLayer_);
+        
         return this;
       }
       /**
        * <code>repeated string nodeLayer = 3;</code>
        */
       public Builder clearNodeLayer() {
-        copyOnWrite();
-        instance.clearNodeLayer();
+        nodeLayer_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        
         return this;
       }
       /**
@@ -4231,45 +4601,59 @@ public final class MultipartBinary {
        */
       public Builder addNodeLayerBytes(
           com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.addNodeLayerBytes(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureNodeLayerIsMutable();
+        nodeLayer_.add(value);
+        
         return this;
       }
 
+      private com.google.protobuf.LazyStringList edgeLayer_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureEdgeLayerIsMutable() {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+          edgeLayer_ = new com.google.protobuf.LazyStringArrayList(edgeLayer_);
+          bitField0_ |= 0x00000008;
+         }
+      }
       /**
        * <code>repeated string edgeLayer = 4;</code>
        */
-      public java.util.List<String>
+      public com.google.protobuf.ProtocolStringList
           getEdgeLayerList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getEdgeLayerList());
+        return edgeLayer_.getUnmodifiableView();
       }
       /**
        * <code>repeated string edgeLayer = 4;</code>
        */
       public int getEdgeLayerCount() {
-        return instance.getEdgeLayerCount();
+        return edgeLayer_.size();
       }
       /**
        * <code>repeated string edgeLayer = 4;</code>
        */
       public java.lang.String getEdgeLayer(int index) {
-        return instance.getEdgeLayer(index);
+        return edgeLayer_.get(index);
       }
       /**
        * <code>repeated string edgeLayer = 4;</code>
        */
       public com.google.protobuf.ByteString
           getEdgeLayerBytes(int index) {
-        return instance.getEdgeLayerBytes(index);
+        return edgeLayer_.getByteString(index);
       }
       /**
        * <code>repeated string edgeLayer = 4;</code>
        */
       public Builder setEdgeLayer(
           int index, java.lang.String value) {
-        copyOnWrite();
-        instance.setEdgeLayer(index, value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureEdgeLayerIsMutable();
+        edgeLayer_.set(index, value);
+        
         return this;
       }
       /**
@@ -4277,8 +4661,12 @@ public final class MultipartBinary {
        */
       public Builder addEdgeLayer(
           java.lang.String value) {
-        copyOnWrite();
-        instance.addEdgeLayer(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureEdgeLayerIsMutable();
+        edgeLayer_.add(value);
+        
         return this;
       }
       /**
@@ -4286,16 +4674,19 @@ public final class MultipartBinary {
        */
       public Builder addAllEdgeLayer(
           java.lang.Iterable<java.lang.String> values) {
-        copyOnWrite();
-        instance.addAllEdgeLayer(values);
+        ensureEdgeLayerIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, edgeLayer_);
+        
         return this;
       }
       /**
        * <code>repeated string edgeLayer = 4;</code>
        */
       public Builder clearEdgeLayer() {
-        copyOnWrite();
-        instance.clearEdgeLayer();
+        edgeLayer_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        
         return this;
       }
       /**
@@ -4303,36 +4694,53 @@ public final class MultipartBinary {
        */
       public Builder addEdgeLayerBytes(
           com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.addEdgeLayerBytes(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureEdgeLayerIsMutable();
+        edgeLayer_.add(value);
+        
         return this;
+      }
+
+      private java.util.List<se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency> edgeLayerDeps_ =
+        java.util.Collections.emptyList();
+      private void ensureEdgeLayerDepsIsMutable() {
+        if (!((bitField0_ & 0x00000010) == 0x00000010)) {
+          edgeLayerDeps_ = new java.util.ArrayList<se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency>(edgeLayerDeps_);
+          bitField0_ |= 0x00000010;
+         }
       }
 
       /**
        * <code>repeated .Header.Dependency edgeLayerDeps = 5;</code>
        */
       public java.util.List<se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency> getEdgeLayerDepsList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getEdgeLayerDepsList());
+        return java.util.Collections.unmodifiableList(edgeLayerDeps_);
       }
       /**
        * <code>repeated .Header.Dependency edgeLayerDeps = 5;</code>
        */
       public int getEdgeLayerDepsCount() {
-        return instance.getEdgeLayerDepsCount();
-      }/**
+        return edgeLayerDeps_.size();
+      }
+      /**
        * <code>repeated .Header.Dependency edgeLayerDeps = 5;</code>
        */
       public se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency getEdgeLayerDeps(int index) {
-        return instance.getEdgeLayerDeps(index);
+        return edgeLayerDeps_.get(index);
       }
       /**
        * <code>repeated .Header.Dependency edgeLayerDeps = 5;</code>
        */
       public Builder setEdgeLayerDeps(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency value) {
-        copyOnWrite();
-        instance.setEdgeLayerDeps(index, value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureEdgeLayerDepsIsMutable();
+        edgeLayerDeps_.set(index, value);
+
         return this;
       }
       /**
@@ -4340,16 +4748,21 @@ public final class MultipartBinary {
        */
       public Builder setEdgeLayerDeps(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency.Builder builderForValue) {
-        copyOnWrite();
-        instance.setEdgeLayerDeps(index, builderForValue);
+        ensureEdgeLayerDepsIsMutable();
+        edgeLayerDeps_.set(index, builderForValue.build());
+
         return this;
       }
       /**
        * <code>repeated .Header.Dependency edgeLayerDeps = 5;</code>
        */
       public Builder addEdgeLayerDeps(se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency value) {
-        copyOnWrite();
-        instance.addEdgeLayerDeps(value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureEdgeLayerDepsIsMutable();
+        edgeLayerDeps_.add(value);
+
         return this;
       }
       /**
@@ -4357,8 +4770,12 @@ public final class MultipartBinary {
        */
       public Builder addEdgeLayerDeps(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency value) {
-        copyOnWrite();
-        instance.addEdgeLayerDeps(index, value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureEdgeLayerDepsIsMutable();
+        edgeLayerDeps_.add(index, value);
+
         return this;
       }
       /**
@@ -4366,8 +4783,9 @@ public final class MultipartBinary {
        */
       public Builder addEdgeLayerDeps(
           se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency.Builder builderForValue) {
-        copyOnWrite();
-        instance.addEdgeLayerDeps(builderForValue);
+        ensureEdgeLayerDepsIsMutable();
+        edgeLayerDeps_.add(builderForValue.build());
+
         return this;
       }
       /**
@@ -4375,8 +4793,9 @@ public final class MultipartBinary {
        */
       public Builder addEdgeLayerDeps(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency.Builder builderForValue) {
-        copyOnWrite();
-        instance.addEdgeLayerDeps(index, builderForValue);
+        ensureEdgeLayerDepsIsMutable();
+        edgeLayerDeps_.add(index, builderForValue.build());
+
         return this;
       }
       /**
@@ -4384,61 +4803,75 @@ public final class MultipartBinary {
        */
       public Builder addAllEdgeLayerDeps(
           java.lang.Iterable<? extends se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency> values) {
-        copyOnWrite();
-        instance.addAllEdgeLayerDeps(values);
+        ensureEdgeLayerDepsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, edgeLayerDeps_);
+
         return this;
       }
       /**
        * <code>repeated .Header.Dependency edgeLayerDeps = 5;</code>
        */
       public Builder clearEdgeLayerDeps() {
-        copyOnWrite();
-        instance.clearEdgeLayerDeps();
+        edgeLayerDeps_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000010);
+
         return this;
       }
       /**
        * <code>repeated .Header.Dependency edgeLayerDeps = 5;</code>
        */
       public Builder removeEdgeLayerDeps(int index) {
-        copyOnWrite();
-        instance.removeEdgeLayerDeps(index);
+        ensureEdgeLayerDepsIsMutable();
+        edgeLayerDeps_.remove(index);
+
         return this;
       }
 
+      private com.google.protobuf.LazyStringList uri_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureUriIsMutable() {
+        if (!((bitField0_ & 0x00000020) == 0x00000020)) {
+          uri_ = new com.google.protobuf.LazyStringArrayList(uri_);
+          bitField0_ |= 0x00000020;
+         }
+      }
       /**
        * <code>repeated string uri = 6;</code>
        */
-      public java.util.List<String>
+      public com.google.protobuf.ProtocolStringList
           getUriList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getUriList());
+        return uri_.getUnmodifiableView();
       }
       /**
        * <code>repeated string uri = 6;</code>
        */
       public int getUriCount() {
-        return instance.getUriCount();
+        return uri_.size();
       }
       /**
        * <code>repeated string uri = 6;</code>
        */
       public java.lang.String getUri(int index) {
-        return instance.getUri(index);
+        return uri_.get(index);
       }
       /**
        * <code>repeated string uri = 6;</code>
        */
       public com.google.protobuf.ByteString
           getUriBytes(int index) {
-        return instance.getUriBytes(index);
+        return uri_.getByteString(index);
       }
       /**
        * <code>repeated string uri = 6;</code>
        */
       public Builder setUri(
           int index, java.lang.String value) {
-        copyOnWrite();
-        instance.setUri(index, value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureUriIsMutable();
+        uri_.set(index, value);
+        
         return this;
       }
       /**
@@ -4446,8 +4879,12 @@ public final class MultipartBinary {
        */
       public Builder addUri(
           java.lang.String value) {
-        copyOnWrite();
-        instance.addUri(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureUriIsMutable();
+        uri_.add(value);
+        
         return this;
       }
       /**
@@ -4455,16 +4892,19 @@ public final class MultipartBinary {
        */
       public Builder addAllUri(
           java.lang.Iterable<java.lang.String> values) {
-        copyOnWrite();
-        instance.addAllUri(values);
+        ensureUriIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, uri_);
+        
         return this;
       }
       /**
        * <code>repeated string uri = 6;</code>
        */
       public Builder clearUri() {
-        copyOnWrite();
-        instance.clearUri();
+        uri_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000020);
+        
         return this;
       }
       /**
@@ -4472,45 +4912,75 @@ public final class MultipartBinary {
        */
       public Builder addUriBytes(
           com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.addUriBytes(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureUriIsMutable();
+        uri_.add(value);
+        
         return this;
       }
 
+      private java.lang.Object id_ = "";
       /**
        * <code>optional string id = 7;</code>
        */
       public boolean hasId() {
-        return instance.hasId();
+        return ((bitField0_ & 0x00000040) == 0x00000040);
       }
       /**
        * <code>optional string id = 7;</code>
        */
       public java.lang.String getId() {
-        return instance.getId();
+        java.lang.Object ref = id_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            id_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
        * <code>optional string id = 7;</code>
        */
       public com.google.protobuf.ByteString
           getIdBytes() {
-        return instance.getIdBytes();
+        java.lang.Object ref = id_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          id_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
        * <code>optional string id = 7;</code>
        */
       public Builder setId(
           java.lang.String value) {
-        copyOnWrite();
-        instance.setId(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000040;
+        id_ = value;
+        
         return this;
       }
       /**
        * <code>optional string id = 7;</code>
        */
       public Builder clearId() {
-        copyOnWrite();
-        instance.clearId();
+        bitField0_ = (bitField0_ & ~0x00000040);
+        id_ = getDefaultInstance().getId();
+        
         return this;
       }
       /**
@@ -4518,45 +4988,75 @@ public final class MultipartBinary {
        */
       public Builder setIdBytes(
           com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setIdBytes(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000040;
+        id_ = value;
+        
         return this;
       }
 
+      private java.lang.Object lang_ = "";
       /**
        * <code>optional string lang = 8;</code>
        */
       public boolean hasLang() {
-        return instance.hasLang();
+        return ((bitField0_ & 0x00000080) == 0x00000080);
       }
       /**
        * <code>optional string lang = 8;</code>
        */
       public java.lang.String getLang() {
-        return instance.getLang();
+        java.lang.Object ref = lang_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            lang_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
        * <code>optional string lang = 8;</code>
        */
       public com.google.protobuf.ByteString
           getLangBytes() {
-        return instance.getLangBytes();
+        java.lang.Object ref = lang_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          lang_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
        * <code>optional string lang = 8;</code>
        */
       public Builder setLang(
           java.lang.String value) {
-        copyOnWrite();
-        instance.setLang(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000080;
+        lang_ = value;
+        
         return this;
       }
       /**
        * <code>optional string lang = 8;</code>
        */
       public Builder clearLang() {
-        copyOnWrite();
-        instance.clearLang();
+        bitField0_ = (bitField0_ & ~0x00000080);
+        lang_ = getDefaultInstance().getLang();
+        
         return this;
       }
       /**
@@ -4564,45 +5064,75 @@ public final class MultipartBinary {
        */
       public Builder setLangBytes(
           com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setLangBytes(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000080;
+        lang_ = value;
+        
         return this;
       }
 
+      private java.lang.Object type_ = "";
       /**
        * <code>optional string type = 9;</code>
        */
       public boolean hasType() {
-        return instance.hasType();
+        return ((bitField0_ & 0x00000100) == 0x00000100);
       }
       /**
        * <code>optional string type = 9;</code>
        */
       public java.lang.String getType() {
-        return instance.getType();
+        java.lang.Object ref = type_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            type_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
        * <code>optional string type = 9;</code>
        */
       public com.google.protobuf.ByteString
           getTypeBytes() {
-        return instance.getTypeBytes();
+        java.lang.Object ref = type_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          type_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
        * <code>optional string type = 9;</code>
        */
       public Builder setType(
           java.lang.String value) {
-        copyOnWrite();
-        instance.setType(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000100;
+        type_ = value;
+        
         return this;
       }
       /**
        * <code>optional string type = 9;</code>
        */
       public Builder clearType() {
-        copyOnWrite();
-        instance.clearType();
+        bitField0_ = (bitField0_ & ~0x00000100);
+        type_ = getDefaultInstance().getType();
+        
         return this;
       }
       /**
@@ -4610,220 +5140,24 @@ public final class MultipartBinary {
        */
       public Builder setTypeBytes(
           com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setTypeBytes(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000100;
+        type_ = value;
+        
         return this;
       }
 
       // @@protoc_insertion_point(builder_scope:Header)
     }
-    private byte memoizedIsInitialized = -1;
-    protected final Object dynamicMethod(
-        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        Object arg0, Object arg1) {
-      switch (method) {
-        case NEW_MUTABLE_INSTANCE: {
-          return new se.lth.cs.docforia.io.multipart.MultipartBinary.Header();
-        }
-        case IS_INITIALIZED: {
-          byte isInitialized = memoizedIsInitialized;
-          if (isInitialized == 1) return DEFAULT_INSTANCE;
-          if (isInitialized == 0) return null;
 
-          boolean shouldMemoize = ((Boolean) arg0).booleanValue();
-          if (!hasLength()) {
-            if (shouldMemoize) {
-              memoizedIsInitialized = 0;
-            }
-            return null;
-          }
-          if (!hasCoreproperties()) {
-            if (shouldMemoize) {
-              memoizedIsInitialized = 0;
-            }
-            return null;
-          }
-          if (!getCoreproperties().isInitialized()) {
-            if (shouldMemoize) {
-              memoizedIsInitialized = 0;
-            }
-            return null;
-          }
-          if (shouldMemoize) memoizedIsInitialized = 1;
-          return DEFAULT_INSTANCE;
-
-        }
-        case MAKE_IMMUTABLE: {
-          nodeLayer_.makeImmutable();
-          edgeLayer_.makeImmutable();
-          edgeLayerDeps_.makeImmutable();
-          uri_.makeImmutable();
-          return null;
-        }
-        case NEW_BUILDER: {
-          return new Builder();
-        }
-        case VISIT: {
-          Visitor visitor = (Visitor) arg0;
-          se.lth.cs.docforia.io.multipart.MultipartBinary.Header other = (se.lth.cs.docforia.io.multipart.MultipartBinary.Header) arg1;
-          length_ = visitor.visitInt(
-              hasLength(), length_,
-              other.hasLength(), other.length_);
-          coreproperties_ = visitor.visitMessage(coreproperties_, other.coreproperties_);
-          nodeLayer_= visitor.visitList(nodeLayer_, other.nodeLayer_);
-          edgeLayer_= visitor.visitList(edgeLayer_, other.edgeLayer_);
-          edgeLayerDeps_= visitor.visitList(edgeLayerDeps_, other.edgeLayerDeps_);
-          uri_= visitor.visitList(uri_, other.uri_);
-          id_ = visitor.visitString(
-              hasId(), id_,
-              other.hasId(), other.id_);
-          lang_ = visitor.visitString(
-              hasLang(), lang_,
-              other.hasLang(), other.lang_);
-          type_ = visitor.visitString(
-              hasType(), type_,
-              other.hasType(), other.type_);
-          if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-              .INSTANCE) {
-            bitField0_ |= other.bitField0_;
-          }
-          return this;
-        }
-        case MERGE_FROM_STREAM: {
-          com.google.protobuf.CodedInputStream input =
-              (com.google.protobuf.CodedInputStream) arg0;
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-              (com.google.protobuf.ExtensionRegistryLite) arg1;
-          try {
-            boolean done = false;
-            while (!done) {
-              int tag = input.readTag();
-              switch (tag) {
-                case 0:
-                  done = true;
-                  break;
-                default: {
-                  if (!parseUnknownField(tag, input)) {
-                    done = true;
-                  }
-                  break;
-                }
-                case 8: {
-                  bitField0_ |= 0x00000001;
-                  length_ = input.readUInt32();
-                  break;
-                }
-                case 18: {
-                  se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.Builder subBuilder = null;
-                  if (((bitField0_ & 0x00000002) == 0x00000002)) {
-                    subBuilder = coreproperties_.toBuilder();
-                  }
-                  coreproperties_ = input.readMessage(se.lth.cs.docforia.io.multipart.MultipartBinary.Properties.parser(), extensionRegistry);
-                  if (subBuilder != null) {
-                    subBuilder.mergeFrom(coreproperties_);
-                    coreproperties_ = subBuilder.buildPartial();
-                  }
-                  bitField0_ |= 0x00000002;
-                  break;
-                }
-                case 26: {
-                  String s = input.readString();
-                  if (!nodeLayer_.isModifiable()) {
-                    nodeLayer_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(nodeLayer_);
-                  }
-                  nodeLayer_.add(s);
-                  break;
-                }
-                case 34: {
-                  String s = input.readString();
-                  if (!edgeLayer_.isModifiable()) {
-                    edgeLayer_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(edgeLayer_);
-                  }
-                  edgeLayer_.add(s);
-                  break;
-                }
-                case 42: {
-                  if (!edgeLayerDeps_.isModifiable()) {
-                    edgeLayerDeps_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(edgeLayerDeps_);
-                  }
-                  edgeLayerDeps_.add(
-                      input.readMessage(se.lth.cs.docforia.io.multipart.MultipartBinary.Header.Dependency.parser(), extensionRegistry));
-                  break;
-                }
-                case 50: {
-                  String s = input.readString();
-                  if (!uri_.isModifiable()) {
-                    uri_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(uri_);
-                  }
-                  uri_.add(s);
-                  break;
-                }
-                case 58: {
-                  String s = input.readString();
-                  bitField0_ |= 0x00000004;
-                  id_ = s;
-                  break;
-                }
-                case 66: {
-                  String s = input.readString();
-                  bitField0_ |= 0x00000008;
-                  lang_ = s;
-                  break;
-                }
-                case 74: {
-                  String s = input.readString();
-                  bitField0_ |= 0x00000010;
-                  type_ = s;
-                  break;
-                }
-              }
-            }
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw new RuntimeException(e.setUnfinishedMessage(this));
-          } catch (java.io.IOException e) {
-            throw new RuntimeException(
-                new com.google.protobuf.InvalidProtocolBufferException(
-                    e.getMessage()).setUnfinishedMessage(this));
-          } finally {
-          }
-        }
-        case GET_DEFAULT_INSTANCE: {
-          return DEFAULT_INSTANCE;
-        }
-        case GET_PARSER: {
-          if (PARSER == null) {    synchronized (se.lth.cs.docforia.io.multipart.MultipartBinary.Header.class) {
-              if (PARSER == null) {
-                PARSER = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-              }
-            }
-          }
-          return PARSER;
-        }
-      }
-      throw new UnsupportedOperationException();
+    static {
+      defaultInstance = new Header(true);
+      defaultInstance.initFields();
     }
-
 
     // @@protoc_insertion_point(class_scope:Header)
-    private static final se.lth.cs.docforia.io.multipart.MultipartBinary.Header DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new Header();
-      DEFAULT_INSTANCE.makeImmutable();
-    }
-
-    public static se.lth.cs.docforia.io.multipart.MultipartBinary.Header getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static volatile com.google.protobuf.Parser<Header> PARSER;
-
-    public static com.google.protobuf.Parser<Header> parser() {
-      return DEFAULT_INSTANCE.getParserForType();
-    }
   }
 
   public interface NodeLayerOrBuilder extends
@@ -4893,16 +5227,124 @@ public final class MultipartBinary {
   /**
    * Protobuf type {@code NodeLayer}
    */
-  public  static final class NodeLayer extends
-      com.google.protobuf.GeneratedMessageLite<
-          NodeLayer, NodeLayer.Builder> implements
+  public static final class NodeLayer extends
+      com.google.protobuf.GeneratedMessageLite implements
       // @@protoc_insertion_point(message_implements:NodeLayer)
       NodeLayerOrBuilder {
-    private NodeLayer() {
-      userdefined_ = "";
-      variants_ = emptyProtobufList();
-      properties_ = emptyProtobufList();
+    // Use NodeLayer.newBuilder() to construct.
+    private NodeLayer(com.google.protobuf.GeneratedMessageLite.Builder builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
+    private NodeLayer(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
+
+    private static final NodeLayer defaultInstance;
+    public static NodeLayer getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public NodeLayer getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.ByteString unknownFields;
+    private NodeLayer(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.ByteString.Output unknownFieldsOutput =
+          com.google.protobuf.ByteString.newOutput();
+      com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          com.google.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput);
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              idx_ = input.readUInt32();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              id_ = input.readUInt32();
+              break;
+            }
+            case 26: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000004;
+              userdefined_ = bs;
+              break;
+            }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                variants_ = new java.util.ArrayList<se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant>();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              variants_.add(input.readMessage(se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant.PARSER, extensionRegistry));
+              break;
+            }
+            case 42: {
+              if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+                properties_ = new java.util.ArrayList<se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn>();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              properties_.add(input.readMessage(se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+          variants_ = java.util.Collections.unmodifiableList(variants_);
+        }
+        if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+          properties_ = java.util.Collections.unmodifiableList(properties_);
+        }
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
+        }
+        makeExtensionsImmutable();
+      }
+    }
+    public static com.google.protobuf.Parser<NodeLayer> PARSER =
+        new com.google.protobuf.AbstractParser<NodeLayer>() {
+      public NodeLayer parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new NodeLayer(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<NodeLayer> getParserForType() {
+      return PARSER;
+    }
+
     public interface VariantOrBuilder extends
         // @@protoc_insertion_point(interface_extends:NodeLayer.Variant)
         com.google.protobuf.MessageLiteOrBuilder {
@@ -4931,45 +5373,151 @@ public final class MultipartBinary {
       int getNumNodes();
 
       /**
+       * <code>repeated sint32 ranges = 3 [packed = true];</code>
+       *
        * <pre>
        *delta coded
        * </pre>
-       *
-       * <code>repeated sint32 ranges = 3 [packed = true];</code>
        */
       java.util.List<java.lang.Integer> getRangesList();
       /**
+       * <code>repeated sint32 ranges = 3 [packed = true];</code>
+       *
        * <pre>
        *delta coded
        * </pre>
-       *
-       * <code>repeated sint32 ranges = 3 [packed = true];</code>
        */
       int getRangesCount();
       /**
+       * <code>repeated sint32 ranges = 3 [packed = true];</code>
+       *
        * <pre>
        *delta coded
        * </pre>
-       *
-       * <code>repeated sint32 ranges = 3 [packed = true];</code>
        */
       int getRanges(int index);
     }
     /**
      * Protobuf type {@code NodeLayer.Variant}
      */
-    public  static final class Variant extends
-        com.google.protobuf.GeneratedMessageLite<
-            Variant, Variant.Builder> implements
+    public static final class Variant extends
+        com.google.protobuf.GeneratedMessageLite implements
         // @@protoc_insertion_point(message_implements:NodeLayer.Variant)
         VariantOrBuilder {
-      private Variant() {
-        name_ = "";
-        ranges_ = emptyIntList();
+      // Use Variant.newBuilder() to construct.
+      private Variant(com.google.protobuf.GeneratedMessageLite.Builder builder) {
+        super(builder);
+        this.unknownFields = builder.getUnknownFields();
       }
+      private Variant(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
+
+      private static final Variant defaultInstance;
+      public static Variant getDefaultInstance() {
+        return defaultInstance;
+      }
+
+      public Variant getDefaultInstanceForType() {
+        return defaultInstance;
+      }
+
+      private final com.google.protobuf.ByteString unknownFields;
+      private Variant(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        initFields();
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.ByteString.Output unknownFieldsOutput =
+            com.google.protobuf.ByteString.newOutput();
+        com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+            com.google.protobuf.CodedOutputStream.newInstance(
+                unknownFieldsOutput);
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownField(input, unknownFieldsCodedOutput,
+                                       extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+              case 10: {
+                com.google.protobuf.ByteString bs = input.readBytes();
+                bitField0_ |= 0x00000001;
+                name_ = bs;
+                break;
+              }
+              case 16: {
+                bitField0_ |= 0x00000002;
+                numNodes_ = input.readUInt32();
+                break;
+              }
+              case 24: {
+                if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                  ranges_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000004;
+                }
+                ranges_.add(input.readSInt32());
+                break;
+              }
+              case 26: {
+                int length = input.readRawVarint32();
+                int limit = input.pushLimit(length);
+                if (!((mutable_bitField0_ & 0x00000004) == 0x00000004) && input.getBytesUntilLimit() > 0) {
+                  ranges_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000004;
+                }
+                while (input.getBytesUntilLimit() > 0) {
+                  ranges_.add(input.readSInt32());
+                }
+                input.popLimit(limit);
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e.getMessage()).setUnfinishedMessage(this);
+        } finally {
+          if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+            ranges_ = java.util.Collections.unmodifiableList(ranges_);
+          }
+          try {
+            unknownFieldsCodedOutput.flush();
+          } catch (java.io.IOException e) {
+          // Should not happen
+          } finally {
+            unknownFields = unknownFieldsOutput.toByteString();
+          }
+          makeExtensionsImmutable();
+        }
+      }
+      public static com.google.protobuf.Parser<Variant> PARSER =
+          new com.google.protobuf.AbstractParser<Variant>() {
+        public Variant parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new Variant(input, extensionRegistry);
+        }
+      };
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<Variant> getParserForType() {
+        return PARSER;
+      }
+
       private int bitField0_;
       public static final int NAME_FIELD_NUMBER = 1;
-      private java.lang.String name_;
+      private java.lang.Object name_;
       /**
        * <code>optional string name = 1;</code>
        */
@@ -4980,43 +5528,34 @@ public final class MultipartBinary {
        * <code>optional string name = 1;</code>
        */
       public java.lang.String getName() {
-        return name_;
+        java.lang.Object ref = name_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            name_ = s;
+          }
+          return s;
+        }
       }
       /**
        * <code>optional string name = 1;</code>
        */
       public com.google.protobuf.ByteString
           getNameBytes() {
-        return com.google.protobuf.ByteString.copyFromUtf8(name_);
-      }
-      /**
-       * <code>optional string name = 1;</code>
-       */
-      private void setName(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        name_ = value;
-      }
-      /**
-       * <code>optional string name = 1;</code>
-       */
-      private void clearName() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        name_ = getDefaultInstance().getName();
-      }
-      /**
-       * <code>optional string name = 1;</code>
-       */
-      private void setNameBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        name_ = value.toStringUtf8();
+        java.lang.Object ref = name_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          name_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
 
       public static final int NUMNODES_FIELD_NUMBER = 2;
@@ -5033,127 +5572,81 @@ public final class MultipartBinary {
       public int getNumNodes() {
         return numNodes_;
       }
-      /**
-       * <code>required uint32 numNodes = 2;</code>
-       */
-      private void setNumNodes(int value) {
-        bitField0_ |= 0x00000002;
-        numNodes_ = value;
-      }
-      /**
-       * <code>required uint32 numNodes = 2;</code>
-       */
-      private void clearNumNodes() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        numNodes_ = 0;
-      }
 
       public static final int RANGES_FIELD_NUMBER = 3;
-      private com.google.protobuf.Internal.IntList ranges_;
+      private java.util.List<java.lang.Integer> ranges_;
       /**
+       * <code>repeated sint32 ranges = 3 [packed = true];</code>
+       *
        * <pre>
        *delta coded
        * </pre>
-       *
-       * <code>repeated sint32 ranges = 3 [packed = true];</code>
        */
       public java.util.List<java.lang.Integer>
           getRangesList() {
         return ranges_;
       }
       /**
+       * <code>repeated sint32 ranges = 3 [packed = true];</code>
+       *
        * <pre>
        *delta coded
        * </pre>
-       *
-       * <code>repeated sint32 ranges = 3 [packed = true];</code>
        */
       public int getRangesCount() {
         return ranges_.size();
       }
       /**
+       * <code>repeated sint32 ranges = 3 [packed = true];</code>
+       *
        * <pre>
        *delta coded
        * </pre>
-       *
-       * <code>repeated sint32 ranges = 3 [packed = true];</code>
        */
       public int getRanges(int index) {
-        return ranges_.getInt(index);
+        return ranges_.get(index);
       }
       private int rangesMemoizedSerializedSize = -1;
-      private void ensureRangesIsMutable() {
-        if (!ranges_.isModifiable()) {
-          ranges_ =
-              com.google.protobuf.GeneratedMessageLite.mutableCopy(ranges_);
-         }
+
+      private void initFields() {
+        name_ = "";
+        numNodes_ = 0;
+        ranges_ = java.util.Collections.emptyList();
       }
-      /**
-       * <pre>
-       *delta coded
-       * </pre>
-       *
-       * <code>repeated sint32 ranges = 3 [packed = true];</code>
-       */
-      private void setRanges(
-          int index, int value) {
-        ensureRangesIsMutable();
-        ranges_.setInt(index, value);
-      }
-      /**
-       * <pre>
-       *delta coded
-       * </pre>
-       *
-       * <code>repeated sint32 ranges = 3 [packed = true];</code>
-       */
-      private void addRanges(int value) {
-        ensureRangesIsMutable();
-        ranges_.addInt(value);
-      }
-      /**
-       * <pre>
-       *delta coded
-       * </pre>
-       *
-       * <code>repeated sint32 ranges = 3 [packed = true];</code>
-       */
-      private void addAllRanges(
-          java.lang.Iterable<? extends java.lang.Integer> values) {
-        ensureRangesIsMutable();
-        com.google.protobuf.AbstractMessageLite.addAll(
-            values, ranges_);
-      }
-      /**
-       * <pre>
-       *delta coded
-       * </pre>
-       *
-       * <code>repeated sint32 ranges = 3 [packed = true];</code>
-       */
-      private void clearRanges() {
-        ranges_ = emptyIntList();
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        if (!hasNumNodes()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        memoizedIsInitialized = 1;
+        return true;
       }
 
       public void writeTo(com.google.protobuf.CodedOutputStream output)
                           throws java.io.IOException {
         getSerializedSize();
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          output.writeString(1, getName());
+          output.writeBytes(1, getNameBytes());
         }
         if (((bitField0_ & 0x00000002) == 0x00000002)) {
           output.writeUInt32(2, numNodes_);
         }
         if (getRangesList().size() > 0) {
-          output.writeUInt32NoTag(26);
-          output.writeUInt32NoTag(rangesMemoizedSerializedSize);
+          output.writeRawVarint32(26);
+          output.writeRawVarint32(rangesMemoizedSerializedSize);
         }
         for (int i = 0; i < ranges_.size(); i++) {
-          output.writeSInt32NoTag(ranges_.getInt(i));
+          output.writeSInt32NoTag(ranges_.get(i));
         }
-        unknownFields.writeTo(output);
+        output.writeRawBytes(unknownFields);
       }
 
+      private int memoizedSerializedSize = -1;
       public int getSerializedSize() {
         int size = memoizedSerializedSize;
         if (size != -1) return size;
@@ -5161,7 +5654,7 @@ public final class MultipartBinary {
         size = 0;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           size += com.google.protobuf.CodedOutputStream
-            .computeStringSize(1, getName());
+            .computeBytesSize(1, getNameBytes());
         }
         if (((bitField0_ & 0x00000002) == 0x00000002)) {
           size += com.google.protobuf.CodedOutputStream
@@ -5171,7 +5664,7 @@ public final class MultipartBinary {
           int dataSize = 0;
           for (int i = 0; i < ranges_.size(); i++) {
             dataSize += com.google.protobuf.CodedOutputStream
-              .computeSInt32SizeNoTag(ranges_.getInt(i));
+              .computeSInt32SizeNoTag(ranges_.get(i));
           }
           size += dataSize;
           if (!getRangesList().isEmpty()) {
@@ -5181,127 +5674,258 @@ public final class MultipartBinary {
           }
           rangesMemoizedSerializedSize = dataSize;
         }
-        size += unknownFields.getSerializedSize();
+        size += unknownFields.size();
         memoizedSerializedSize = size;
         return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected java.lang.Object writeReplace()
+          throws java.io.ObjectStreamException {
+        return super.writeReplace();
       }
 
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant parseFrom(
           com.google.protobuf.ByteString data)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, data);
+        return PARSER.parseFrom(data);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant parseFrom(
           com.google.protobuf.ByteString data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, data, extensionRegistry);
+        return PARSER.parseFrom(data, extensionRegistry);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant parseFrom(byte[] data)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, data);
+        return PARSER.parseFrom(data);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant parseFrom(
           byte[] data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, data, extensionRegistry);
+        return PARSER.parseFrom(data, extensionRegistry);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant parseFrom(java.io.InputStream input)
           throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, input);
+        return PARSER.parseFrom(input);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant parseFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, input, extensionRegistry);
+        return PARSER.parseFrom(input, extensionRegistry);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
-        return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+        return PARSER.parseDelimitedFrom(input);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant parseDelimitedFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+        return PARSER.parseDelimitedFrom(input, extensionRegistry);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant parseFrom(
           com.google.protobuf.CodedInputStream input)
           throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, input);
+        return PARSER.parseFrom(input);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant parseFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, input, extensionRegistry);
+        return PARSER.parseFrom(input, extensionRegistry);
       }
 
-      public static Builder newBuilder() {
-        return DEFAULT_INSTANCE.toBuilder();
-      }
+      public static Builder newBuilder() { return Builder.create(); }
+      public Builder newBuilderForType() { return newBuilder(); }
       public static Builder newBuilder(se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant prototype) {
-        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+        return newBuilder().mergeFrom(prototype);
       }
+      public Builder toBuilder() { return newBuilder(this); }
 
       /**
        * Protobuf type {@code NodeLayer.Variant}
        */
       public static final class Builder extends
           com.google.protobuf.GeneratedMessageLite.Builder<
-            se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant, Builder> implements
+            se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant, Builder>
+          implements
           // @@protoc_insertion_point(builder_implements:NodeLayer.Variant)
           se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.VariantOrBuilder {
         // Construct using se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant.newBuilder()
         private Builder() {
-          super(DEFAULT_INSTANCE);
+          maybeForceBuilderInitialization();
         }
 
+        private void maybeForceBuilderInitialization() {
+        }
+        private static Builder create() {
+          return new Builder();
+        }
 
+        public Builder clear() {
+          super.clear();
+          name_ = "";
+          bitField0_ = (bitField0_ & ~0x00000001);
+          numNodes_ = 0;
+          bitField0_ = (bitField0_ & ~0x00000002);
+          ranges_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+          return this;
+        }
+
+        public Builder clone() {
+          return create().mergeFrom(buildPartial());
+        }
+
+        public se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant getDefaultInstanceForType() {
+          return se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant.getDefaultInstance();
+        }
+
+        public se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant build() {
+          se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant buildPartial() {
+          se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant result = new se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant(this);
+          int from_bitField0_ = bitField0_;
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
+          }
+          result.name_ = name_;
+          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+            to_bitField0_ |= 0x00000002;
+          }
+          result.numNodes_ = numNodes_;
+          if (((bitField0_ & 0x00000004) == 0x00000004)) {
+            ranges_ = java.util.Collections.unmodifiableList(ranges_);
+            bitField0_ = (bitField0_ & ~0x00000004);
+          }
+          result.ranges_ = ranges_;
+          result.bitField0_ = to_bitField0_;
+          return result;
+        }
+
+        public Builder mergeFrom(se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant other) {
+          if (other == se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant.getDefaultInstance()) return this;
+          if (other.hasName()) {
+            bitField0_ |= 0x00000001;
+            name_ = other.name_;
+            
+          }
+          if (other.hasNumNodes()) {
+            setNumNodes(other.getNumNodes());
+          }
+          if (!other.ranges_.isEmpty()) {
+            if (ranges_.isEmpty()) {
+              ranges_ = other.ranges_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+            } else {
+              ensureRangesIsMutable();
+              ranges_.addAll(other.ranges_);
+            }
+            
+          }
+          setUnknownFields(
+              getUnknownFields().concat(other.unknownFields));
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          if (!hasNumNodes()) {
+            
+            return false;
+          }
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant) e.getUnfinishedMessage();
+            throw e;
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        private java.lang.Object name_ = "";
         /**
          * <code>optional string name = 1;</code>
          */
         public boolean hasName() {
-          return instance.hasName();
+          return ((bitField0_ & 0x00000001) == 0x00000001);
         }
         /**
          * <code>optional string name = 1;</code>
          */
         public java.lang.String getName() {
-          return instance.getName();
+          java.lang.Object ref = name_;
+          if (!(ref instanceof java.lang.String)) {
+            com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            if (bs.isValidUtf8()) {
+              name_ = s;
+            }
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
         }
         /**
          * <code>optional string name = 1;</code>
          */
         public com.google.protobuf.ByteString
             getNameBytes() {
-          return instance.getNameBytes();
+          java.lang.Object ref = name_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            name_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
         }
         /**
          * <code>optional string name = 1;</code>
          */
         public Builder setName(
             java.lang.String value) {
-          copyOnWrite();
-          instance.setName(value);
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          name_ = value;
+          
           return this;
         }
         /**
          * <code>optional string name = 1;</code>
          */
         public Builder clearName() {
-          copyOnWrite();
-          instance.clearName();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          name_ = getDefaultInstance().getName();
+          
           return this;
         }
         /**
@@ -5309,267 +5933,150 @@ public final class MultipartBinary {
          */
         public Builder setNameBytes(
             com.google.protobuf.ByteString value) {
-          copyOnWrite();
-          instance.setNameBytes(value);
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          name_ = value;
+          
           return this;
         }
 
+        private int numNodes_ ;
         /**
          * <code>required uint32 numNodes = 2;</code>
          */
         public boolean hasNumNodes() {
-          return instance.hasNumNodes();
+          return ((bitField0_ & 0x00000002) == 0x00000002);
         }
         /**
          * <code>required uint32 numNodes = 2;</code>
          */
         public int getNumNodes() {
-          return instance.getNumNodes();
+          return numNodes_;
         }
         /**
          * <code>required uint32 numNodes = 2;</code>
          */
         public Builder setNumNodes(int value) {
-          copyOnWrite();
-          instance.setNumNodes(value);
+          bitField0_ |= 0x00000002;
+          numNodes_ = value;
+          
           return this;
         }
         /**
          * <code>required uint32 numNodes = 2;</code>
          */
         public Builder clearNumNodes() {
-          copyOnWrite();
-          instance.clearNumNodes();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          numNodes_ = 0;
+          
           return this;
         }
 
+        private java.util.List<java.lang.Integer> ranges_ = java.util.Collections.emptyList();
+        private void ensureRangesIsMutable() {
+          if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+            ranges_ = new java.util.ArrayList<java.lang.Integer>(ranges_);
+            bitField0_ |= 0x00000004;
+           }
+        }
         /**
+         * <code>repeated sint32 ranges = 3 [packed = true];</code>
+         *
          * <pre>
          *delta coded
          * </pre>
-         *
-         * <code>repeated sint32 ranges = 3 [packed = true];</code>
          */
         public java.util.List<java.lang.Integer>
             getRangesList() {
-          return java.util.Collections.unmodifiableList(
-              instance.getRangesList());
+          return java.util.Collections.unmodifiableList(ranges_);
         }
         /**
+         * <code>repeated sint32 ranges = 3 [packed = true];</code>
+         *
          * <pre>
          *delta coded
          * </pre>
-         *
-         * <code>repeated sint32 ranges = 3 [packed = true];</code>
          */
         public int getRangesCount() {
-          return instance.getRangesCount();
+          return ranges_.size();
         }
         /**
+         * <code>repeated sint32 ranges = 3 [packed = true];</code>
+         *
          * <pre>
          *delta coded
          * </pre>
-         *
-         * <code>repeated sint32 ranges = 3 [packed = true];</code>
          */
         public int getRanges(int index) {
-          return instance.getRanges(index);
+          return ranges_.get(index);
         }
         /**
+         * <code>repeated sint32 ranges = 3 [packed = true];</code>
+         *
          * <pre>
          *delta coded
          * </pre>
-         *
-         * <code>repeated sint32 ranges = 3 [packed = true];</code>
          */
         public Builder setRanges(
             int index, int value) {
-          copyOnWrite();
-          instance.setRanges(index, value);
+          ensureRangesIsMutable();
+          ranges_.set(index, value);
+          
           return this;
         }
         /**
+         * <code>repeated sint32 ranges = 3 [packed = true];</code>
+         *
          * <pre>
          *delta coded
          * </pre>
-         *
-         * <code>repeated sint32 ranges = 3 [packed = true];</code>
          */
         public Builder addRanges(int value) {
-          copyOnWrite();
-          instance.addRanges(value);
+          ensureRangesIsMutable();
+          ranges_.add(value);
+          
           return this;
         }
         /**
+         * <code>repeated sint32 ranges = 3 [packed = true];</code>
+         *
          * <pre>
          *delta coded
          * </pre>
-         *
-         * <code>repeated sint32 ranges = 3 [packed = true];</code>
          */
         public Builder addAllRanges(
             java.lang.Iterable<? extends java.lang.Integer> values) {
-          copyOnWrite();
-          instance.addAllRanges(values);
+          ensureRangesIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, ranges_);
+          
           return this;
         }
         /**
+         * <code>repeated sint32 ranges = 3 [packed = true];</code>
+         *
          * <pre>
          *delta coded
          * </pre>
-         *
-         * <code>repeated sint32 ranges = 3 [packed = true];</code>
          */
         public Builder clearRanges() {
-          copyOnWrite();
-          instance.clearRanges();
+          ranges_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+          
           return this;
         }
 
         // @@protoc_insertion_point(builder_scope:NodeLayer.Variant)
       }
-      private byte memoizedIsInitialized = -1;
-      protected final Object dynamicMethod(
-          com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-          Object arg0, Object arg1) {
-        switch (method) {
-          case NEW_MUTABLE_INSTANCE: {
-            return new se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant();
-          }
-          case IS_INITIALIZED: {
-            byte isInitialized = memoizedIsInitialized;
-            if (isInitialized == 1) return DEFAULT_INSTANCE;
-            if (isInitialized == 0) return null;
 
-            boolean shouldMemoize = ((Boolean) arg0).booleanValue();
-            if (!hasNumNodes()) {
-              if (shouldMemoize) {
-                memoizedIsInitialized = 0;
-              }
-              return null;
-            }
-            if (shouldMemoize) memoizedIsInitialized = 1;
-            return DEFAULT_INSTANCE;
-
-          }
-          case MAKE_IMMUTABLE: {
-            ranges_.makeImmutable();
-            return null;
-          }
-          case NEW_BUILDER: {
-            return new Builder();
-          }
-          case VISIT: {
-            Visitor visitor = (Visitor) arg0;
-            se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant other = (se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant) arg1;
-            name_ = visitor.visitString(
-                hasName(), name_,
-                other.hasName(), other.name_);
-            numNodes_ = visitor.visitInt(
-                hasNumNodes(), numNodes_,
-                other.hasNumNodes(), other.numNodes_);
-            ranges_= visitor.visitIntList(ranges_, other.ranges_);
-            if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-                .INSTANCE) {
-              bitField0_ |= other.bitField0_;
-            }
-            return this;
-          }
-          case MERGE_FROM_STREAM: {
-            com.google.protobuf.CodedInputStream input =
-                (com.google.protobuf.CodedInputStream) arg0;
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-                (com.google.protobuf.ExtensionRegistryLite) arg1;
-            try {
-              boolean done = false;
-              while (!done) {
-                int tag = input.readTag();
-                switch (tag) {
-                  case 0:
-                    done = true;
-                    break;
-                  default: {
-                    if (!parseUnknownField(tag, input)) {
-                      done = true;
-                    }
-                    break;
-                  }
-                  case 10: {
-                    String s = input.readString();
-                    bitField0_ |= 0x00000001;
-                    name_ = s;
-                    break;
-                  }
-                  case 16: {
-                    bitField0_ |= 0x00000002;
-                    numNodes_ = input.readUInt32();
-                    break;
-                  }
-                  case 24: {
-                    if (!ranges_.isModifiable()) {
-                      ranges_ =
-                          com.google.protobuf.GeneratedMessageLite.mutableCopy(ranges_);
-                    }
-                    ranges_.addInt(input.readSInt32());
-                    break;
-                  }
-                  case 26: {
-                    int length = input.readRawVarint32();
-                    int limit = input.pushLimit(length);
-                    if (!ranges_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                      ranges_ =
-                          com.google.protobuf.GeneratedMessageLite.mutableCopy(ranges_);
-                    }
-                    while (input.getBytesUntilLimit() > 0) {
-                      ranges_.addInt(input.readSInt32());
-                    }
-                    input.popLimit(limit);
-                    break;
-                  }
-                }
-              }
-            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-              throw new RuntimeException(e.setUnfinishedMessage(this));
-            } catch (java.io.IOException e) {
-              throw new RuntimeException(
-                  new com.google.protobuf.InvalidProtocolBufferException(
-                      e.getMessage()).setUnfinishedMessage(this));
-            } finally {
-            }
-          }
-          case GET_DEFAULT_INSTANCE: {
-            return DEFAULT_INSTANCE;
-          }
-          case GET_PARSER: {
-            if (PARSER == null) {    synchronized (se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant.class) {
-                if (PARSER == null) {
-                  PARSER = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-                }
-              }
-            }
-            return PARSER;
-          }
-        }
-        throw new UnsupportedOperationException();
+      static {
+        defaultInstance = new Variant(true);
+        defaultInstance.initFields();
       }
-
 
       // @@protoc_insertion_point(class_scope:NodeLayer.Variant)
-      private static final se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant DEFAULT_INSTANCE;
-      static {
-        DEFAULT_INSTANCE = new Variant();
-        DEFAULT_INSTANCE.makeImmutable();
-      }
-
-      public static se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant getDefaultInstance() {
-        return DEFAULT_INSTANCE;
-      }
-
-      private static volatile com.google.protobuf.Parser<Variant> PARSER;
-
-      public static com.google.protobuf.Parser<Variant> parser() {
-        return DEFAULT_INSTANCE.getParserForType();
-      }
     }
 
     private int bitField0_;
@@ -5587,20 +6094,6 @@ public final class MultipartBinary {
     public int getIdx() {
       return idx_;
     }
-    /**
-     * <code>required uint32 idx = 1;</code>
-     */
-    private void setIdx(int value) {
-      bitField0_ |= 0x00000001;
-      idx_ = value;
-    }
-    /**
-     * <code>required uint32 idx = 1;</code>
-     */
-    private void clearIdx() {
-      bitField0_ = (bitField0_ & ~0x00000001);
-      idx_ = 0;
-    }
 
     public static final int ID_FIELD_NUMBER = 2;
     private int id_;
@@ -5616,23 +6109,9 @@ public final class MultipartBinary {
     public int getId() {
       return id_;
     }
-    /**
-     * <code>optional uint32 id = 2;</code>
-     */
-    private void setId(int value) {
-      bitField0_ |= 0x00000002;
-      id_ = value;
-    }
-    /**
-     * <code>optional uint32 id = 2;</code>
-     */
-    private void clearId() {
-      bitField0_ = (bitField0_ & ~0x00000002);
-      id_ = 0;
-    }
 
     public static final int USERDEFINED_FIELD_NUMBER = 3;
-    private java.lang.String userdefined_;
+    private java.lang.Object userdefined_;
     /**
      * <code>optional string userdefined = 3;</code>
      */
@@ -5643,47 +6122,38 @@ public final class MultipartBinary {
      * <code>optional string userdefined = 3;</code>
      */
     public java.lang.String getUserdefined() {
-      return userdefined_;
+      java.lang.Object ref = userdefined_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          userdefined_ = s;
+        }
+        return s;
+      }
     }
     /**
      * <code>optional string userdefined = 3;</code>
      */
     public com.google.protobuf.ByteString
         getUserdefinedBytes() {
-      return com.google.protobuf.ByteString.copyFromUtf8(userdefined_);
-    }
-    /**
-     * <code>optional string userdefined = 3;</code>
-     */
-    private void setUserdefined(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-      userdefined_ = value;
-    }
-    /**
-     * <code>optional string userdefined = 3;</code>
-     */
-    private void clearUserdefined() {
-      bitField0_ = (bitField0_ & ~0x00000004);
-      userdefined_ = getDefaultInstance().getUserdefined();
-    }
-    /**
-     * <code>optional string userdefined = 3;</code>
-     */
-    private void setUserdefinedBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-      userdefined_ = value.toStringUtf8();
+      java.lang.Object ref = userdefined_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        userdefined_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int VARIANTS_FIELD_NUMBER = 4;
-    private com.google.protobuf.Internal.ProtobufList<se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant> variants_;
+    private java.util.List<se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant> variants_;
     /**
      * <code>repeated .NodeLayer.Variant variants = 4;</code>
      */
@@ -5716,94 +6186,9 @@ public final class MultipartBinary {
         int index) {
       return variants_.get(index);
     }
-    private void ensureVariantsIsMutable() {
-      if (!variants_.isModifiable()) {
-        variants_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(variants_);
-       }
-    }
-
-    /**
-     * <code>repeated .NodeLayer.Variant variants = 4;</code>
-     */
-    private void setVariants(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureVariantsIsMutable();
-      variants_.set(index, value);
-    }
-    /**
-     * <code>repeated .NodeLayer.Variant variants = 4;</code>
-     */
-    private void setVariants(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant.Builder builderForValue) {
-      ensureVariantsIsMutable();
-      variants_.set(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .NodeLayer.Variant variants = 4;</code>
-     */
-    private void addVariants(se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureVariantsIsMutable();
-      variants_.add(value);
-    }
-    /**
-     * <code>repeated .NodeLayer.Variant variants = 4;</code>
-     */
-    private void addVariants(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureVariantsIsMutable();
-      variants_.add(index, value);
-    }
-    /**
-     * <code>repeated .NodeLayer.Variant variants = 4;</code>
-     */
-    private void addVariants(
-        se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant.Builder builderForValue) {
-      ensureVariantsIsMutable();
-      variants_.add(builderForValue.build());
-    }
-    /**
-     * <code>repeated .NodeLayer.Variant variants = 4;</code>
-     */
-    private void addVariants(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant.Builder builderForValue) {
-      ensureVariantsIsMutable();
-      variants_.add(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .NodeLayer.Variant variants = 4;</code>
-     */
-    private void addAllVariants(
-        java.lang.Iterable<? extends se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant> values) {
-      ensureVariantsIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, variants_);
-    }
-    /**
-     * <code>repeated .NodeLayer.Variant variants = 4;</code>
-     */
-    private void clearVariants() {
-      variants_ = emptyProtobufList();
-    }
-    /**
-     * <code>repeated .NodeLayer.Variant variants = 4;</code>
-     */
-    private void removeVariants(int index) {
-      ensureVariantsIsMutable();
-      variants_.remove(index);
-    }
 
     public static final int PROPERTIES_FIELD_NUMBER = 5;
-    private com.google.protobuf.Internal.ProtobufList<se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn> properties_;
+    private java.util.List<se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn> properties_;
     /**
      * <code>repeated .PropertyColumn properties = 5;</code>
      */
@@ -5836,94 +6221,43 @@ public final class MultipartBinary {
         int index) {
       return properties_.get(index);
     }
-    private void ensurePropertiesIsMutable() {
-      if (!properties_.isModifiable()) {
-        properties_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(properties_);
-       }
-    }
 
-    /**
-     * <code>repeated .PropertyColumn properties = 5;</code>
-     */
-    private void setProperties(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn value) {
-      if (value == null) {
-        throw new NullPointerException();
+    private void initFields() {
+      idx_ = 0;
+      id_ = 0;
+      userdefined_ = "";
+      variants_ = java.util.Collections.emptyList();
+      properties_ = java.util.Collections.emptyList();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasIdx()) {
+        memoizedIsInitialized = 0;
+        return false;
       }
-      ensurePropertiesIsMutable();
-      properties_.set(index, value);
-    }
-    /**
-     * <code>repeated .PropertyColumn properties = 5;</code>
-     */
-    private void setProperties(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn.Builder builderForValue) {
-      ensurePropertiesIsMutable();
-      properties_.set(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .PropertyColumn properties = 5;</code>
-     */
-    private void addProperties(se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn value) {
-      if (value == null) {
-        throw new NullPointerException();
+      for (int i = 0; i < getVariantsCount(); i++) {
+        if (!getVariants(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
       }
-      ensurePropertiesIsMutable();
-      properties_.add(value);
-    }
-    /**
-     * <code>repeated .PropertyColumn properties = 5;</code>
-     */
-    private void addProperties(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn value) {
-      if (value == null) {
-        throw new NullPointerException();
+      for (int i = 0; i < getPropertiesCount(); i++) {
+        if (!getProperties(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
       }
-      ensurePropertiesIsMutable();
-      properties_.add(index, value);
-    }
-    /**
-     * <code>repeated .PropertyColumn properties = 5;</code>
-     */
-    private void addProperties(
-        se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn.Builder builderForValue) {
-      ensurePropertiesIsMutable();
-      properties_.add(builderForValue.build());
-    }
-    /**
-     * <code>repeated .PropertyColumn properties = 5;</code>
-     */
-    private void addProperties(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn.Builder builderForValue) {
-      ensurePropertiesIsMutable();
-      properties_.add(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .PropertyColumn properties = 5;</code>
-     */
-    private void addAllProperties(
-        java.lang.Iterable<? extends se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn> values) {
-      ensurePropertiesIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, properties_);
-    }
-    /**
-     * <code>repeated .PropertyColumn properties = 5;</code>
-     */
-    private void clearProperties() {
-      properties_ = emptyProtobufList();
-    }
-    /**
-     * <code>repeated .PropertyColumn properties = 5;</code>
-     */
-    private void removeProperties(int index) {
-      ensurePropertiesIsMutable();
-      properties_.remove(index);
+      memoizedIsInitialized = 1;
+      return true;
     }
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeUInt32(1, idx_);
       }
@@ -5931,7 +6265,7 @@ public final class MultipartBinary {
         output.writeUInt32(2, id_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeString(3, getUserdefined());
+        output.writeBytes(3, getUserdefinedBytes());
       }
       for (int i = 0; i < variants_.size(); i++) {
         output.writeMessage(4, variants_.get(i));
@@ -5939,9 +6273,10 @@ public final class MultipartBinary {
       for (int i = 0; i < properties_.size(); i++) {
         output.writeMessage(5, properties_.get(i));
       }
-      unknownFields.writeTo(output);
+      output.writeRawBytes(unknownFields);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
@@ -5957,7 +6292,7 @@ public final class MultipartBinary {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeStringSize(3, getUserdefined());
+          .computeBytesSize(3, getUserdefinedBytes());
       }
       for (int i = 0; i < variants_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
@@ -5967,185 +6302,360 @@ public final class MultipartBinary {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(5, properties_.get(i));
       }
-      size += unknownFields.getSerializedSize();
+      size += unknownFields.size();
       memoizedSerializedSize = size;
       return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return PARSER.parseFrom(input);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return PARSER.parseFrom(input);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
+    public Builder toBuilder() { return newBuilder(this); }
 
     /**
      * Protobuf type {@code NodeLayer}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.Builder<
-          se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer, Builder> implements
+          se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer, Builder>
+        implements
         // @@protoc_insertion_point(builder_implements:NodeLayer)
         se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayerOrBuilder {
       // Construct using se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.newBuilder()
       private Builder() {
-        super(DEFAULT_INSTANCE);
+        maybeForceBuilderInitialization();
       }
 
+      private void maybeForceBuilderInitialization() {
+      }
+      private static Builder create() {
+        return new Builder();
+      }
 
+      public Builder clear() {
+        super.clear();
+        idx_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        id_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        userdefined_ = "";
+        bitField0_ = (bitField0_ & ~0x00000004);
+        variants_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000008);
+        properties_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000010);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer getDefaultInstanceForType() {
+        return se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.getDefaultInstance();
+      }
+
+      public se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer build() {
+        se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer buildPartial() {
+        se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer result = new se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.idx_ = idx_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.id_ = id_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.userdefined_ = userdefined_;
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          variants_ = java.util.Collections.unmodifiableList(variants_);
+          bitField0_ = (bitField0_ & ~0x00000008);
+        }
+        result.variants_ = variants_;
+        if (((bitField0_ & 0x00000010) == 0x00000010)) {
+          properties_ = java.util.Collections.unmodifiableList(properties_);
+          bitField0_ = (bitField0_ & ~0x00000010);
+        }
+        result.properties_ = properties_;
+        result.bitField0_ = to_bitField0_;
+        return result;
+      }
+
+      public Builder mergeFrom(se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer other) {
+        if (other == se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.getDefaultInstance()) return this;
+        if (other.hasIdx()) {
+          setIdx(other.getIdx());
+        }
+        if (other.hasId()) {
+          setId(other.getId());
+        }
+        if (other.hasUserdefined()) {
+          bitField0_ |= 0x00000004;
+          userdefined_ = other.userdefined_;
+          
+        }
+        if (!other.variants_.isEmpty()) {
+          if (variants_.isEmpty()) {
+            variants_ = other.variants_;
+            bitField0_ = (bitField0_ & ~0x00000008);
+          } else {
+            ensureVariantsIsMutable();
+            variants_.addAll(other.variants_);
+          }
+          
+        }
+        if (!other.properties_.isEmpty()) {
+          if (properties_.isEmpty()) {
+            properties_ = other.properties_;
+            bitField0_ = (bitField0_ & ~0x00000010);
+          } else {
+            ensurePropertiesIsMutable();
+            properties_.addAll(other.properties_);
+          }
+          
+        }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasIdx()) {
+          
+          return false;
+        }
+        for (int i = 0; i < getVariantsCount(); i++) {
+          if (!getVariants(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        for (int i = 0; i < getPropertiesCount(); i++) {
+          if (!getProperties(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private int idx_ ;
       /**
        * <code>required uint32 idx = 1;</code>
        */
       public boolean hasIdx() {
-        return instance.hasIdx();
+        return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
        * <code>required uint32 idx = 1;</code>
        */
       public int getIdx() {
-        return instance.getIdx();
+        return idx_;
       }
       /**
        * <code>required uint32 idx = 1;</code>
        */
       public Builder setIdx(int value) {
-        copyOnWrite();
-        instance.setIdx(value);
+        bitField0_ |= 0x00000001;
+        idx_ = value;
+        
         return this;
       }
       /**
        * <code>required uint32 idx = 1;</code>
        */
       public Builder clearIdx() {
-        copyOnWrite();
-        instance.clearIdx();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        idx_ = 0;
+        
         return this;
       }
 
+      private int id_ ;
       /**
        * <code>optional uint32 id = 2;</code>
        */
       public boolean hasId() {
-        return instance.hasId();
+        return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
        * <code>optional uint32 id = 2;</code>
        */
       public int getId() {
-        return instance.getId();
+        return id_;
       }
       /**
        * <code>optional uint32 id = 2;</code>
        */
       public Builder setId(int value) {
-        copyOnWrite();
-        instance.setId(value);
+        bitField0_ |= 0x00000002;
+        id_ = value;
+        
         return this;
       }
       /**
        * <code>optional uint32 id = 2;</code>
        */
       public Builder clearId() {
-        copyOnWrite();
-        instance.clearId();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        id_ = 0;
+        
         return this;
       }
 
+      private java.lang.Object userdefined_ = "";
       /**
        * <code>optional string userdefined = 3;</code>
        */
       public boolean hasUserdefined() {
-        return instance.hasUserdefined();
+        return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
        * <code>optional string userdefined = 3;</code>
        */
       public java.lang.String getUserdefined() {
-        return instance.getUserdefined();
+        java.lang.Object ref = userdefined_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            userdefined_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
        * <code>optional string userdefined = 3;</code>
        */
       public com.google.protobuf.ByteString
           getUserdefinedBytes() {
-        return instance.getUserdefinedBytes();
+        java.lang.Object ref = userdefined_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          userdefined_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
        * <code>optional string userdefined = 3;</code>
        */
       public Builder setUserdefined(
           java.lang.String value) {
-        copyOnWrite();
-        instance.setUserdefined(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        userdefined_ = value;
+        
         return this;
       }
       /**
        * <code>optional string userdefined = 3;</code>
        */
       public Builder clearUserdefined() {
-        copyOnWrite();
-        instance.clearUserdefined();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        userdefined_ = getDefaultInstance().getUserdefined();
+        
         return this;
       }
       /**
@@ -6153,36 +6663,53 @@ public final class MultipartBinary {
        */
       public Builder setUserdefinedBytes(
           com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setUserdefinedBytes(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        userdefined_ = value;
+        
         return this;
+      }
+
+      private java.util.List<se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant> variants_ =
+        java.util.Collections.emptyList();
+      private void ensureVariantsIsMutable() {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+          variants_ = new java.util.ArrayList<se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant>(variants_);
+          bitField0_ |= 0x00000008;
+         }
       }
 
       /**
        * <code>repeated .NodeLayer.Variant variants = 4;</code>
        */
       public java.util.List<se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant> getVariantsList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getVariantsList());
+        return java.util.Collections.unmodifiableList(variants_);
       }
       /**
        * <code>repeated .NodeLayer.Variant variants = 4;</code>
        */
       public int getVariantsCount() {
-        return instance.getVariantsCount();
-      }/**
+        return variants_.size();
+      }
+      /**
        * <code>repeated .NodeLayer.Variant variants = 4;</code>
        */
       public se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant getVariants(int index) {
-        return instance.getVariants(index);
+        return variants_.get(index);
       }
       /**
        * <code>repeated .NodeLayer.Variant variants = 4;</code>
        */
       public Builder setVariants(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant value) {
-        copyOnWrite();
-        instance.setVariants(index, value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureVariantsIsMutable();
+        variants_.set(index, value);
+
         return this;
       }
       /**
@@ -6190,16 +6717,21 @@ public final class MultipartBinary {
        */
       public Builder setVariants(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant.Builder builderForValue) {
-        copyOnWrite();
-        instance.setVariants(index, builderForValue);
+        ensureVariantsIsMutable();
+        variants_.set(index, builderForValue.build());
+
         return this;
       }
       /**
        * <code>repeated .NodeLayer.Variant variants = 4;</code>
        */
       public Builder addVariants(se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant value) {
-        copyOnWrite();
-        instance.addVariants(value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureVariantsIsMutable();
+        variants_.add(value);
+
         return this;
       }
       /**
@@ -6207,8 +6739,12 @@ public final class MultipartBinary {
        */
       public Builder addVariants(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant value) {
-        copyOnWrite();
-        instance.addVariants(index, value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureVariantsIsMutable();
+        variants_.add(index, value);
+
         return this;
       }
       /**
@@ -6216,8 +6752,9 @@ public final class MultipartBinary {
        */
       public Builder addVariants(
           se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant.Builder builderForValue) {
-        copyOnWrite();
-        instance.addVariants(builderForValue);
+        ensureVariantsIsMutable();
+        variants_.add(builderForValue.build());
+
         return this;
       }
       /**
@@ -6225,8 +6762,9 @@ public final class MultipartBinary {
        */
       public Builder addVariants(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant.Builder builderForValue) {
-        copyOnWrite();
-        instance.addVariants(index, builderForValue);
+        ensureVariantsIsMutable();
+        variants_.add(index, builderForValue.build());
+
         return this;
       }
       /**
@@ -6234,52 +6772,69 @@ public final class MultipartBinary {
        */
       public Builder addAllVariants(
           java.lang.Iterable<? extends se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant> values) {
-        copyOnWrite();
-        instance.addAllVariants(values);
+        ensureVariantsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, variants_);
+
         return this;
       }
       /**
        * <code>repeated .NodeLayer.Variant variants = 4;</code>
        */
       public Builder clearVariants() {
-        copyOnWrite();
-        instance.clearVariants();
+        variants_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000008);
+
         return this;
       }
       /**
        * <code>repeated .NodeLayer.Variant variants = 4;</code>
        */
       public Builder removeVariants(int index) {
-        copyOnWrite();
-        instance.removeVariants(index);
+        ensureVariantsIsMutable();
+        variants_.remove(index);
+
         return this;
+      }
+
+      private java.util.List<se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn> properties_ =
+        java.util.Collections.emptyList();
+      private void ensurePropertiesIsMutable() {
+        if (!((bitField0_ & 0x00000010) == 0x00000010)) {
+          properties_ = new java.util.ArrayList<se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn>(properties_);
+          bitField0_ |= 0x00000010;
+         }
       }
 
       /**
        * <code>repeated .PropertyColumn properties = 5;</code>
        */
       public java.util.List<se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn> getPropertiesList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getPropertiesList());
+        return java.util.Collections.unmodifiableList(properties_);
       }
       /**
        * <code>repeated .PropertyColumn properties = 5;</code>
        */
       public int getPropertiesCount() {
-        return instance.getPropertiesCount();
-      }/**
+        return properties_.size();
+      }
+      /**
        * <code>repeated .PropertyColumn properties = 5;</code>
        */
       public se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn getProperties(int index) {
-        return instance.getProperties(index);
+        return properties_.get(index);
       }
       /**
        * <code>repeated .PropertyColumn properties = 5;</code>
        */
       public Builder setProperties(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn value) {
-        copyOnWrite();
-        instance.setProperties(index, value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensurePropertiesIsMutable();
+        properties_.set(index, value);
+
         return this;
       }
       /**
@@ -6287,16 +6842,21 @@ public final class MultipartBinary {
        */
       public Builder setProperties(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn.Builder builderForValue) {
-        copyOnWrite();
-        instance.setProperties(index, builderForValue);
+        ensurePropertiesIsMutable();
+        properties_.set(index, builderForValue.build());
+
         return this;
       }
       /**
        * <code>repeated .PropertyColumn properties = 5;</code>
        */
       public Builder addProperties(se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn value) {
-        copyOnWrite();
-        instance.addProperties(value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensurePropertiesIsMutable();
+        properties_.add(value);
+
         return this;
       }
       /**
@@ -6304,8 +6864,12 @@ public final class MultipartBinary {
        */
       public Builder addProperties(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn value) {
-        copyOnWrite();
-        instance.addProperties(index, value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensurePropertiesIsMutable();
+        properties_.add(index, value);
+
         return this;
       }
       /**
@@ -6313,8 +6877,9 @@ public final class MultipartBinary {
        */
       public Builder addProperties(
           se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn.Builder builderForValue) {
-        copyOnWrite();
-        instance.addProperties(builderForValue);
+        ensurePropertiesIsMutable();
+        properties_.add(builderForValue.build());
+
         return this;
       }
       /**
@@ -6322,8 +6887,9 @@ public final class MultipartBinary {
        */
       public Builder addProperties(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn.Builder builderForValue) {
-        copyOnWrite();
-        instance.addProperties(index, builderForValue);
+        ensurePropertiesIsMutable();
+        properties_.add(index, builderForValue.build());
+
         return this;
       }
       /**
@@ -6331,194 +6897,40 @@ public final class MultipartBinary {
        */
       public Builder addAllProperties(
           java.lang.Iterable<? extends se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn> values) {
-        copyOnWrite();
-        instance.addAllProperties(values);
+        ensurePropertiesIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, properties_);
+
         return this;
       }
       /**
        * <code>repeated .PropertyColumn properties = 5;</code>
        */
       public Builder clearProperties() {
-        copyOnWrite();
-        instance.clearProperties();
+        properties_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000010);
+
         return this;
       }
       /**
        * <code>repeated .PropertyColumn properties = 5;</code>
        */
       public Builder removeProperties(int index) {
-        copyOnWrite();
-        instance.removeProperties(index);
+        ensurePropertiesIsMutable();
+        properties_.remove(index);
+
         return this;
       }
 
       // @@protoc_insertion_point(builder_scope:NodeLayer)
     }
-    private byte memoizedIsInitialized = -1;
-    protected final Object dynamicMethod(
-        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        Object arg0, Object arg1) {
-      switch (method) {
-        case NEW_MUTABLE_INSTANCE: {
-          return new se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer();
-        }
-        case IS_INITIALIZED: {
-          byte isInitialized = memoizedIsInitialized;
-          if (isInitialized == 1) return DEFAULT_INSTANCE;
-          if (isInitialized == 0) return null;
 
-          boolean shouldMemoize = ((Boolean) arg0).booleanValue();
-          if (!hasIdx()) {
-            if (shouldMemoize) {
-              memoizedIsInitialized = 0;
-            }
-            return null;
-          }
-          for (int i = 0; i < getVariantsCount(); i++) {
-            if (!getVariants(i).isInitialized()) {
-              if (shouldMemoize) {
-                memoizedIsInitialized = 0;
-              }
-              return null;
-            }
-          }
-          for (int i = 0; i < getPropertiesCount(); i++) {
-            if (!getProperties(i).isInitialized()) {
-              if (shouldMemoize) {
-                memoizedIsInitialized = 0;
-              }
-              return null;
-            }
-          }
-          if (shouldMemoize) memoizedIsInitialized = 1;
-          return DEFAULT_INSTANCE;
-
-        }
-        case MAKE_IMMUTABLE: {
-          variants_.makeImmutable();
-          properties_.makeImmutable();
-          return null;
-        }
-        case NEW_BUILDER: {
-          return new Builder();
-        }
-        case VISIT: {
-          Visitor visitor = (Visitor) arg0;
-          se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer other = (se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer) arg1;
-          idx_ = visitor.visitInt(
-              hasIdx(), idx_,
-              other.hasIdx(), other.idx_);
-          id_ = visitor.visitInt(
-              hasId(), id_,
-              other.hasId(), other.id_);
-          userdefined_ = visitor.visitString(
-              hasUserdefined(), userdefined_,
-              other.hasUserdefined(), other.userdefined_);
-          variants_= visitor.visitList(variants_, other.variants_);
-          properties_= visitor.visitList(properties_, other.properties_);
-          if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-              .INSTANCE) {
-            bitField0_ |= other.bitField0_;
-          }
-          return this;
-        }
-        case MERGE_FROM_STREAM: {
-          com.google.protobuf.CodedInputStream input =
-              (com.google.protobuf.CodedInputStream) arg0;
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-              (com.google.protobuf.ExtensionRegistryLite) arg1;
-          try {
-            boolean done = false;
-            while (!done) {
-              int tag = input.readTag();
-              switch (tag) {
-                case 0:
-                  done = true;
-                  break;
-                default: {
-                  if (!parseUnknownField(tag, input)) {
-                    done = true;
-                  }
-                  break;
-                }
-                case 8: {
-                  bitField0_ |= 0x00000001;
-                  idx_ = input.readUInt32();
-                  break;
-                }
-                case 16: {
-                  bitField0_ |= 0x00000002;
-                  id_ = input.readUInt32();
-                  break;
-                }
-                case 26: {
-                  String s = input.readString();
-                  bitField0_ |= 0x00000004;
-                  userdefined_ = s;
-                  break;
-                }
-                case 34: {
-                  if (!variants_.isModifiable()) {
-                    variants_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(variants_);
-                  }
-                  variants_.add(
-                      input.readMessage(se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.Variant.parser(), extensionRegistry));
-                  break;
-                }
-                case 42: {
-                  if (!properties_.isModifiable()) {
-                    properties_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(properties_);
-                  }
-                  properties_.add(
-                      input.readMessage(se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn.parser(), extensionRegistry));
-                  break;
-                }
-              }
-            }
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw new RuntimeException(e.setUnfinishedMessage(this));
-          } catch (java.io.IOException e) {
-            throw new RuntimeException(
-                new com.google.protobuf.InvalidProtocolBufferException(
-                    e.getMessage()).setUnfinishedMessage(this));
-          } finally {
-          }
-        }
-        case GET_DEFAULT_INSTANCE: {
-          return DEFAULT_INSTANCE;
-        }
-        case GET_PARSER: {
-          if (PARSER == null) {    synchronized (se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer.class) {
-              if (PARSER == null) {
-                PARSER = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-              }
-            }
-          }
-          return PARSER;
-        }
-      }
-      throw new UnsupportedOperationException();
+    static {
+      defaultInstance = new NodeLayer(true);
+      defaultInstance.initFields();
     }
-
 
     // @@protoc_insertion_point(class_scope:NodeLayer)
-    private static final se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new NodeLayer();
-      DEFAULT_INSTANCE.makeImmutable();
-    }
-
-    public static se.lth.cs.docforia.io.multipart.MultipartBinary.NodeLayer getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static volatile com.google.protobuf.Parser<NodeLayer> PARSER;
-
-    public static com.google.protobuf.Parser<NodeLayer> parser() {
-      return DEFAULT_INSTANCE.getParserForType();
-    }
   }
 
   public interface EdgeLayerOrBuilder extends
@@ -6588,16 +7000,124 @@ public final class MultipartBinary {
   /**
    * Protobuf type {@code EdgeLayer}
    */
-  public  static final class EdgeLayer extends
-      com.google.protobuf.GeneratedMessageLite<
-          EdgeLayer, EdgeLayer.Builder> implements
+  public static final class EdgeLayer extends
+      com.google.protobuf.GeneratedMessageLite implements
       // @@protoc_insertion_point(message_implements:EdgeLayer)
       EdgeLayerOrBuilder {
-    private EdgeLayer() {
-      userdefined_ = "";
-      variants_ = emptyProtobufList();
-      properties_ = emptyProtobufList();
+    // Use EdgeLayer.newBuilder() to construct.
+    private EdgeLayer(com.google.protobuf.GeneratedMessageLite.Builder builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
+    private EdgeLayer(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
+
+    private static final EdgeLayer defaultInstance;
+    public static EdgeLayer getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public EdgeLayer getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.ByteString unknownFields;
+    private EdgeLayer(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.ByteString.Output unknownFieldsOutput =
+          com.google.protobuf.ByteString.newOutput();
+      com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          com.google.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput);
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              idx_ = input.readUInt32();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              id_ = input.readUInt32();
+              break;
+            }
+            case 26: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000004;
+              userdefined_ = bs;
+              break;
+            }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                variants_ = new java.util.ArrayList<se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant>();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              variants_.add(input.readMessage(se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant.PARSER, extensionRegistry));
+              break;
+            }
+            case 42: {
+              if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+                properties_ = new java.util.ArrayList<se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn>();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              properties_.add(input.readMessage(se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+          variants_ = java.util.Collections.unmodifiableList(variants_);
+        }
+        if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+          properties_ = java.util.Collections.unmodifiableList(properties_);
+        }
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
+        }
+        makeExtensionsImmutable();
+      }
+    }
+    public static com.google.protobuf.Parser<EdgeLayer> PARSER =
+        new com.google.protobuf.AbstractParser<EdgeLayer>() {
+      public EdgeLayer parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new EdgeLayer(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<EdgeLayer> getParserForType() {
+      return PARSER;
+    }
+
     public interface VariantOrBuilder extends
         // @@protoc_insertion_point(interface_extends:EdgeLayer.Variant)
         com.google.protobuf.MessageLiteOrBuilder {
@@ -6643,73 +7163,243 @@ public final class MultipartBinary {
       int getNodestarts(int index);
 
       /**
+       * <code>repeated sint32 head = 4 [packed = true];</code>
+       *
        * <pre>
        *delta coded
        * </pre>
-       *
-       * <code>repeated sint32 head = 4 [packed = true];</code>
        */
       java.util.List<java.lang.Integer> getHeadList();
       /**
+       * <code>repeated sint32 head = 4 [packed = true];</code>
+       *
        * <pre>
        *delta coded
        * </pre>
-       *
-       * <code>repeated sint32 head = 4 [packed = true];</code>
        */
       int getHeadCount();
       /**
+       * <code>repeated sint32 head = 4 [packed = true];</code>
+       *
        * <pre>
        *delta coded
        * </pre>
-       *
-       * <code>repeated sint32 head = 4 [packed = true];</code>
        */
       int getHead(int index);
 
       /**
+       * <code>repeated sint32 tail = 5 [packed = true];</code>
+       *
        * <pre>
        *delta coded
        * </pre>
-       *
-       * <code>repeated sint32 tail = 5 [packed = true];</code>
        */
       java.util.List<java.lang.Integer> getTailList();
       /**
+       * <code>repeated sint32 tail = 5 [packed = true];</code>
+       *
        * <pre>
        *delta coded
        * </pre>
-       *
-       * <code>repeated sint32 tail = 5 [packed = true];</code>
        */
       int getTailCount();
       /**
+       * <code>repeated sint32 tail = 5 [packed = true];</code>
+       *
        * <pre>
        *delta coded
        * </pre>
-       *
-       * <code>repeated sint32 tail = 5 [packed = true];</code>
        */
       int getTail(int index);
     }
     /**
      * Protobuf type {@code EdgeLayer.Variant}
      */
-    public  static final class Variant extends
-        com.google.protobuf.GeneratedMessageLite<
-            Variant, Variant.Builder> implements
+    public static final class Variant extends
+        com.google.protobuf.GeneratedMessageLite implements
         // @@protoc_insertion_point(message_implements:EdgeLayer.Variant)
         VariantOrBuilder {
-      private Variant() {
-        name_ = "";
-        nodelayers_ = emptyIntList();
-        nodestarts_ = emptyIntList();
-        head_ = emptyIntList();
-        tail_ = emptyIntList();
+      // Use Variant.newBuilder() to construct.
+      private Variant(com.google.protobuf.GeneratedMessageLite.Builder builder) {
+        super(builder);
+        this.unknownFields = builder.getUnknownFields();
       }
+      private Variant(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
+
+      private static final Variant defaultInstance;
+      public static Variant getDefaultInstance() {
+        return defaultInstance;
+      }
+
+      public Variant getDefaultInstanceForType() {
+        return defaultInstance;
+      }
+
+      private final com.google.protobuf.ByteString unknownFields;
+      private Variant(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        initFields();
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.ByteString.Output unknownFieldsOutput =
+            com.google.protobuf.ByteString.newOutput();
+        com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+            com.google.protobuf.CodedOutputStream.newInstance(
+                unknownFieldsOutput);
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownField(input, unknownFieldsCodedOutput,
+                                       extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+              case 10: {
+                com.google.protobuf.ByteString bs = input.readBytes();
+                bitField0_ |= 0x00000001;
+                name_ = bs;
+                break;
+              }
+              case 16: {
+                if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                  nodelayers_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000002;
+                }
+                nodelayers_.add(input.readUInt32());
+                break;
+              }
+              case 18: {
+                int length = input.readRawVarint32();
+                int limit = input.pushLimit(length);
+                if (!((mutable_bitField0_ & 0x00000002) == 0x00000002) && input.getBytesUntilLimit() > 0) {
+                  nodelayers_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000002;
+                }
+                while (input.getBytesUntilLimit() > 0) {
+                  nodelayers_.add(input.readUInt32());
+                }
+                input.popLimit(limit);
+                break;
+              }
+              case 24: {
+                if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                  nodestarts_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000004;
+                }
+                nodestarts_.add(input.readUInt32());
+                break;
+              }
+              case 26: {
+                int length = input.readRawVarint32();
+                int limit = input.pushLimit(length);
+                if (!((mutable_bitField0_ & 0x00000004) == 0x00000004) && input.getBytesUntilLimit() > 0) {
+                  nodestarts_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000004;
+                }
+                while (input.getBytesUntilLimit() > 0) {
+                  nodestarts_.add(input.readUInt32());
+                }
+                input.popLimit(limit);
+                break;
+              }
+              case 32: {
+                if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                  head_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000008;
+                }
+                head_.add(input.readSInt32());
+                break;
+              }
+              case 34: {
+                int length = input.readRawVarint32();
+                int limit = input.pushLimit(length);
+                if (!((mutable_bitField0_ & 0x00000008) == 0x00000008) && input.getBytesUntilLimit() > 0) {
+                  head_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000008;
+                }
+                while (input.getBytesUntilLimit() > 0) {
+                  head_.add(input.readSInt32());
+                }
+                input.popLimit(limit);
+                break;
+              }
+              case 40: {
+                if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+                  tail_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000010;
+                }
+                tail_.add(input.readSInt32());
+                break;
+              }
+              case 42: {
+                int length = input.readRawVarint32();
+                int limit = input.pushLimit(length);
+                if (!((mutable_bitField0_ & 0x00000010) == 0x00000010) && input.getBytesUntilLimit() > 0) {
+                  tail_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000010;
+                }
+                while (input.getBytesUntilLimit() > 0) {
+                  tail_.add(input.readSInt32());
+                }
+                input.popLimit(limit);
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e.getMessage()).setUnfinishedMessage(this);
+        } finally {
+          if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+            nodelayers_ = java.util.Collections.unmodifiableList(nodelayers_);
+          }
+          if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+            nodestarts_ = java.util.Collections.unmodifiableList(nodestarts_);
+          }
+          if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+            head_ = java.util.Collections.unmodifiableList(head_);
+          }
+          if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+            tail_ = java.util.Collections.unmodifiableList(tail_);
+          }
+          try {
+            unknownFieldsCodedOutput.flush();
+          } catch (java.io.IOException e) {
+          // Should not happen
+          } finally {
+            unknownFields = unknownFieldsOutput.toByteString();
+          }
+          makeExtensionsImmutable();
+        }
+      }
+      public static com.google.protobuf.Parser<Variant> PARSER =
+          new com.google.protobuf.AbstractParser<Variant>() {
+        public Variant parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new Variant(input, extensionRegistry);
+        }
+      };
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<Variant> getParserForType() {
+        return PARSER;
+      }
+
       private int bitField0_;
       public static final int NAME_FIELD_NUMBER = 1;
-      private java.lang.String name_;
+      private java.lang.Object name_;
       /**
        * <code>optional string name = 1;</code>
        */
@@ -6720,47 +7410,38 @@ public final class MultipartBinary {
        * <code>optional string name = 1;</code>
        */
       public java.lang.String getName() {
-        return name_;
+        java.lang.Object ref = name_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            name_ = s;
+          }
+          return s;
+        }
       }
       /**
        * <code>optional string name = 1;</code>
        */
       public com.google.protobuf.ByteString
           getNameBytes() {
-        return com.google.protobuf.ByteString.copyFromUtf8(name_);
-      }
-      /**
-       * <code>optional string name = 1;</code>
-       */
-      private void setName(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        name_ = value;
-      }
-      /**
-       * <code>optional string name = 1;</code>
-       */
-      private void clearName() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        name_ = getDefaultInstance().getName();
-      }
-      /**
-       * <code>optional string name = 1;</code>
-       */
-      private void setNameBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        name_ = value.toStringUtf8();
+        java.lang.Object ref = name_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          name_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
 
       public static final int NODELAYERS_FIELD_NUMBER = 2;
-      private com.google.protobuf.Internal.IntList nodelayers_;
+      private java.util.List<java.lang.Integer> nodelayers_;
       /**
        * <code>repeated uint32 nodelayers = 2;</code>
        */
@@ -6778,47 +7459,11 @@ public final class MultipartBinary {
        * <code>repeated uint32 nodelayers = 2;</code>
        */
       public int getNodelayers(int index) {
-        return nodelayers_.getInt(index);
-      }
-      private void ensureNodelayersIsMutable() {
-        if (!nodelayers_.isModifiable()) {
-          nodelayers_ =
-              com.google.protobuf.GeneratedMessageLite.mutableCopy(nodelayers_);
-         }
-      }
-      /**
-       * <code>repeated uint32 nodelayers = 2;</code>
-       */
-      private void setNodelayers(
-          int index, int value) {
-        ensureNodelayersIsMutable();
-        nodelayers_.setInt(index, value);
-      }
-      /**
-       * <code>repeated uint32 nodelayers = 2;</code>
-       */
-      private void addNodelayers(int value) {
-        ensureNodelayersIsMutable();
-        nodelayers_.addInt(value);
-      }
-      /**
-       * <code>repeated uint32 nodelayers = 2;</code>
-       */
-      private void addAllNodelayers(
-          java.lang.Iterable<? extends java.lang.Integer> values) {
-        ensureNodelayersIsMutable();
-        com.google.protobuf.AbstractMessageLite.addAll(
-            values, nodelayers_);
-      }
-      /**
-       * <code>repeated uint32 nodelayers = 2;</code>
-       */
-      private void clearNodelayers() {
-        nodelayers_ = emptyIntList();
+        return nodelayers_.get(index);
       }
 
       public static final int NODESTARTS_FIELD_NUMBER = 3;
-      private com.google.protobuf.Internal.IntList nodestarts_;
+      private java.util.List<java.lang.Integer> nodestarts_;
       /**
        * <code>repeated uint32 nodestarts = 3;</code>
        */
@@ -6836,248 +7481,126 @@ public final class MultipartBinary {
        * <code>repeated uint32 nodestarts = 3;</code>
        */
       public int getNodestarts(int index) {
-        return nodestarts_.getInt(index);
-      }
-      private void ensureNodestartsIsMutable() {
-        if (!nodestarts_.isModifiable()) {
-          nodestarts_ =
-              com.google.protobuf.GeneratedMessageLite.mutableCopy(nodestarts_);
-         }
-      }
-      /**
-       * <code>repeated uint32 nodestarts = 3;</code>
-       */
-      private void setNodestarts(
-          int index, int value) {
-        ensureNodestartsIsMutable();
-        nodestarts_.setInt(index, value);
-      }
-      /**
-       * <code>repeated uint32 nodestarts = 3;</code>
-       */
-      private void addNodestarts(int value) {
-        ensureNodestartsIsMutable();
-        nodestarts_.addInt(value);
-      }
-      /**
-       * <code>repeated uint32 nodestarts = 3;</code>
-       */
-      private void addAllNodestarts(
-          java.lang.Iterable<? extends java.lang.Integer> values) {
-        ensureNodestartsIsMutable();
-        com.google.protobuf.AbstractMessageLite.addAll(
-            values, nodestarts_);
-      }
-      /**
-       * <code>repeated uint32 nodestarts = 3;</code>
-       */
-      private void clearNodestarts() {
-        nodestarts_ = emptyIntList();
+        return nodestarts_.get(index);
       }
 
       public static final int HEAD_FIELD_NUMBER = 4;
-      private com.google.protobuf.Internal.IntList head_;
+      private java.util.List<java.lang.Integer> head_;
       /**
+       * <code>repeated sint32 head = 4 [packed = true];</code>
+       *
        * <pre>
        *delta coded
        * </pre>
-       *
-       * <code>repeated sint32 head = 4 [packed = true];</code>
        */
       public java.util.List<java.lang.Integer>
           getHeadList() {
         return head_;
       }
       /**
+       * <code>repeated sint32 head = 4 [packed = true];</code>
+       *
        * <pre>
        *delta coded
        * </pre>
-       *
-       * <code>repeated sint32 head = 4 [packed = true];</code>
        */
       public int getHeadCount() {
         return head_.size();
       }
       /**
+       * <code>repeated sint32 head = 4 [packed = true];</code>
+       *
        * <pre>
        *delta coded
        * </pre>
-       *
-       * <code>repeated sint32 head = 4 [packed = true];</code>
        */
       public int getHead(int index) {
-        return head_.getInt(index);
+        return head_.get(index);
       }
       private int headMemoizedSerializedSize = -1;
-      private void ensureHeadIsMutable() {
-        if (!head_.isModifiable()) {
-          head_ =
-              com.google.protobuf.GeneratedMessageLite.mutableCopy(head_);
-         }
-      }
-      /**
-       * <pre>
-       *delta coded
-       * </pre>
-       *
-       * <code>repeated sint32 head = 4 [packed = true];</code>
-       */
-      private void setHead(
-          int index, int value) {
-        ensureHeadIsMutable();
-        head_.setInt(index, value);
-      }
-      /**
-       * <pre>
-       *delta coded
-       * </pre>
-       *
-       * <code>repeated sint32 head = 4 [packed = true];</code>
-       */
-      private void addHead(int value) {
-        ensureHeadIsMutable();
-        head_.addInt(value);
-      }
-      /**
-       * <pre>
-       *delta coded
-       * </pre>
-       *
-       * <code>repeated sint32 head = 4 [packed = true];</code>
-       */
-      private void addAllHead(
-          java.lang.Iterable<? extends java.lang.Integer> values) {
-        ensureHeadIsMutable();
-        com.google.protobuf.AbstractMessageLite.addAll(
-            values, head_);
-      }
-      /**
-       * <pre>
-       *delta coded
-       * </pre>
-       *
-       * <code>repeated sint32 head = 4 [packed = true];</code>
-       */
-      private void clearHead() {
-        head_ = emptyIntList();
-      }
 
       public static final int TAIL_FIELD_NUMBER = 5;
-      private com.google.protobuf.Internal.IntList tail_;
+      private java.util.List<java.lang.Integer> tail_;
       /**
+       * <code>repeated sint32 tail = 5 [packed = true];</code>
+       *
        * <pre>
        *delta coded
        * </pre>
-       *
-       * <code>repeated sint32 tail = 5 [packed = true];</code>
        */
       public java.util.List<java.lang.Integer>
           getTailList() {
         return tail_;
       }
       /**
+       * <code>repeated sint32 tail = 5 [packed = true];</code>
+       *
        * <pre>
        *delta coded
        * </pre>
-       *
-       * <code>repeated sint32 tail = 5 [packed = true];</code>
        */
       public int getTailCount() {
         return tail_.size();
       }
       /**
+       * <code>repeated sint32 tail = 5 [packed = true];</code>
+       *
        * <pre>
        *delta coded
        * </pre>
-       *
-       * <code>repeated sint32 tail = 5 [packed = true];</code>
        */
       public int getTail(int index) {
-        return tail_.getInt(index);
+        return tail_.get(index);
       }
       private int tailMemoizedSerializedSize = -1;
-      private void ensureTailIsMutable() {
-        if (!tail_.isModifiable()) {
-          tail_ =
-              com.google.protobuf.GeneratedMessageLite.mutableCopy(tail_);
-         }
+
+      private void initFields() {
+        name_ = "";
+        nodelayers_ = java.util.Collections.emptyList();
+        nodestarts_ = java.util.Collections.emptyList();
+        head_ = java.util.Collections.emptyList();
+        tail_ = java.util.Collections.emptyList();
       }
-      /**
-       * <pre>
-       *delta coded
-       * </pre>
-       *
-       * <code>repeated sint32 tail = 5 [packed = true];</code>
-       */
-      private void setTail(
-          int index, int value) {
-        ensureTailIsMutable();
-        tail_.setInt(index, value);
-      }
-      /**
-       * <pre>
-       *delta coded
-       * </pre>
-       *
-       * <code>repeated sint32 tail = 5 [packed = true];</code>
-       */
-      private void addTail(int value) {
-        ensureTailIsMutable();
-        tail_.addInt(value);
-      }
-      /**
-       * <pre>
-       *delta coded
-       * </pre>
-       *
-       * <code>repeated sint32 tail = 5 [packed = true];</code>
-       */
-      private void addAllTail(
-          java.lang.Iterable<? extends java.lang.Integer> values) {
-        ensureTailIsMutable();
-        com.google.protobuf.AbstractMessageLite.addAll(
-            values, tail_);
-      }
-      /**
-       * <pre>
-       *delta coded
-       * </pre>
-       *
-       * <code>repeated sint32 tail = 5 [packed = true];</code>
-       */
-      private void clearTail() {
-        tail_ = emptyIntList();
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
       }
 
       public void writeTo(com.google.protobuf.CodedOutputStream output)
                           throws java.io.IOException {
         getSerializedSize();
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          output.writeString(1, getName());
+          output.writeBytes(1, getNameBytes());
         }
         for (int i = 0; i < nodelayers_.size(); i++) {
-          output.writeUInt32(2, nodelayers_.getInt(i));
+          output.writeUInt32(2, nodelayers_.get(i));
         }
         for (int i = 0; i < nodestarts_.size(); i++) {
-          output.writeUInt32(3, nodestarts_.getInt(i));
+          output.writeUInt32(3, nodestarts_.get(i));
         }
         if (getHeadList().size() > 0) {
-          output.writeUInt32NoTag(34);
-          output.writeUInt32NoTag(headMemoizedSerializedSize);
+          output.writeRawVarint32(34);
+          output.writeRawVarint32(headMemoizedSerializedSize);
         }
         for (int i = 0; i < head_.size(); i++) {
-          output.writeSInt32NoTag(head_.getInt(i));
+          output.writeSInt32NoTag(head_.get(i));
         }
         if (getTailList().size() > 0) {
-          output.writeUInt32NoTag(42);
-          output.writeUInt32NoTag(tailMemoizedSerializedSize);
+          output.writeRawVarint32(42);
+          output.writeRawVarint32(tailMemoizedSerializedSize);
         }
         for (int i = 0; i < tail_.size(); i++) {
-          output.writeSInt32NoTag(tail_.getInt(i));
+          output.writeSInt32NoTag(tail_.get(i));
         }
-        unknownFields.writeTo(output);
+        output.writeRawBytes(unknownFields);
       }
 
+      private int memoizedSerializedSize = -1;
       public int getSerializedSize() {
         int size = memoizedSerializedSize;
         if (size != -1) return size;
@@ -7085,13 +7608,13 @@ public final class MultipartBinary {
         size = 0;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           size += com.google.protobuf.CodedOutputStream
-            .computeStringSize(1, getName());
+            .computeBytesSize(1, getNameBytes());
         }
         {
           int dataSize = 0;
           for (int i = 0; i < nodelayers_.size(); i++) {
             dataSize += com.google.protobuf.CodedOutputStream
-              .computeUInt32SizeNoTag(nodelayers_.getInt(i));
+              .computeUInt32SizeNoTag(nodelayers_.get(i));
           }
           size += dataSize;
           size += 1 * getNodelayersList().size();
@@ -7100,7 +7623,7 @@ public final class MultipartBinary {
           int dataSize = 0;
           for (int i = 0; i < nodestarts_.size(); i++) {
             dataSize += com.google.protobuf.CodedOutputStream
-              .computeUInt32SizeNoTag(nodestarts_.getInt(i));
+              .computeUInt32SizeNoTag(nodestarts_.get(i));
           }
           size += dataSize;
           size += 1 * getNodestartsList().size();
@@ -7109,7 +7632,7 @@ public final class MultipartBinary {
           int dataSize = 0;
           for (int i = 0; i < head_.size(); i++) {
             dataSize += com.google.protobuf.CodedOutputStream
-              .computeSInt32SizeNoTag(head_.getInt(i));
+              .computeSInt32SizeNoTag(head_.get(i));
           }
           size += dataSize;
           if (!getHeadList().isEmpty()) {
@@ -7123,7 +7646,7 @@ public final class MultipartBinary {
           int dataSize = 0;
           for (int i = 0; i < tail_.size(); i++) {
             dataSize += com.google.protobuf.CodedOutputStream
-              .computeSInt32SizeNoTag(tail_.getInt(i));
+              .computeSInt32SizeNoTag(tail_.get(i));
           }
           size += dataSize;
           if (!getTailList().isEmpty()) {
@@ -7133,127 +7656,296 @@ public final class MultipartBinary {
           }
           tailMemoizedSerializedSize = dataSize;
         }
-        size += unknownFields.getSerializedSize();
+        size += unknownFields.size();
         memoizedSerializedSize = size;
         return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected java.lang.Object writeReplace()
+          throws java.io.ObjectStreamException {
+        return super.writeReplace();
       }
 
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant parseFrom(
           com.google.protobuf.ByteString data)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, data);
+        return PARSER.parseFrom(data);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant parseFrom(
           com.google.protobuf.ByteString data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, data, extensionRegistry);
+        return PARSER.parseFrom(data, extensionRegistry);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant parseFrom(byte[] data)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, data);
+        return PARSER.parseFrom(data);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant parseFrom(
           byte[] data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, data, extensionRegistry);
+        return PARSER.parseFrom(data, extensionRegistry);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant parseFrom(java.io.InputStream input)
           throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, input);
+        return PARSER.parseFrom(input);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant parseFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, input, extensionRegistry);
+        return PARSER.parseFrom(input, extensionRegistry);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
-        return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+        return PARSER.parseDelimitedFrom(input);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant parseDelimitedFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+        return PARSER.parseDelimitedFrom(input, extensionRegistry);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant parseFrom(
           com.google.protobuf.CodedInputStream input)
           throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, input);
+        return PARSER.parseFrom(input);
       }
       public static se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant parseFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageLite.parseFrom(
-            DEFAULT_INSTANCE, input, extensionRegistry);
+        return PARSER.parseFrom(input, extensionRegistry);
       }
 
-      public static Builder newBuilder() {
-        return DEFAULT_INSTANCE.toBuilder();
-      }
+      public static Builder newBuilder() { return Builder.create(); }
+      public Builder newBuilderForType() { return newBuilder(); }
       public static Builder newBuilder(se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant prototype) {
-        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+        return newBuilder().mergeFrom(prototype);
       }
+      public Builder toBuilder() { return newBuilder(this); }
 
       /**
        * Protobuf type {@code EdgeLayer.Variant}
        */
       public static final class Builder extends
           com.google.protobuf.GeneratedMessageLite.Builder<
-            se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant, Builder> implements
+            se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant, Builder>
+          implements
           // @@protoc_insertion_point(builder_implements:EdgeLayer.Variant)
           se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.VariantOrBuilder {
         // Construct using se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant.newBuilder()
         private Builder() {
-          super(DEFAULT_INSTANCE);
+          maybeForceBuilderInitialization();
         }
 
+        private void maybeForceBuilderInitialization() {
+        }
+        private static Builder create() {
+          return new Builder();
+        }
 
+        public Builder clear() {
+          super.clear();
+          name_ = "";
+          bitField0_ = (bitField0_ & ~0x00000001);
+          nodelayers_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          nodestarts_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+          head_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+          tail_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
+          return this;
+        }
+
+        public Builder clone() {
+          return create().mergeFrom(buildPartial());
+        }
+
+        public se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant getDefaultInstanceForType() {
+          return se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant.getDefaultInstance();
+        }
+
+        public se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant build() {
+          se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant buildPartial() {
+          se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant result = new se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant(this);
+          int from_bitField0_ = bitField0_;
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
+          }
+          result.name_ = name_;
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+            nodelayers_ = java.util.Collections.unmodifiableList(nodelayers_);
+            bitField0_ = (bitField0_ & ~0x00000002);
+          }
+          result.nodelayers_ = nodelayers_;
+          if (((bitField0_ & 0x00000004) == 0x00000004)) {
+            nodestarts_ = java.util.Collections.unmodifiableList(nodestarts_);
+            bitField0_ = (bitField0_ & ~0x00000004);
+          }
+          result.nodestarts_ = nodestarts_;
+          if (((bitField0_ & 0x00000008) == 0x00000008)) {
+            head_ = java.util.Collections.unmodifiableList(head_);
+            bitField0_ = (bitField0_ & ~0x00000008);
+          }
+          result.head_ = head_;
+          if (((bitField0_ & 0x00000010) == 0x00000010)) {
+            tail_ = java.util.Collections.unmodifiableList(tail_);
+            bitField0_ = (bitField0_ & ~0x00000010);
+          }
+          result.tail_ = tail_;
+          result.bitField0_ = to_bitField0_;
+          return result;
+        }
+
+        public Builder mergeFrom(se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant other) {
+          if (other == se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant.getDefaultInstance()) return this;
+          if (other.hasName()) {
+            bitField0_ |= 0x00000001;
+            name_ = other.name_;
+            
+          }
+          if (!other.nodelayers_.isEmpty()) {
+            if (nodelayers_.isEmpty()) {
+              nodelayers_ = other.nodelayers_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+            } else {
+              ensureNodelayersIsMutable();
+              nodelayers_.addAll(other.nodelayers_);
+            }
+            
+          }
+          if (!other.nodestarts_.isEmpty()) {
+            if (nodestarts_.isEmpty()) {
+              nodestarts_ = other.nodestarts_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+            } else {
+              ensureNodestartsIsMutable();
+              nodestarts_.addAll(other.nodestarts_);
+            }
+            
+          }
+          if (!other.head_.isEmpty()) {
+            if (head_.isEmpty()) {
+              head_ = other.head_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+            } else {
+              ensureHeadIsMutable();
+              head_.addAll(other.head_);
+            }
+            
+          }
+          if (!other.tail_.isEmpty()) {
+            if (tail_.isEmpty()) {
+              tail_ = other.tail_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+            } else {
+              ensureTailIsMutable();
+              tail_.addAll(other.tail_);
+            }
+            
+          }
+          setUnknownFields(
+              getUnknownFields().concat(other.unknownFields));
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant) e.getUnfinishedMessage();
+            throw e;
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        private java.lang.Object name_ = "";
         /**
          * <code>optional string name = 1;</code>
          */
         public boolean hasName() {
-          return instance.hasName();
+          return ((bitField0_ & 0x00000001) == 0x00000001);
         }
         /**
          * <code>optional string name = 1;</code>
          */
         public java.lang.String getName() {
-          return instance.getName();
+          java.lang.Object ref = name_;
+          if (!(ref instanceof java.lang.String)) {
+            com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            if (bs.isValidUtf8()) {
+              name_ = s;
+            }
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
         }
         /**
          * <code>optional string name = 1;</code>
          */
         public com.google.protobuf.ByteString
             getNameBytes() {
-          return instance.getNameBytes();
+          java.lang.Object ref = name_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            name_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
         }
         /**
          * <code>optional string name = 1;</code>
          */
         public Builder setName(
             java.lang.String value) {
-          copyOnWrite();
-          instance.setName(value);
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          name_ = value;
+          
           return this;
         }
         /**
          * <code>optional string name = 1;</code>
          */
         public Builder clearName() {
-          copyOnWrite();
-          instance.clearName();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          name_ = getDefaultInstance().getName();
+          
           return this;
         }
         /**
@@ -7261,46 +7953,58 @@ public final class MultipartBinary {
          */
         public Builder setNameBytes(
             com.google.protobuf.ByteString value) {
-          copyOnWrite();
-          instance.setNameBytes(value);
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          name_ = value;
+          
           return this;
         }
 
+        private java.util.List<java.lang.Integer> nodelayers_ = java.util.Collections.emptyList();
+        private void ensureNodelayersIsMutable() {
+          if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+            nodelayers_ = new java.util.ArrayList<java.lang.Integer>(nodelayers_);
+            bitField0_ |= 0x00000002;
+           }
+        }
         /**
          * <code>repeated uint32 nodelayers = 2;</code>
          */
         public java.util.List<java.lang.Integer>
             getNodelayersList() {
-          return java.util.Collections.unmodifiableList(
-              instance.getNodelayersList());
+          return java.util.Collections.unmodifiableList(nodelayers_);
         }
         /**
          * <code>repeated uint32 nodelayers = 2;</code>
          */
         public int getNodelayersCount() {
-          return instance.getNodelayersCount();
+          return nodelayers_.size();
         }
         /**
          * <code>repeated uint32 nodelayers = 2;</code>
          */
         public int getNodelayers(int index) {
-          return instance.getNodelayers(index);
+          return nodelayers_.get(index);
         }
         /**
          * <code>repeated uint32 nodelayers = 2;</code>
          */
         public Builder setNodelayers(
             int index, int value) {
-          copyOnWrite();
-          instance.setNodelayers(index, value);
+          ensureNodelayersIsMutable();
+          nodelayers_.set(index, value);
+          
           return this;
         }
         /**
          * <code>repeated uint32 nodelayers = 2;</code>
          */
         public Builder addNodelayers(int value) {
-          copyOnWrite();
-          instance.addNodelayers(value);
+          ensureNodelayersIsMutable();
+          nodelayers_.add(value);
+          
           return this;
         }
         /**
@@ -7308,54 +8012,65 @@ public final class MultipartBinary {
          */
         public Builder addAllNodelayers(
             java.lang.Iterable<? extends java.lang.Integer> values) {
-          copyOnWrite();
-          instance.addAllNodelayers(values);
+          ensureNodelayersIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, nodelayers_);
+          
           return this;
         }
         /**
          * <code>repeated uint32 nodelayers = 2;</code>
          */
         public Builder clearNodelayers() {
-          copyOnWrite();
-          instance.clearNodelayers();
+          nodelayers_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          
           return this;
         }
 
+        private java.util.List<java.lang.Integer> nodestarts_ = java.util.Collections.emptyList();
+        private void ensureNodestartsIsMutable() {
+          if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+            nodestarts_ = new java.util.ArrayList<java.lang.Integer>(nodestarts_);
+            bitField0_ |= 0x00000004;
+           }
+        }
         /**
          * <code>repeated uint32 nodestarts = 3;</code>
          */
         public java.util.List<java.lang.Integer>
             getNodestartsList() {
-          return java.util.Collections.unmodifiableList(
-              instance.getNodestartsList());
+          return java.util.Collections.unmodifiableList(nodestarts_);
         }
         /**
          * <code>repeated uint32 nodestarts = 3;</code>
          */
         public int getNodestartsCount() {
-          return instance.getNodestartsCount();
+          return nodestarts_.size();
         }
         /**
          * <code>repeated uint32 nodestarts = 3;</code>
          */
         public int getNodestarts(int index) {
-          return instance.getNodestarts(index);
+          return nodestarts_.get(index);
         }
         /**
          * <code>repeated uint32 nodestarts = 3;</code>
          */
         public Builder setNodestarts(
             int index, int value) {
-          copyOnWrite();
-          instance.setNodestarts(index, value);
+          ensureNodestartsIsMutable();
+          nodestarts_.set(index, value);
+          
           return this;
         }
         /**
          * <code>repeated uint32 nodestarts = 3;</code>
          */
         public Builder addNodestarts(int value) {
-          copyOnWrite();
-          instance.addNodestarts(value);
+          ensureNodestartsIsMutable();
+          nodestarts_.add(value);
+          
           return this;
         }
         /**
@@ -7363,376 +8078,219 @@ public final class MultipartBinary {
          */
         public Builder addAllNodestarts(
             java.lang.Iterable<? extends java.lang.Integer> values) {
-          copyOnWrite();
-          instance.addAllNodestarts(values);
+          ensureNodestartsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, nodestarts_);
+          
           return this;
         }
         /**
          * <code>repeated uint32 nodestarts = 3;</code>
          */
         public Builder clearNodestarts() {
-          copyOnWrite();
-          instance.clearNodestarts();
+          nodestarts_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+          
           return this;
         }
 
+        private java.util.List<java.lang.Integer> head_ = java.util.Collections.emptyList();
+        private void ensureHeadIsMutable() {
+          if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+            head_ = new java.util.ArrayList<java.lang.Integer>(head_);
+            bitField0_ |= 0x00000008;
+           }
+        }
         /**
+         * <code>repeated sint32 head = 4 [packed = true];</code>
+         *
          * <pre>
          *delta coded
          * </pre>
-         *
-         * <code>repeated sint32 head = 4 [packed = true];</code>
          */
         public java.util.List<java.lang.Integer>
             getHeadList() {
-          return java.util.Collections.unmodifiableList(
-              instance.getHeadList());
+          return java.util.Collections.unmodifiableList(head_);
         }
         /**
+         * <code>repeated sint32 head = 4 [packed = true];</code>
+         *
          * <pre>
          *delta coded
          * </pre>
-         *
-         * <code>repeated sint32 head = 4 [packed = true];</code>
          */
         public int getHeadCount() {
-          return instance.getHeadCount();
+          return head_.size();
         }
         /**
+         * <code>repeated sint32 head = 4 [packed = true];</code>
+         *
          * <pre>
          *delta coded
          * </pre>
-         *
-         * <code>repeated sint32 head = 4 [packed = true];</code>
          */
         public int getHead(int index) {
-          return instance.getHead(index);
+          return head_.get(index);
         }
         /**
+         * <code>repeated sint32 head = 4 [packed = true];</code>
+         *
          * <pre>
          *delta coded
          * </pre>
-         *
-         * <code>repeated sint32 head = 4 [packed = true];</code>
          */
         public Builder setHead(
             int index, int value) {
-          copyOnWrite();
-          instance.setHead(index, value);
+          ensureHeadIsMutable();
+          head_.set(index, value);
+          
           return this;
         }
         /**
+         * <code>repeated sint32 head = 4 [packed = true];</code>
+         *
          * <pre>
          *delta coded
          * </pre>
-         *
-         * <code>repeated sint32 head = 4 [packed = true];</code>
          */
         public Builder addHead(int value) {
-          copyOnWrite();
-          instance.addHead(value);
+          ensureHeadIsMutable();
+          head_.add(value);
+          
           return this;
         }
         /**
+         * <code>repeated sint32 head = 4 [packed = true];</code>
+         *
          * <pre>
          *delta coded
          * </pre>
-         *
-         * <code>repeated sint32 head = 4 [packed = true];</code>
          */
         public Builder addAllHead(
             java.lang.Iterable<? extends java.lang.Integer> values) {
-          copyOnWrite();
-          instance.addAllHead(values);
+          ensureHeadIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, head_);
+          
           return this;
         }
         /**
+         * <code>repeated sint32 head = 4 [packed = true];</code>
+         *
          * <pre>
          *delta coded
          * </pre>
-         *
-         * <code>repeated sint32 head = 4 [packed = true];</code>
          */
         public Builder clearHead() {
-          copyOnWrite();
-          instance.clearHead();
+          head_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+          
           return this;
         }
 
+        private java.util.List<java.lang.Integer> tail_ = java.util.Collections.emptyList();
+        private void ensureTailIsMutable() {
+          if (!((bitField0_ & 0x00000010) == 0x00000010)) {
+            tail_ = new java.util.ArrayList<java.lang.Integer>(tail_);
+            bitField0_ |= 0x00000010;
+           }
+        }
         /**
+         * <code>repeated sint32 tail = 5 [packed = true];</code>
+         *
          * <pre>
          *delta coded
          * </pre>
-         *
-         * <code>repeated sint32 tail = 5 [packed = true];</code>
          */
         public java.util.List<java.lang.Integer>
             getTailList() {
-          return java.util.Collections.unmodifiableList(
-              instance.getTailList());
+          return java.util.Collections.unmodifiableList(tail_);
         }
         /**
+         * <code>repeated sint32 tail = 5 [packed = true];</code>
+         *
          * <pre>
          *delta coded
          * </pre>
-         *
-         * <code>repeated sint32 tail = 5 [packed = true];</code>
          */
         public int getTailCount() {
-          return instance.getTailCount();
+          return tail_.size();
         }
         /**
+         * <code>repeated sint32 tail = 5 [packed = true];</code>
+         *
          * <pre>
          *delta coded
          * </pre>
-         *
-         * <code>repeated sint32 tail = 5 [packed = true];</code>
          */
         public int getTail(int index) {
-          return instance.getTail(index);
+          return tail_.get(index);
         }
         /**
+         * <code>repeated sint32 tail = 5 [packed = true];</code>
+         *
          * <pre>
          *delta coded
          * </pre>
-         *
-         * <code>repeated sint32 tail = 5 [packed = true];</code>
          */
         public Builder setTail(
             int index, int value) {
-          copyOnWrite();
-          instance.setTail(index, value);
+          ensureTailIsMutable();
+          tail_.set(index, value);
+          
           return this;
         }
         /**
+         * <code>repeated sint32 tail = 5 [packed = true];</code>
+         *
          * <pre>
          *delta coded
          * </pre>
-         *
-         * <code>repeated sint32 tail = 5 [packed = true];</code>
          */
         public Builder addTail(int value) {
-          copyOnWrite();
-          instance.addTail(value);
+          ensureTailIsMutable();
+          tail_.add(value);
+          
           return this;
         }
         /**
+         * <code>repeated sint32 tail = 5 [packed = true];</code>
+         *
          * <pre>
          *delta coded
          * </pre>
-         *
-         * <code>repeated sint32 tail = 5 [packed = true];</code>
          */
         public Builder addAllTail(
             java.lang.Iterable<? extends java.lang.Integer> values) {
-          copyOnWrite();
-          instance.addAllTail(values);
+          ensureTailIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, tail_);
+          
           return this;
         }
         /**
+         * <code>repeated sint32 tail = 5 [packed = true];</code>
+         *
          * <pre>
          *delta coded
          * </pre>
-         *
-         * <code>repeated sint32 tail = 5 [packed = true];</code>
          */
         public Builder clearTail() {
-          copyOnWrite();
-          instance.clearTail();
+          tail_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
+          
           return this;
         }
 
         // @@protoc_insertion_point(builder_scope:EdgeLayer.Variant)
       }
-      protected final Object dynamicMethod(
-          com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-          Object arg0, Object arg1) {
-        switch (method) {
-          case NEW_MUTABLE_INSTANCE: {
-            return new se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant();
-          }
-          case IS_INITIALIZED: {
-            return DEFAULT_INSTANCE;
-          }
-          case MAKE_IMMUTABLE: {
-            nodelayers_.makeImmutable();
-            nodestarts_.makeImmutable();
-            head_.makeImmutable();
-            tail_.makeImmutable();
-            return null;
-          }
-          case NEW_BUILDER: {
-            return new Builder();
-          }
-          case VISIT: {
-            Visitor visitor = (Visitor) arg0;
-            se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant other = (se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant) arg1;
-            name_ = visitor.visitString(
-                hasName(), name_,
-                other.hasName(), other.name_);
-            nodelayers_= visitor.visitIntList(nodelayers_, other.nodelayers_);
-            nodestarts_= visitor.visitIntList(nodestarts_, other.nodestarts_);
-            head_= visitor.visitIntList(head_, other.head_);
-            tail_= visitor.visitIntList(tail_, other.tail_);
-            if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-                .INSTANCE) {
-              bitField0_ |= other.bitField0_;
-            }
-            return this;
-          }
-          case MERGE_FROM_STREAM: {
-            com.google.protobuf.CodedInputStream input =
-                (com.google.protobuf.CodedInputStream) arg0;
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-                (com.google.protobuf.ExtensionRegistryLite) arg1;
-            try {
-              boolean done = false;
-              while (!done) {
-                int tag = input.readTag();
-                switch (tag) {
-                  case 0:
-                    done = true;
-                    break;
-                  default: {
-                    if (!parseUnknownField(tag, input)) {
-                      done = true;
-                    }
-                    break;
-                  }
-                  case 10: {
-                    String s = input.readString();
-                    bitField0_ |= 0x00000001;
-                    name_ = s;
-                    break;
-                  }
-                  case 16: {
-                    if (!nodelayers_.isModifiable()) {
-                      nodelayers_ =
-                          com.google.protobuf.GeneratedMessageLite.mutableCopy(nodelayers_);
-                    }
-                    nodelayers_.addInt(input.readUInt32());
-                    break;
-                  }
-                  case 18: {
-                    int length = input.readRawVarint32();
-                    int limit = input.pushLimit(length);
-                    if (!nodelayers_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                      nodelayers_ =
-                          com.google.protobuf.GeneratedMessageLite.mutableCopy(nodelayers_);
-                    }
-                    while (input.getBytesUntilLimit() > 0) {
-                      nodelayers_.addInt(input.readUInt32());
-                    }
-                    input.popLimit(limit);
-                    break;
-                  }
-                  case 24: {
-                    if (!nodestarts_.isModifiable()) {
-                      nodestarts_ =
-                          com.google.protobuf.GeneratedMessageLite.mutableCopy(nodestarts_);
-                    }
-                    nodestarts_.addInt(input.readUInt32());
-                    break;
-                  }
-                  case 26: {
-                    int length = input.readRawVarint32();
-                    int limit = input.pushLimit(length);
-                    if (!nodestarts_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                      nodestarts_ =
-                          com.google.protobuf.GeneratedMessageLite.mutableCopy(nodestarts_);
-                    }
-                    while (input.getBytesUntilLimit() > 0) {
-                      nodestarts_.addInt(input.readUInt32());
-                    }
-                    input.popLimit(limit);
-                    break;
-                  }
-                  case 32: {
-                    if (!head_.isModifiable()) {
-                      head_ =
-                          com.google.protobuf.GeneratedMessageLite.mutableCopy(head_);
-                    }
-                    head_.addInt(input.readSInt32());
-                    break;
-                  }
-                  case 34: {
-                    int length = input.readRawVarint32();
-                    int limit = input.pushLimit(length);
-                    if (!head_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                      head_ =
-                          com.google.protobuf.GeneratedMessageLite.mutableCopy(head_);
-                    }
-                    while (input.getBytesUntilLimit() > 0) {
-                      head_.addInt(input.readSInt32());
-                    }
-                    input.popLimit(limit);
-                    break;
-                  }
-                  case 40: {
-                    if (!tail_.isModifiable()) {
-                      tail_ =
-                          com.google.protobuf.GeneratedMessageLite.mutableCopy(tail_);
-                    }
-                    tail_.addInt(input.readSInt32());
-                    break;
-                  }
-                  case 42: {
-                    int length = input.readRawVarint32();
-                    int limit = input.pushLimit(length);
-                    if (!tail_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                      tail_ =
-                          com.google.protobuf.GeneratedMessageLite.mutableCopy(tail_);
-                    }
-                    while (input.getBytesUntilLimit() > 0) {
-                      tail_.addInt(input.readSInt32());
-                    }
-                    input.popLimit(limit);
-                    break;
-                  }
-                }
-              }
-            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-              throw new RuntimeException(e.setUnfinishedMessage(this));
-            } catch (java.io.IOException e) {
-              throw new RuntimeException(
-                  new com.google.protobuf.InvalidProtocolBufferException(
-                      e.getMessage()).setUnfinishedMessage(this));
-            } finally {
-            }
-          }
-          case GET_DEFAULT_INSTANCE: {
-            return DEFAULT_INSTANCE;
-          }
-          case GET_PARSER: {
-            if (PARSER == null) {    synchronized (se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant.class) {
-                if (PARSER == null) {
-                  PARSER = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-                }
-              }
-            }
-            return PARSER;
-          }
-        }
-        throw new UnsupportedOperationException();
-      }
 
+      static {
+        defaultInstance = new Variant(true);
+        defaultInstance.initFields();
+      }
 
       // @@protoc_insertion_point(class_scope:EdgeLayer.Variant)
-      private static final se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant DEFAULT_INSTANCE;
-      static {
-        DEFAULT_INSTANCE = new Variant();
-        DEFAULT_INSTANCE.makeImmutable();
-      }
-
-      public static se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant getDefaultInstance() {
-        return DEFAULT_INSTANCE;
-      }
-
-      private static volatile com.google.protobuf.Parser<Variant> PARSER;
-
-      public static com.google.protobuf.Parser<Variant> parser() {
-        return DEFAULT_INSTANCE.getParserForType();
-      }
     }
 
     private int bitField0_;
@@ -7750,20 +8308,6 @@ public final class MultipartBinary {
     public int getIdx() {
       return idx_;
     }
-    /**
-     * <code>required uint32 idx = 1;</code>
-     */
-    private void setIdx(int value) {
-      bitField0_ |= 0x00000001;
-      idx_ = value;
-    }
-    /**
-     * <code>required uint32 idx = 1;</code>
-     */
-    private void clearIdx() {
-      bitField0_ = (bitField0_ & ~0x00000001);
-      idx_ = 0;
-    }
 
     public static final int ID_FIELD_NUMBER = 2;
     private int id_;
@@ -7779,23 +8323,9 @@ public final class MultipartBinary {
     public int getId() {
       return id_;
     }
-    /**
-     * <code>optional uint32 id = 2;</code>
-     */
-    private void setId(int value) {
-      bitField0_ |= 0x00000002;
-      id_ = value;
-    }
-    /**
-     * <code>optional uint32 id = 2;</code>
-     */
-    private void clearId() {
-      bitField0_ = (bitField0_ & ~0x00000002);
-      id_ = 0;
-    }
 
     public static final int USERDEFINED_FIELD_NUMBER = 3;
-    private java.lang.String userdefined_;
+    private java.lang.Object userdefined_;
     /**
      * <code>optional string userdefined = 3;</code>
      */
@@ -7806,47 +8336,38 @@ public final class MultipartBinary {
      * <code>optional string userdefined = 3;</code>
      */
     public java.lang.String getUserdefined() {
-      return userdefined_;
+      java.lang.Object ref = userdefined_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          userdefined_ = s;
+        }
+        return s;
+      }
     }
     /**
      * <code>optional string userdefined = 3;</code>
      */
     public com.google.protobuf.ByteString
         getUserdefinedBytes() {
-      return com.google.protobuf.ByteString.copyFromUtf8(userdefined_);
-    }
-    /**
-     * <code>optional string userdefined = 3;</code>
-     */
-    private void setUserdefined(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-      userdefined_ = value;
-    }
-    /**
-     * <code>optional string userdefined = 3;</code>
-     */
-    private void clearUserdefined() {
-      bitField0_ = (bitField0_ & ~0x00000004);
-      userdefined_ = getDefaultInstance().getUserdefined();
-    }
-    /**
-     * <code>optional string userdefined = 3;</code>
-     */
-    private void setUserdefinedBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-      userdefined_ = value.toStringUtf8();
+      java.lang.Object ref = userdefined_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        userdefined_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int VARIANTS_FIELD_NUMBER = 4;
-    private com.google.protobuf.Internal.ProtobufList<se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant> variants_;
+    private java.util.List<se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant> variants_;
     /**
      * <code>repeated .EdgeLayer.Variant variants = 4;</code>
      */
@@ -7879,94 +8400,9 @@ public final class MultipartBinary {
         int index) {
       return variants_.get(index);
     }
-    private void ensureVariantsIsMutable() {
-      if (!variants_.isModifiable()) {
-        variants_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(variants_);
-       }
-    }
-
-    /**
-     * <code>repeated .EdgeLayer.Variant variants = 4;</code>
-     */
-    private void setVariants(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureVariantsIsMutable();
-      variants_.set(index, value);
-    }
-    /**
-     * <code>repeated .EdgeLayer.Variant variants = 4;</code>
-     */
-    private void setVariants(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant.Builder builderForValue) {
-      ensureVariantsIsMutable();
-      variants_.set(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .EdgeLayer.Variant variants = 4;</code>
-     */
-    private void addVariants(se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureVariantsIsMutable();
-      variants_.add(value);
-    }
-    /**
-     * <code>repeated .EdgeLayer.Variant variants = 4;</code>
-     */
-    private void addVariants(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureVariantsIsMutable();
-      variants_.add(index, value);
-    }
-    /**
-     * <code>repeated .EdgeLayer.Variant variants = 4;</code>
-     */
-    private void addVariants(
-        se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant.Builder builderForValue) {
-      ensureVariantsIsMutable();
-      variants_.add(builderForValue.build());
-    }
-    /**
-     * <code>repeated .EdgeLayer.Variant variants = 4;</code>
-     */
-    private void addVariants(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant.Builder builderForValue) {
-      ensureVariantsIsMutable();
-      variants_.add(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .EdgeLayer.Variant variants = 4;</code>
-     */
-    private void addAllVariants(
-        java.lang.Iterable<? extends se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant> values) {
-      ensureVariantsIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, variants_);
-    }
-    /**
-     * <code>repeated .EdgeLayer.Variant variants = 4;</code>
-     */
-    private void clearVariants() {
-      variants_ = emptyProtobufList();
-    }
-    /**
-     * <code>repeated .EdgeLayer.Variant variants = 4;</code>
-     */
-    private void removeVariants(int index) {
-      ensureVariantsIsMutable();
-      variants_.remove(index);
-    }
 
     public static final int PROPERTIES_FIELD_NUMBER = 5;
-    private com.google.protobuf.Internal.ProtobufList<se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn> properties_;
+    private java.util.List<se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn> properties_;
     /**
      * <code>repeated .PropertyColumn properties = 5;</code>
      */
@@ -7999,94 +8435,37 @@ public final class MultipartBinary {
         int index) {
       return properties_.get(index);
     }
-    private void ensurePropertiesIsMutable() {
-      if (!properties_.isModifiable()) {
-        properties_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(properties_);
-       }
-    }
 
-    /**
-     * <code>repeated .PropertyColumn properties = 5;</code>
-     */
-    private void setProperties(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn value) {
-      if (value == null) {
-        throw new NullPointerException();
+    private void initFields() {
+      idx_ = 0;
+      id_ = 0;
+      userdefined_ = "";
+      variants_ = java.util.Collections.emptyList();
+      properties_ = java.util.Collections.emptyList();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasIdx()) {
+        memoizedIsInitialized = 0;
+        return false;
       }
-      ensurePropertiesIsMutable();
-      properties_.set(index, value);
-    }
-    /**
-     * <code>repeated .PropertyColumn properties = 5;</code>
-     */
-    private void setProperties(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn.Builder builderForValue) {
-      ensurePropertiesIsMutable();
-      properties_.set(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .PropertyColumn properties = 5;</code>
-     */
-    private void addProperties(se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn value) {
-      if (value == null) {
-        throw new NullPointerException();
+      for (int i = 0; i < getPropertiesCount(); i++) {
+        if (!getProperties(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
       }
-      ensurePropertiesIsMutable();
-      properties_.add(value);
-    }
-    /**
-     * <code>repeated .PropertyColumn properties = 5;</code>
-     */
-    private void addProperties(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensurePropertiesIsMutable();
-      properties_.add(index, value);
-    }
-    /**
-     * <code>repeated .PropertyColumn properties = 5;</code>
-     */
-    private void addProperties(
-        se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn.Builder builderForValue) {
-      ensurePropertiesIsMutable();
-      properties_.add(builderForValue.build());
-    }
-    /**
-     * <code>repeated .PropertyColumn properties = 5;</code>
-     */
-    private void addProperties(
-        int index, se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn.Builder builderForValue) {
-      ensurePropertiesIsMutable();
-      properties_.add(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .PropertyColumn properties = 5;</code>
-     */
-    private void addAllProperties(
-        java.lang.Iterable<? extends se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn> values) {
-      ensurePropertiesIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, properties_);
-    }
-    /**
-     * <code>repeated .PropertyColumn properties = 5;</code>
-     */
-    private void clearProperties() {
-      properties_ = emptyProtobufList();
-    }
-    /**
-     * <code>repeated .PropertyColumn properties = 5;</code>
-     */
-    private void removeProperties(int index) {
-      ensurePropertiesIsMutable();
-      properties_.remove(index);
+      memoizedIsInitialized = 1;
+      return true;
     }
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeUInt32(1, idx_);
       }
@@ -8094,7 +8473,7 @@ public final class MultipartBinary {
         output.writeUInt32(2, id_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeString(3, getUserdefined());
+        output.writeBytes(3, getUserdefinedBytes());
       }
       for (int i = 0; i < variants_.size(); i++) {
         output.writeMessage(4, variants_.get(i));
@@ -8102,9 +8481,10 @@ public final class MultipartBinary {
       for (int i = 0; i < properties_.size(); i++) {
         output.writeMessage(5, properties_.get(i));
       }
-      unknownFields.writeTo(output);
+      output.writeRawBytes(unknownFields);
     }
 
+    private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
@@ -8120,7 +8500,7 @@ public final class MultipartBinary {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeStringSize(3, getUserdefined());
+          .computeBytesSize(3, getUserdefinedBytes());
       }
       for (int i = 0; i < variants_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
@@ -8130,185 +8510,354 @@ public final class MultipartBinary {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(5, properties_.get(i));
       }
-      size += unknownFields.getSerializedSize();
+      size += unknownFields.size();
       memoizedSerializedSize = size;
       return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
     }
 
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return PARSER.parseFrom(input);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+      return PARSER.parseDelimitedFrom(input);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return PARSER.parseFrom(input);
     }
     public static se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return PARSER.parseFrom(input, extensionRegistry);
     }
 
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
+    public Builder toBuilder() { return newBuilder(this); }
 
     /**
      * Protobuf type {@code EdgeLayer}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.Builder<
-          se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer, Builder> implements
+          se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer, Builder>
+        implements
         // @@protoc_insertion_point(builder_implements:EdgeLayer)
         se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayerOrBuilder {
       // Construct using se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.newBuilder()
       private Builder() {
-        super(DEFAULT_INSTANCE);
+        maybeForceBuilderInitialization();
       }
 
+      private void maybeForceBuilderInitialization() {
+      }
+      private static Builder create() {
+        return new Builder();
+      }
 
+      public Builder clear() {
+        super.clear();
+        idx_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        id_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        userdefined_ = "";
+        bitField0_ = (bitField0_ & ~0x00000004);
+        variants_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000008);
+        properties_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000010);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer getDefaultInstanceForType() {
+        return se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.getDefaultInstance();
+      }
+
+      public se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer build() {
+        se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer buildPartial() {
+        se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer result = new se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.idx_ = idx_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.id_ = id_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.userdefined_ = userdefined_;
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          variants_ = java.util.Collections.unmodifiableList(variants_);
+          bitField0_ = (bitField0_ & ~0x00000008);
+        }
+        result.variants_ = variants_;
+        if (((bitField0_ & 0x00000010) == 0x00000010)) {
+          properties_ = java.util.Collections.unmodifiableList(properties_);
+          bitField0_ = (bitField0_ & ~0x00000010);
+        }
+        result.properties_ = properties_;
+        result.bitField0_ = to_bitField0_;
+        return result;
+      }
+
+      public Builder mergeFrom(se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer other) {
+        if (other == se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.getDefaultInstance()) return this;
+        if (other.hasIdx()) {
+          setIdx(other.getIdx());
+        }
+        if (other.hasId()) {
+          setId(other.getId());
+        }
+        if (other.hasUserdefined()) {
+          bitField0_ |= 0x00000004;
+          userdefined_ = other.userdefined_;
+          
+        }
+        if (!other.variants_.isEmpty()) {
+          if (variants_.isEmpty()) {
+            variants_ = other.variants_;
+            bitField0_ = (bitField0_ & ~0x00000008);
+          } else {
+            ensureVariantsIsMutable();
+            variants_.addAll(other.variants_);
+          }
+          
+        }
+        if (!other.properties_.isEmpty()) {
+          if (properties_.isEmpty()) {
+            properties_ = other.properties_;
+            bitField0_ = (bitField0_ & ~0x00000010);
+          } else {
+            ensurePropertiesIsMutable();
+            properties_.addAll(other.properties_);
+          }
+          
+        }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasIdx()) {
+          
+          return false;
+        }
+        for (int i = 0; i < getPropertiesCount(); i++) {
+          if (!getProperties(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private int idx_ ;
       /**
        * <code>required uint32 idx = 1;</code>
        */
       public boolean hasIdx() {
-        return instance.hasIdx();
+        return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
        * <code>required uint32 idx = 1;</code>
        */
       public int getIdx() {
-        return instance.getIdx();
+        return idx_;
       }
       /**
        * <code>required uint32 idx = 1;</code>
        */
       public Builder setIdx(int value) {
-        copyOnWrite();
-        instance.setIdx(value);
+        bitField0_ |= 0x00000001;
+        idx_ = value;
+        
         return this;
       }
       /**
        * <code>required uint32 idx = 1;</code>
        */
       public Builder clearIdx() {
-        copyOnWrite();
-        instance.clearIdx();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        idx_ = 0;
+        
         return this;
       }
 
+      private int id_ ;
       /**
        * <code>optional uint32 id = 2;</code>
        */
       public boolean hasId() {
-        return instance.hasId();
+        return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
        * <code>optional uint32 id = 2;</code>
        */
       public int getId() {
-        return instance.getId();
+        return id_;
       }
       /**
        * <code>optional uint32 id = 2;</code>
        */
       public Builder setId(int value) {
-        copyOnWrite();
-        instance.setId(value);
+        bitField0_ |= 0x00000002;
+        id_ = value;
+        
         return this;
       }
       /**
        * <code>optional uint32 id = 2;</code>
        */
       public Builder clearId() {
-        copyOnWrite();
-        instance.clearId();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        id_ = 0;
+        
         return this;
       }
 
+      private java.lang.Object userdefined_ = "";
       /**
        * <code>optional string userdefined = 3;</code>
        */
       public boolean hasUserdefined() {
-        return instance.hasUserdefined();
+        return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
        * <code>optional string userdefined = 3;</code>
        */
       public java.lang.String getUserdefined() {
-        return instance.getUserdefined();
+        java.lang.Object ref = userdefined_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            userdefined_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
        * <code>optional string userdefined = 3;</code>
        */
       public com.google.protobuf.ByteString
           getUserdefinedBytes() {
-        return instance.getUserdefinedBytes();
+        java.lang.Object ref = userdefined_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          userdefined_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
        * <code>optional string userdefined = 3;</code>
        */
       public Builder setUserdefined(
           java.lang.String value) {
-        copyOnWrite();
-        instance.setUserdefined(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        userdefined_ = value;
+        
         return this;
       }
       /**
        * <code>optional string userdefined = 3;</code>
        */
       public Builder clearUserdefined() {
-        copyOnWrite();
-        instance.clearUserdefined();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        userdefined_ = getDefaultInstance().getUserdefined();
+        
         return this;
       }
       /**
@@ -8316,36 +8865,53 @@ public final class MultipartBinary {
        */
       public Builder setUserdefinedBytes(
           com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setUserdefinedBytes(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        userdefined_ = value;
+        
         return this;
+      }
+
+      private java.util.List<se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant> variants_ =
+        java.util.Collections.emptyList();
+      private void ensureVariantsIsMutable() {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+          variants_ = new java.util.ArrayList<se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant>(variants_);
+          bitField0_ |= 0x00000008;
+         }
       }
 
       /**
        * <code>repeated .EdgeLayer.Variant variants = 4;</code>
        */
       public java.util.List<se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant> getVariantsList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getVariantsList());
+        return java.util.Collections.unmodifiableList(variants_);
       }
       /**
        * <code>repeated .EdgeLayer.Variant variants = 4;</code>
        */
       public int getVariantsCount() {
-        return instance.getVariantsCount();
-      }/**
+        return variants_.size();
+      }
+      /**
        * <code>repeated .EdgeLayer.Variant variants = 4;</code>
        */
       public se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant getVariants(int index) {
-        return instance.getVariants(index);
+        return variants_.get(index);
       }
       /**
        * <code>repeated .EdgeLayer.Variant variants = 4;</code>
        */
       public Builder setVariants(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant value) {
-        copyOnWrite();
-        instance.setVariants(index, value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureVariantsIsMutable();
+        variants_.set(index, value);
+
         return this;
       }
       /**
@@ -8353,16 +8919,21 @@ public final class MultipartBinary {
        */
       public Builder setVariants(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant.Builder builderForValue) {
-        copyOnWrite();
-        instance.setVariants(index, builderForValue);
+        ensureVariantsIsMutable();
+        variants_.set(index, builderForValue.build());
+
         return this;
       }
       /**
        * <code>repeated .EdgeLayer.Variant variants = 4;</code>
        */
       public Builder addVariants(se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant value) {
-        copyOnWrite();
-        instance.addVariants(value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureVariantsIsMutable();
+        variants_.add(value);
+
         return this;
       }
       /**
@@ -8370,8 +8941,12 @@ public final class MultipartBinary {
        */
       public Builder addVariants(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant value) {
-        copyOnWrite();
-        instance.addVariants(index, value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureVariantsIsMutable();
+        variants_.add(index, value);
+
         return this;
       }
       /**
@@ -8379,8 +8954,9 @@ public final class MultipartBinary {
        */
       public Builder addVariants(
           se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant.Builder builderForValue) {
-        copyOnWrite();
-        instance.addVariants(builderForValue);
+        ensureVariantsIsMutable();
+        variants_.add(builderForValue.build());
+
         return this;
       }
       /**
@@ -8388,8 +8964,9 @@ public final class MultipartBinary {
        */
       public Builder addVariants(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant.Builder builderForValue) {
-        copyOnWrite();
-        instance.addVariants(index, builderForValue);
+        ensureVariantsIsMutable();
+        variants_.add(index, builderForValue.build());
+
         return this;
       }
       /**
@@ -8397,52 +8974,69 @@ public final class MultipartBinary {
        */
       public Builder addAllVariants(
           java.lang.Iterable<? extends se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant> values) {
-        copyOnWrite();
-        instance.addAllVariants(values);
+        ensureVariantsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, variants_);
+
         return this;
       }
       /**
        * <code>repeated .EdgeLayer.Variant variants = 4;</code>
        */
       public Builder clearVariants() {
-        copyOnWrite();
-        instance.clearVariants();
+        variants_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000008);
+
         return this;
       }
       /**
        * <code>repeated .EdgeLayer.Variant variants = 4;</code>
        */
       public Builder removeVariants(int index) {
-        copyOnWrite();
-        instance.removeVariants(index);
+        ensureVariantsIsMutable();
+        variants_.remove(index);
+
         return this;
+      }
+
+      private java.util.List<se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn> properties_ =
+        java.util.Collections.emptyList();
+      private void ensurePropertiesIsMutable() {
+        if (!((bitField0_ & 0x00000010) == 0x00000010)) {
+          properties_ = new java.util.ArrayList<se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn>(properties_);
+          bitField0_ |= 0x00000010;
+         }
       }
 
       /**
        * <code>repeated .PropertyColumn properties = 5;</code>
        */
       public java.util.List<se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn> getPropertiesList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getPropertiesList());
+        return java.util.Collections.unmodifiableList(properties_);
       }
       /**
        * <code>repeated .PropertyColumn properties = 5;</code>
        */
       public int getPropertiesCount() {
-        return instance.getPropertiesCount();
-      }/**
+        return properties_.size();
+      }
+      /**
        * <code>repeated .PropertyColumn properties = 5;</code>
        */
       public se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn getProperties(int index) {
-        return instance.getProperties(index);
+        return properties_.get(index);
       }
       /**
        * <code>repeated .PropertyColumn properties = 5;</code>
        */
       public Builder setProperties(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn value) {
-        copyOnWrite();
-        instance.setProperties(index, value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensurePropertiesIsMutable();
+        properties_.set(index, value);
+
         return this;
       }
       /**
@@ -8450,16 +9044,21 @@ public final class MultipartBinary {
        */
       public Builder setProperties(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn.Builder builderForValue) {
-        copyOnWrite();
-        instance.setProperties(index, builderForValue);
+        ensurePropertiesIsMutable();
+        properties_.set(index, builderForValue.build());
+
         return this;
       }
       /**
        * <code>repeated .PropertyColumn properties = 5;</code>
        */
       public Builder addProperties(se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn value) {
-        copyOnWrite();
-        instance.addProperties(value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensurePropertiesIsMutable();
+        properties_.add(value);
+
         return this;
       }
       /**
@@ -8467,8 +9066,12 @@ public final class MultipartBinary {
        */
       public Builder addProperties(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn value) {
-        copyOnWrite();
-        instance.addProperties(index, value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensurePropertiesIsMutable();
+        properties_.add(index, value);
+
         return this;
       }
       /**
@@ -8476,8 +9079,9 @@ public final class MultipartBinary {
        */
       public Builder addProperties(
           se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn.Builder builderForValue) {
-        copyOnWrite();
-        instance.addProperties(builderForValue);
+        ensurePropertiesIsMutable();
+        properties_.add(builderForValue.build());
+
         return this;
       }
       /**
@@ -8485,8 +9089,9 @@ public final class MultipartBinary {
        */
       public Builder addProperties(
           int index, se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn.Builder builderForValue) {
-        copyOnWrite();
-        instance.addProperties(index, builderForValue);
+        ensurePropertiesIsMutable();
+        properties_.add(index, builderForValue.build());
+
         return this;
       }
       /**
@@ -8494,186 +9099,40 @@ public final class MultipartBinary {
        */
       public Builder addAllProperties(
           java.lang.Iterable<? extends se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn> values) {
-        copyOnWrite();
-        instance.addAllProperties(values);
+        ensurePropertiesIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, properties_);
+
         return this;
       }
       /**
        * <code>repeated .PropertyColumn properties = 5;</code>
        */
       public Builder clearProperties() {
-        copyOnWrite();
-        instance.clearProperties();
+        properties_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000010);
+
         return this;
       }
       /**
        * <code>repeated .PropertyColumn properties = 5;</code>
        */
       public Builder removeProperties(int index) {
-        copyOnWrite();
-        instance.removeProperties(index);
+        ensurePropertiesIsMutable();
+        properties_.remove(index);
+
         return this;
       }
 
       // @@protoc_insertion_point(builder_scope:EdgeLayer)
     }
-    private byte memoizedIsInitialized = -1;
-    protected final Object dynamicMethod(
-        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        Object arg0, Object arg1) {
-      switch (method) {
-        case NEW_MUTABLE_INSTANCE: {
-          return new se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer();
-        }
-        case IS_INITIALIZED: {
-          byte isInitialized = memoizedIsInitialized;
-          if (isInitialized == 1) return DEFAULT_INSTANCE;
-          if (isInitialized == 0) return null;
 
-          boolean shouldMemoize = ((Boolean) arg0).booleanValue();
-          if (!hasIdx()) {
-            if (shouldMemoize) {
-              memoizedIsInitialized = 0;
-            }
-            return null;
-          }
-          for (int i = 0; i < getPropertiesCount(); i++) {
-            if (!getProperties(i).isInitialized()) {
-              if (shouldMemoize) {
-                memoizedIsInitialized = 0;
-              }
-              return null;
-            }
-          }
-          if (shouldMemoize) memoizedIsInitialized = 1;
-          return DEFAULT_INSTANCE;
-
-        }
-        case MAKE_IMMUTABLE: {
-          variants_.makeImmutable();
-          properties_.makeImmutable();
-          return null;
-        }
-        case NEW_BUILDER: {
-          return new Builder();
-        }
-        case VISIT: {
-          Visitor visitor = (Visitor) arg0;
-          se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer other = (se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer) arg1;
-          idx_ = visitor.visitInt(
-              hasIdx(), idx_,
-              other.hasIdx(), other.idx_);
-          id_ = visitor.visitInt(
-              hasId(), id_,
-              other.hasId(), other.id_);
-          userdefined_ = visitor.visitString(
-              hasUserdefined(), userdefined_,
-              other.hasUserdefined(), other.userdefined_);
-          variants_= visitor.visitList(variants_, other.variants_);
-          properties_= visitor.visitList(properties_, other.properties_);
-          if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-              .INSTANCE) {
-            bitField0_ |= other.bitField0_;
-          }
-          return this;
-        }
-        case MERGE_FROM_STREAM: {
-          com.google.protobuf.CodedInputStream input =
-              (com.google.protobuf.CodedInputStream) arg0;
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-              (com.google.protobuf.ExtensionRegistryLite) arg1;
-          try {
-            boolean done = false;
-            while (!done) {
-              int tag = input.readTag();
-              switch (tag) {
-                case 0:
-                  done = true;
-                  break;
-                default: {
-                  if (!parseUnknownField(tag, input)) {
-                    done = true;
-                  }
-                  break;
-                }
-                case 8: {
-                  bitField0_ |= 0x00000001;
-                  idx_ = input.readUInt32();
-                  break;
-                }
-                case 16: {
-                  bitField0_ |= 0x00000002;
-                  id_ = input.readUInt32();
-                  break;
-                }
-                case 26: {
-                  String s = input.readString();
-                  bitField0_ |= 0x00000004;
-                  userdefined_ = s;
-                  break;
-                }
-                case 34: {
-                  if (!variants_.isModifiable()) {
-                    variants_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(variants_);
-                  }
-                  variants_.add(
-                      input.readMessage(se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.Variant.parser(), extensionRegistry));
-                  break;
-                }
-                case 42: {
-                  if (!properties_.isModifiable()) {
-                    properties_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(properties_);
-                  }
-                  properties_.add(
-                      input.readMessage(se.lth.cs.docforia.io.multipart.MultipartBinary.PropertyColumn.parser(), extensionRegistry));
-                  break;
-                }
-              }
-            }
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw new RuntimeException(e.setUnfinishedMessage(this));
-          } catch (java.io.IOException e) {
-            throw new RuntimeException(
-                new com.google.protobuf.InvalidProtocolBufferException(
-                    e.getMessage()).setUnfinishedMessage(this));
-          } finally {
-          }
-        }
-        case GET_DEFAULT_INSTANCE: {
-          return DEFAULT_INSTANCE;
-        }
-        case GET_PARSER: {
-          if (PARSER == null) {    synchronized (se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer.class) {
-              if (PARSER == null) {
-                PARSER = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-              }
-            }
-          }
-          return PARSER;
-        }
-      }
-      throw new UnsupportedOperationException();
+    static {
+      defaultInstance = new EdgeLayer(true);
+      defaultInstance.initFields();
     }
-
 
     // @@protoc_insertion_point(class_scope:EdgeLayer)
-    private static final se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new EdgeLayer();
-      DEFAULT_INSTANCE.makeImmutable();
-    }
-
-    public static se.lth.cs.docforia.io.multipart.MultipartBinary.EdgeLayer getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static volatile com.google.protobuf.Parser<EdgeLayer> PARSER;
-
-    public static com.google.protobuf.Parser<EdgeLayer> parser() {
-      return DEFAULT_INSTANCE.getParserForType();
-    }
   }
 
 
