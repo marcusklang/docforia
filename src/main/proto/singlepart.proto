@@ -1,0 +1,169 @@
+syntax = "proto3";
+
+option java_package = "se.lth.cs.docforia.io.singlepart";
+option java_outer_classname = "Singlepart";
+option optimize_for = LITE_RUNTIME;
+
+message PropertySet {
+    repeated uint32 keys = 1 [packed=true];
+}
+
+message PropertyKey {
+  enum SpecialKey {
+    NODE_RANGE_START_END = 0;
+    NODE_NUM_EDGE_OUT = 1; //Type is D_INT (values are counts), layerid tells which layer
+    EDGE_HEAD = 2; //Type is D_INT (values are node indicies), layerid tells which layer
+    DOC_ID = 3;
+    DOC_URI = 4;
+    DOC_LANG = 5;
+    DOC_TITLE = 6;
+    DOC_TEXT = 7;
+    DOC_TYPE = 8;
+  }
+
+  oneof key {
+    SpecialKey special = 1;
+    string name = 2;
+  }
+
+  enum DataType {
+    D_NULL = 0;
+    D_BINARY = 1;
+    D_STRING = 2;
+    D_INT = 3;
+    D_LONG = 4;
+    D_FLOAT = 5;
+    D_DOUBLE = 6;
+    D_BOOLEAN = 7;
+    D_STRING_ARRAY = 8;
+    D_INT_ARRAY = 9;
+    D_LONG_ARRAY = 10;
+    D_FLOAT_ARRAY = 11;
+    D_DOUBLE_ARRAY = 12;
+    D_BOOLEAN_ARARY = 13;
+    D_PROPERTY_MAP = 14;
+    D_DOCUMENT = 15;
+    D_DOCUMENT_ARRAY = 16;
+  }
+
+  oneof valuetype {
+    DataType type = 3;
+    uint32 layerid = 4;
+  }
+}
+
+message PropertyValue {
+  bytes binaryValue = 1;
+  repeated string stringValues = 2;
+  repeated bool boolValues = 3;
+  repeated sint32 intValues = 4 [packed=true];
+  repeated sint64 longValues = 5 [packed=true];
+  repeated float floatValues = 6;
+  repeated double doubleValues = 7;
+  repeated Document docValues = 8;
+  repeated PropertyMap propValues = 9;
+  repeated uint32 lengthInfo = 10 [packed=true]; //In case of array values.
+}
+
+message PropertyMap {
+  repeated PropertyKey propkeys = 1;
+  repeated PropertyValue propvalues = 2;
+}
+
+message Nodes {
+  enum NodeTypes {
+    TOKEN = 0;
+    SENTENCE = 1;
+    PARAGRAPH = 2;
+
+    ANCHOR = 3;
+
+    SECTION = 4;
+    ABSTRACT = 5;
+    HEADING = 6;
+    CLAUSE = 7;
+    PHRASE = 8;
+
+    PREDICATE = 9;
+    ARGUMENT = 10;
+    PROPOSITION = 11;
+
+    ENTITY = 12;
+    NAMED_ENTITY = 13;
+
+    COREF_MENTION = 14;
+    COREF_CHAIN = 15;
+
+    MENTION = 16;
+    ENTITY_DISAMBIGUATION = 17;
+    NAMED_ENTITY_DISAMBIGUATION = 18;
+    SENSE_DISAMBIGUATION = 19;
+    COMPOUND = 20;
+
+    LIST_ITEM = 21;
+    LIST_SECTION = 22;
+
+    TABLE_OF_CONTENTS = 23;
+    AST_NODE = 24;
+    AST_TEXT_NODE = 25;
+
+    PARSE_TREE_NODE = 26;
+  }
+
+  oneof key {
+    NodeTypes builtin = 1;
+    string name = 2;
+  }
+  
+  repeated string variants = 3;
+  repeated uint32 numentries = 4 [packed=true];
+  repeated PropertySet sets = 5; // List of property sets, indicies corresponds to columns index.
+  repeated PropertyKey keys = 6;
+  repeated Column columns = 7; // Raw data in sequence. Type is determined by keys.
+  repeated sint32 stream = 8 [packed=true]; // List of set indicies, determines which set to use when decoding a single node.
+}
+
+message Edges {
+  enum EdgeTypes {
+    RELATIONSHIP = 0;
+    DEPENDENCY_REL = 1;
+    SEMANTIC_ROLE = 2;
+    AST_EDGE = 3;
+    PARSE_TREE_EDGE = 4;
+  }
+
+  oneof key {
+    EdgeTypes builtin = 1;
+    string name = 2;
+  }
+  repeated string variants = 3;
+  repeated uint32 numentries = 4 [packed=true];
+  repeated PropertySet sets = 5; // List of property sets, indicies corresponds to columns index.
+  repeated PropertyKey keys = 6;
+  repeated Column columns = 7; // Raw data in sequence. Type is determined by keys.
+}
+
+message Column {
+  repeated bytes binaryValues = 1;
+  repeated string stringValues = 2;
+  repeated bool boolValues = 3;
+  repeated sint32 intValues = 4 [packed=true];
+  repeated sint64 longValues = 5 [packed=true];
+  repeated float floatValues = 6;
+  repeated double doubleValues = 7;
+  repeated Document docValues = 8;
+  repeated PropertyMap propmapValues = 9;
+  repeated uint32 lengthInfo = 10 [packed=true]; //In case of array values.
+}
+
+message TypeStream {
+    repeated sint32 stream = 1 [packed=true]; // List of set indicies, determines which set to use when decoding a single node.
+}
+
+message Document {
+  PropertyMap propmap = 1;
+  repeated TypeStream nodestreams = 2;
+  repeated TypeStream edgestreams = 3;
+  repeated Nodes nodes = 4;
+  repeated Edges edges = 5;
+}
