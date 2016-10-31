@@ -19,6 +19,8 @@ import se.lth.cs.docforia.Window;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Iterable abstraction
@@ -33,4 +35,7 @@ public interface DocumentIterable<T> extends Iterable<T> {
     DocumentIterable<T> filter(Function<T, Boolean> filter);
     DocumentIterable<Window<T>> window(int n, T padstart, T padend);
     DocumentIterable<Window<T>> window(int n);
+    default Stream<T> stream() {
+        return StreamSupport.stream(this.spliterator(), false);
+    }
 }
