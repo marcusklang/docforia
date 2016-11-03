@@ -1,4 +1,4 @@
-package se.lth.cs.docforia.memstore;
+package se.lth.cs.docforia.io.protobuf3;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -10,6 +10,9 @@ import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import se.lth.cs.docforia.*;
 import se.lth.cs.docforia.data.*;
 import se.lth.cs.docforia.io.singlepart.Singlepart;
+import se.lth.cs.docforia.memstore.MemoryCoreEdgeLayer;
+import se.lth.cs.docforia.memstore.MemoryCoreNodeLayer;
+import se.lth.cs.docforia.memstore.MemoryDocument;
 
 import java.io.IOError;
 import java.io.IOException;
@@ -45,13 +48,17 @@ public class MemoryProtobufCodec {
             Int2IntOpenHashMap mapping = new Int2IntOpenHashMap();
             IntRBTreeSet coordinates = new IntRBTreeSet();
 
-            for (NodeRef nodeRef : doc.engine.nodes()) {
+            coordinates.add(0);
+
+            for (NodeRef nodeRef : doc.engine().nodes()) {
                 NodeStore nodeStore = nodeRef.get();
                 if(nodeStore.isAnnotation()) {
                     coordinates.add(nodeStore.getStart());
                     coordinates.add(nodeStore.getEnd());
                 }
             }
+
+            coordinates.add(doc.length());
 
             IntBidirectionalIterator iter = coordinates.iterator();
             int i = 0;
@@ -82,7 +89,7 @@ public class MemoryProtobufCodec {
             ArrayList<Singlepart.PropertyValue> docpropvalues = new ArrayList<>();
             PropertyMapEncoder pmap = new PropertyMapEncoder(docpropkeys, docpropvalues, typefinder);
 
-            for (Map.Entry<String, DataRef> prop : doc.store.properties()) {
+            for (Map.Entry<String, DataRef> prop : doc.store().properties()) {
                 if(Document.PROP_ALL.contains(prop.getKey())) {
                     //Special!
                     switch (prop.getKey()) {
@@ -166,16 +173,16 @@ public class MemoryProtobufCodec {
 
         private void produceNodeEdgeIds() {
             //Produce ids for nodes and edge layers
-            for (String nodeLayer : doc.engine.nodeLayers()) {
-                for (Optional<String> variant : doc.engine.nodeLayerAllVariants(nodeLayer)) {
-                    nodeLayer2id.put(doc.store.nodeLayer(nodeLayer, variant.orElse(null)), nodeLayer2id.size());
+            for (String nodeLayer : doc.engine().nodeLayers()) {
+                for (Optional<String> variant : doc.engine().nodeLayerAllVariants(nodeLayer)) {
+                    nodeLayer2id.put(doc.store().nodeLayer(nodeLayer, variant.orElse(null)), nodeLayer2id.size());
 
                 }
             }
 
-            for (String edgeLayer : doc.engine.edgeLayers()) {
-                for (Optional<String> variant : doc.engine.edgeLayerAllVariants(edgeLayer)) {
-                    edgeLayer2id.put(doc.store.edgeLayer(edgeLayer, variant.orElse(null)), edgeLayer2id.size());
+            for (String edgeLayer : doc.engine().edgeLayers()) {
+                for (Optional<String> variant : doc.engine().edgeLayerAllVariants(edgeLayer)) {
+                    edgeLayer2id.put(doc.store().edgeLayer(edgeLayer, variant.orElse(null)), edgeLayer2id.size());
                 }
             }
         }
@@ -648,7 +655,7 @@ public class MemoryProtobufCodec {
 
             IntRBTreeSet edgeLayersOut = new IntRBTreeSet();
 
-            doc.engine.edges(ref, Direction.OUT).stream().forEach(e -> {
+            doc.engine().edges(ref, Direction.OUT).stream().forEach(e -> {
                 edgeLayersOut.add(edgeLayer2id.get(e.layer()));
             });
 
@@ -677,8 +684,8 @@ public class MemoryProtobufCodec {
             Object2IntOpenHashMap<HashSet<PropertyKey>> pset2count = new Object2IntOpenHashMap<>();
             Object2IntOpenHashMap<PropertyKey> pkeys2count = new Object2IntOpenHashMap<>();
 
-            for (Optional<String> variant : doc.engine.nodeLayerAllVariants(nodeLayer)) {
-                for (NodeRef nodeRef : doc.store.nodeLayer(nodeLayer, variant.orElse(null))) {
+            for (Optional<String> variant : doc.engine().nodeLayerAllVariants(nodeLayer)) {
+                for (NodeRef nodeRef : doc.store().nodeLayer(nodeLayer, variant.orElse(null))) {
                     HashSet<PropertyKey> pset = getPropertySet(nodeRef);
                     pset2count.put(pset, pset2count.getInt(pset)+1);
                     for (PropertyKey propertyKey : pset) {
@@ -717,8 +724,8 @@ public class MemoryProtobufCodec {
             Object2IntOpenHashMap<HashSet<PropertyKey>> pset2count = new Object2IntOpenHashMap<>();
             Object2IntOpenHashMap<PropertyKey> pkeys2count = new Object2IntOpenHashMap<>();
 
-            for (Optional<String> variant : doc.engine.edgeLayerAllVariants(edgeLayer)) {
-                for (EdgeRef edgeRef : doc.store.edgeLayer(edgeLayer, variant.orElse(null))) {
+            for (Optional<String> variant : doc.engine().edgeLayerAllVariants(edgeLayer)) {
+                for (EdgeRef edgeRef : doc.store().edgeLayer(edgeLayer, variant.orElse(null))) {
                     HashSet<PropertyKey> pset = getPropertySet(edgeRef);
                     pset2count.put(pset, pset2count.getInt(pset)+1);
                     for (PropertyKey propertyKey : pset) {
@@ -827,11 +834,11 @@ public class MemoryProtobufCodec {
             int laststream = 0;
 
             //4. Encode a node at a time per variant, add propertyset used to stream (delta-code)
-            for (Optional<String> variant : doc.engine.nodeLayerAllVariants(nodeLayer)) {
+            for (Optional<String> variant : doc.engine().nodeLayerAllVariants(nodeLayer)) {
                 int count = 0;
                 int lastpos = 0;
 
-                for (NodeRef nodeRef : doc.store.nodeLayer(nodeLayer, variant.orElse(null))) {
+                for (NodeRef nodeRef : doc.store().nodeLayer(nodeLayer, variant.orElse(null))) {
                     HashSet<PropertyKey> pset = new HashSet<>();
                     NodeStore store = nodeRef.get();
                     for (Map.Entry<String, DataRef> prop : store.properties()) {
@@ -863,7 +870,7 @@ public class MemoryProtobufCodec {
 
                     Int2IntRBTreeMap edgeCounts = new Int2IntRBTreeMap();
 
-                    doc.engine.edges(nodeRef, Direction.OUT).stream().forEach(e -> {
+                    doc.engine().edges(nodeRef, Direction.OUT).stream().forEach(e -> {
                         int edgeLayerId = edgeLayer2id.get(e.layer());
                         getEdgelayer(edgeLayerId).add(e);
                         edgeCounts.put(edgeLayerId, edgeCounts.get(edgeLayerId)+1);
@@ -899,7 +906,7 @@ public class MemoryProtobufCodec {
         }
 
         private void encodeNodes() {
-            for (String nodeLayer : doc.engine.nodeLayers()) {
+            for (String nodeLayer : doc.engine().nodeLayers()) {
                 Singlepart.Nodes nodes = encodeNodeLayer(nodeLayer);
                 docBuilder.addNodes(nodes);
             }
@@ -920,7 +927,7 @@ public class MemoryProtobufCodec {
             //1. Find and save all property sets
             Object2IntLinkedOpenHashMap<PropertyKey> pkeys = new Object2IntLinkedOpenHashMap<>();
             Object2IntLinkedOpenHashMap<HashSet<PropertyKey>> psets = new Object2IntLinkedOpenHashMap<>();
-            findNodePropertySet(edgeLayer, psets, pkeys);
+            findEdgePropertySet(edgeLayer, psets, pkeys);
 
             //2. Create all property streams
             pkeys.object2IntEntrySet().forEach(e -> {
@@ -965,8 +972,8 @@ public class MemoryProtobufCodec {
 
             int laststream = 0;
 
-            for (Optional<String> variant : doc.engine.edgeLayerAllVariants(edgeLayer)) {
-                DocumentEdgeLayer edgeCollection = doc.store.edgeLayer(edgeLayer, variant.orElse(null));
+            for (Optional<String> variant : doc.engine().edgeLayerAllVariants(edgeLayer)) {
+                DocumentEdgeLayer edgeCollection = doc.store().edgeLayer(edgeLayer, variant.orElse(null));
 
                 ArrayList<EdgeRef> edges = getEdgelayer(edgeLayer2id.get(edgeCollection));
                 for (EdgeRef edgeRef : edges) {
@@ -1013,7 +1020,7 @@ public class MemoryProtobufCodec {
         }
 
         private void encodeEdges() {
-            for (String edgeLayer : doc.engine.edgeLayers()) {
+            for (String edgeLayer : doc.engine().edgeLayers()) {
                 Singlepart.Edges edges = encodeEdgeLayer(edgeLayer);
                 docBuilder.addEdges(edges);
             }
@@ -1229,7 +1236,7 @@ public class MemoryProtobufCodec {
 
             @Override
             public StringRef readString() {
-                return new StringRef(pval.getStringValues(0));
+                return new StringRef(pval.getStringValues(index++));
             }
 
             private int readArrayCount() {
@@ -1483,7 +1490,7 @@ public class MemoryProtobufCodec {
                 int lastRange = 0;
 
                 String variantName = nodelayer.getVariants(i);
-                DocumentNodeLayer variantLayer = doc.store.nodeLayer(layerName, variantName.isEmpty() ? null : variantName);
+                DocumentNodeLayer variantLayer = doc.store().nodeLayer(layerName, variantName.isEmpty() ? null : variantName);
                 nodelayerid2layer.put(layerid, variantLayer);
 
                 final int numNodes = numentries.get(i);
@@ -1623,7 +1630,7 @@ public class MemoryProtobufCodec {
 
             for (int i = 0; i < variants.size(); i++) {
                 String variantName = edgelayer.getVariants(i);
-                DocumentEdgeLayer variantLayer = doc.store.edgeLayer(layerName, variantName.isEmpty() ? null : variantName);
+                DocumentEdgeLayer variantLayer = doc.store().edgeLayer(layerName, variantName.isEmpty() ? null : variantName);
                 edgelayerid2layer.put(layerid, variantLayer);
 
                 final int numEdges = numentries.get(i);

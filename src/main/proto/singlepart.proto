@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option java_package = "se.lth.cs.docforia.io.singlepart";
+option java_package = "se.lth.cs.docforia.io.protobuf3";
 option java_outer_classname = "Singlepart";
 option optimize_for = LITE_RUNTIME;
 
