@@ -9,7 +9,6 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import se.lth.cs.docforia.*;
 import se.lth.cs.docforia.data.*;
-import se.lth.cs.docforia.io.singlepart.Singlepart;
 import se.lth.cs.docforia.memstore.MemoryCoreEdgeLayer;
 import se.lth.cs.docforia.memstore.MemoryCoreNodeLayer;
 import se.lth.cs.docforia.memstore.MemoryDocument;
