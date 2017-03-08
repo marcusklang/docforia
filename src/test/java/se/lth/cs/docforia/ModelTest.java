@@ -753,6 +753,56 @@ public abstract class ModelTest {
         assertEquals("Conny Andersson (racerförare)", detections.get(1).get(D).text());
     }
 
+    @Test
+    public void testQueryGroupByNull() {
+        Conny_Andersson conny = new Conny_Andersson();
+        Document doc = conny.createDocument(documentFactory());
+        doc.setId(null);
+
+        NodeVar T = Token.var();
+        NodeVar A = Anchor.var();
+        Iterable<PropositionGroup> iterable = doc.select(A, T)
+                                                 .where(T).property(NORMALIZED).exists()
+                                                 .property(STOPWORD).notExists()
+                                                 .coveredBy(A)
+                                                 .where(A).property("resolved").exists()
+                                                 .stream()
+                                                 .collect(QueryCollectors.groupBy(doc, A).orderByValue(T).collector());
+
+        Iterator<PropositionGroup> iter = iterable.iterator();
+
+        PropositionGroup group = iter.next();
+        validateGroup(T,A, group);
+        assertEquals(3, group.size());
+        assertEquals("conny", group.value(0,T).getProperty(NORMALIZED));
+        assertEquals("andersson", group.value(1,T).getProperty(NORMALIZED));
+        assertEquals("skådespelare", group.value(2,T).getProperty(NORMALIZED));
+
+        assertEquals("wikidata:Q5162071", group.key(A).getProperty("resolved"));
+
+        doc.add(new Detection()).setRange(group.key(A).getStart(), group.key(A).getEnd());
+
+        group = iter.next();
+        validateGroup(T,A,group);
+        assertEquals(3, group.size());
+        assertEquals("conny", group.value(0,T).getProperty(NORMALIZED));
+        assertEquals("andersson", group.value(1,T).getProperty(NORMALIZED));
+        assertEquals("racerförare", group.value(2,T).getProperty(NORMALIZED));
+
+        assertEquals("wikidata:Q172242", group.key(A).getProperty("resolved"));
+
+        doc.add(new Detection()).setRange(group.key(A).getStart(), group.key(A).getEnd());
+
+        assertFalse(iter.hasNext());
+
+        NodeVar D = new NodeVar(Detection.class);
+        List<Proposition> detections = doc.select(D).stream().sorted(orderBy(D)).collect(Collectors.toList());
+        assertEquals(2, detections.size());
+
+        assertEquals("Conny Andersson (skådespelare)", detections.get(0).get(D).text());
+        assertEquals("Conny Andersson (racerförare)", detections.get(1).get(D).text());
+    }
+
     private static String text(Node node) {
         return node.text();
     }
@@ -2295,5 +2345,23 @@ public abstract class ModelTest {
 
         doc.removeProperty("attr");
         assertNull(doc.getProperty("attr"));
+    }
+
+    @Test
+    public void testSubDocumentNull() {
+        Document doc = documentFactory().create();
+        doc.setText("01234567890123456789");
+
+        new NamedEntity(doc).setRange(2,8);
+        new Token(doc).setRange(0,2);
+        new Token(doc).setRange(2,6);
+        new Token(doc).setRange(6,8);
+        new Token(doc).setRange(10,19);
+
+        Document document = doc.subDocument(2, 8);
+        List<Token> tokens = document.nodes(Token.class).toList();
+        List<NamedEntity> namedEntities = document.nodes(NamedEntity.class).toList();
+
+
     }
 }

@@ -391,13 +391,16 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
     }
 
 	/**
-	 * Set the document id
+	 * Set the document id, null removes any uri.
 	 * <p>
 	 * <b>Remarks: </b> If bound to a record, affects the record aswell, might throw exception if name is taken.
 	 * @param id the id
      */
     public Document setId(String id) {
-        putProperty(PROP_ID, id);
+    	if(id == null)
+    		removeProperty(PROP_ID);
+    	else
+        	putProperty(PROP_ID, id);
         return this;
     }
 
@@ -459,15 +462,21 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
         return this;
     }
 
-    /** Set URI, replacing any existing URI with given uri */
+    /** Set URI, replacing any existing URI with given uri, null removes any uri. */
     public Document setUri(String uri) {
-        putProperty(PROP_URI, new String[]{uri});
+    	if(uri == null)
+    		removeProperty(PROP_URI);
+    	else
+        	putProperty(PROP_URI, new String[]{uri});
         return this;
     }
 
-    /** Set URI and aliases, replacing any existing URIs with given URI array */
+    /** Set URI and aliases, replacing any existing URIs with given URI array, null removes any uri. */
     public Document setUris(String[] uri) {
-        putProperty(PROP_URI, uri);
+		if(uri == null)
+			removeProperty(PROP_URI);
+		else
+        	putProperty(PROP_URI, uri);
         return this;
     }
 
@@ -501,11 +510,14 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 
 
     /**
-     * Set the language
+     * Set the language, null removes language
      * @param lang ISO 639 language code
      */
     public Document setLanguage(String lang) {
-        putProperty(PROP_LANG, lang);
+    	if(lang == null)
+			removeProperty(PROP_LANG);
+    	else
+        	putProperty(PROP_LANG, lang);
         return this;
     }
 
@@ -522,7 +534,10 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 	 * Get document type, such as text/plain, text/json, text/x-wiki, ...
 	 */
     public Document setType(String mime) {
-        putProperty(Document.PROP_TYPE, mime);
+    	if(mime == null)
+    		removeProperty(PROP_TYPE);
+    	else
+        	putProperty(Document.PROP_TYPE, mime);
         return this;
     }
 
@@ -1464,7 +1479,12 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 	 * Construct a new document with the same type of underlying storage as this document.
 	 */
 	public Document newInstance(String id, String text) {
-		return factory().createFragment(id, text);
+		if(id == null) {
+			return factory().createTextFragment(text);
+		}
+		else {
+			return factory().createFragment(id, text);
+		}
 	}
 
 	/**

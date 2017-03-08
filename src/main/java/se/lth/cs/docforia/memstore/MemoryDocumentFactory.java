@@ -52,6 +52,11 @@ public class MemoryDocumentFactory implements DocumentFactory {
         return new MemoryDocument(id, text);
     }
 
+    @Override
+    public Document createTextFragment(String text) {
+        return new MemoryDocument(text);
+    }
+
     public Document createFragment(Document doc) {
         return Document.convert(this, doc);
     }

@@ -24,6 +24,7 @@ import se.lth.cs.docforia.io.DocumentIO;
  */
 public interface DocumentFactory {
     Document createFragment(Document doc);
+    Document createTextFragment(String text);
     Document createFragment(String id);
     Document createFragment(String id, String text);
 

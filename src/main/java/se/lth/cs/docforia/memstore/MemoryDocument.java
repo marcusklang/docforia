@@ -46,6 +46,9 @@ public class MemoryDocument extends Document implements Externalizable {
     }
 
     public MemoryDocument(String text) {
+        if(text == null)
+            throw new NullPointerException("text");
+
         this.store = new MemoryDocumentStore();
         this.store.doc = this;
         this.store.setText(text);
@@ -53,6 +56,12 @@ public class MemoryDocument extends Document implements Externalizable {
     }
 
     public MemoryDocument(String id, String text) {
+        if(id == null)
+            throw new NullPointerException("id");
+
+        if(text == null)
+            throw new NullPointerException("text");
+
         this.store = new MemoryDocumentStore();
         this.store.doc = this;
         this.setId(id);
