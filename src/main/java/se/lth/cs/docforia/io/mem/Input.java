@@ -82,7 +82,7 @@ public class Input extends InputStream {
      * <b>Remarks:</b> Uses ByteBufferInputStream if it does not have backing array. */
     public Input(ByteBuffer inputBuffer) {
         if(inputBuffer.hasArray()) {
-            setBuffer(inputBuffer.array(), inputBuffer.arrayOffset(), inputBuffer.remaining());
+            setBuffer(inputBuffer.array(), inputBuffer.arrayOffset()+inputBuffer.position(), inputBuffer.remaining());
         } else {
             final int bufferSize = 4096;
             this.capacity = bufferSize;

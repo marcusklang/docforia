@@ -229,7 +229,7 @@ public class MemoryNodeCollection extends DocumentIterableBase<NodeRef> implemen
     }
 
     public void variantChanged(MemoryNode node, String variant) {
-        if(!variant.equals(key.variant)) {
+        if(!Objects.equals(variant,this.key.variant)) {
             unlink(node);
             store.getNodeCollection(this.key.layer, variant).add(node);
         }

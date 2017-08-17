@@ -198,7 +198,7 @@ public class MemoryEdgeCollection extends DocumentIterableBase<EdgeRef> implemen
     }
 
     public void variantChanged(MemoryEdge edge, String variant) {
-        if(!variant.equals(this.key.variant)) {
+        if(!Objects.equals(variant,this.key.variant)) {
             remove(edge);
             store.getEdgeCollection(key.layer, variant).add(edge);
             if(isEmpty()) {
