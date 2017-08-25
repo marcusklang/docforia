@@ -1298,6 +1298,43 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 	}
 
 	/**
+	 * Import layer from another document (without dependencies)
+	 * @param srcdoc    source document
+	 * @param layer     layer
+	 * @param <N>
+	 */
+	public <N extends Node> void  importNodeLayer(Document srcdoc, Class<N> layer) {
+		importNodeLayer(srcdoc, layer);
+	}
+
+	/**
+	 * Import layer from another document (without dependencies)
+	 * @param srcdoc    source document
+	 * @param layer     layer
+	 * @param variant   variant, may be null
+	 * @param <N>
+	 */
+	public <N extends Node> void  importNodeLayer(Document srcdoc, Class<N> layer, String variant) {
+		DocumentNodeLayer targetLayer = store().nodeLayer(Document.nodeLayer(layer), variant);
+
+		for (NodeRef nodeRef : srcdoc.store().nodeLayer(Document.nodeLayer(layer), variant)) {
+			NodeStore srcNodeStore = nodeRef.get();
+			NodeStore targetNodeStore;
+
+			if(srcNodeStore.isAnnotation()) {
+				targetNodeStore = targetLayer.create(srcNodeStore.getStart(), srcNodeStore.getEnd()).get();
+			}
+			else {
+				targetNodeStore = targetLayer.create().get();
+			}
+
+			for(Map.Entry<String, DataRef> entry : srcNodeStore.properties()) {
+				targetNodeStore.putProperty(entry.getKey(), entry.getValue());
+			}
+		}
+	}
+
+	/**
 	 * Import a node
 	 */
 	@SuppressWarnings("unchecked")
@@ -1305,6 +1342,10 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 		LayerRef layer = node.getRef().layer();
 		NodeRef ref = store().createNode(layer.getLayer(), layer.getVariant());
 		NodeStore store = ref.get();
+		if(node.isAnnotation()) {
+			store.setRanges(node.getStart(), node.getEnd());
+		}
+
 		for(Map.Entry<String, DataRef> entry : node.store.properties()) {
 			store.putProperty(entry.getKey(), entry.getValue());
 		}
