@@ -106,6 +106,19 @@ public abstract class Node<T extends Node<T>>
 		return (T)this;
 	}
 
+	/**
+	 * Check if nodes have identical ranges
+	 * @param node node to compare against
+	 * @return true fi ranges are equal
+	 */
+	public boolean rangeEquals(Node node) {
+		if(node.isAnnotation()) {
+			return node.getStart() == this.getStart() && node.getEnd() == this.getEnd();
+		}
+		else
+			return false;
+	}
+
     /**
      * Get the parent document this node is associated with
      * @return parent document
