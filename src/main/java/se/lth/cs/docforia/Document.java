@@ -1338,9 +1338,8 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 	 * Import layer from another document (without dependencies)
 	 * @param srcdoc    source document
 	 * @param dynamiclayer     layer
-	 * @param <N>
 	 */
-	public <N extends Node> void  importNodeLayer(Document srcdoc, String dynamiclayer) {
+	public void  importNodeLayer(Document srcdoc, String dynamiclayer) {
 		importNodeLayer(srcdoc, dynamiclayer, null);
 	}
 
@@ -1349,9 +1348,8 @@ public abstract class Document implements CharSequence, Range, DocumentProxy, Pr
 	 * @param srcdoc    source document
 	 * @param dynamiclayer     layer
 	 * @param variant   variant, may be null
-	 * @param <N>
 	 */
-	public <N extends Node> void  importNodeLayer(Document srcdoc, String dynamiclayer, String variant) {
+	public void  importNodeLayer(Document srcdoc, String dynamiclayer, String variant) {
 		DocumentNodeLayer targetLayer = store().nodeLayer(Document.nodeLayer(dynamiclayer), variant);
 
 		for (NodeRef nodeRef : srcdoc.store().nodeLayer(Document.nodeLayer(dynamiclayer), variant)) {

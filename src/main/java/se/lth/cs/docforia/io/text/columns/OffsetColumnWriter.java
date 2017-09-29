@@ -3,16 +3,18 @@ package se.lth.cs.docforia.io.text.columns;
 import se.lth.cs.docforia.Document;
 import se.lth.cs.docforia.NodeStore;
 import se.lth.cs.docforia.io.text.ColumnReader;
+import se.lth.cs.docforia.io.text.ColumnWriter;
 import se.lth.cs.docforia.io.text.TextSentence;
 import se.lth.cs.docforia.io.text.TextToken;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 /**
  * Write the raw offset as two columns start, end
   */
-public class OffsetColumnWriter implements ColumnReader {
+public class OffsetColumnWriter implements ColumnWriter {
 
     int offset;
 
@@ -33,7 +35,7 @@ public class OffsetColumnWriter implements ColumnReader {
 
 
     @Override
-    public void load(Document doc, List<TextSentence> sentences) {
+    public void save(Document doc, ArrayList<TextSentence> sentences) {
         for (TextSentence sentence : sentences) {
             int realoffset = offset;
             if(offset == -1)
