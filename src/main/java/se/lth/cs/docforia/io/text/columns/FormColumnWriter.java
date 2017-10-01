@@ -53,7 +53,7 @@ public class FormColumnWriter implements ColumnWriter {
 
             for (TextToken token : sentence) {
                 NodeStore raw = token.token();
-                token.setProperty(realoffset, document.text(raw.getStart(), raw.getEnd()));
+                token.setProperty(realoffset, document.text(raw.getStart(), raw.getEnd()).replaceAll("[\\n\\r\\t]", " "));
             }
 
             sentence.setMinCols(realoffset+1);
