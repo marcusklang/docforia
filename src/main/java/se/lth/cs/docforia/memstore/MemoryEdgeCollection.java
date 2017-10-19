@@ -179,9 +179,12 @@ public class MemoryEdgeCollection extends DocumentIterableBase<EdgeRef> implemen
         remove(memref);
     }
 
+    protected void unlink(MemoryEdge edge) {
+        edges.remove(edge);
+    }
 
     public void remove(MemoryEdge edge) {
-        edges.remove(edge);
+        unlink(edge);
         MemoryNode head = (MemoryNode) edge.getHead();
         MemoryNode tail = (MemoryNode) edge.getTail();
         if(head != null)

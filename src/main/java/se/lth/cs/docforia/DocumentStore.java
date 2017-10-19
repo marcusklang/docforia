@@ -19,10 +19,7 @@ import se.lth.cs.docforia.data.DataRef;
 import se.lth.cs.docforia.memstore.MemoryNodeCollection;
 import se.lth.cs.docforia.util.Iterables;
 
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -87,6 +84,14 @@ public abstract class DocumentStore extends PropertyStore {
 
 	public void migrateNodesToVariant(String nodeLayer, String prevVariant, String newVariant) { throw new UnsupportedOperationException(); }
 	public void migrateEdgesToVariant(String edgeLayer, String prevVariant, String newVariant) { throw new UnsupportedOperationException(); }
+
+	public void migradeNodesToVariant(String nodeLayer, String targetVariant, Iterable<NodeRef> nodes) {
+        throw new UnsupportedOperationException();
+    }
+
+    public void migradeEdgesToVariant(String nodeLayer, String targetVariant, Iterable<EdgeRef> edges) {
+        throw new UnsupportedOperationException();
+    }
 
 /*
 	protected static class NodeLayerRef implements LayerRef {

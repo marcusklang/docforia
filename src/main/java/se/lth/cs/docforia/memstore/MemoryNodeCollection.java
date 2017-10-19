@@ -199,7 +199,7 @@ public class MemoryNodeCollection extends DocumentIterableBase<NodeRef> implemen
         node.remove();
     }
 
-    private void unlink(MemoryNode node) {
+    protected void unlink(MemoryNode node) {
         if(node.isAnnotation()) {
             annotations.remove(node.entry);
         } else {

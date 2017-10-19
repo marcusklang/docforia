@@ -420,6 +420,30 @@ public class MemoryDocumentStore extends DocumentStore {
     }
 
     @Override
+    public void migradeNodesToVariant(String nodeLayer, String targetVariant, Iterable<NodeRef> nodes) {
+        MemoryNodeCollection nodeCollection = getNodeCollection(nodeLayer, targetVariant);
+        for (NodeRef node : nodes) {
+            MemoryNode mnode =  (MemoryNode)node;
+            if(mnode.storage != nodeCollection) {
+                mnode.storage.unlink(mnode);
+                nodeCollection.add(mnode);
+            }
+        }
+    }
+
+    @Override
+    public void migradeEdgesToVariant(String nodeLayer, String targetVariant, Iterable<EdgeRef> edges) {
+        MemoryEdgeCollection edgeCollection = getEdgeCollection(nodeLayer, targetVariant);
+        for (EdgeRef edge : edges) {
+            MemoryEdge medge =  (MemoryEdge)edge;
+            if(medge.storage != edgeCollection) {
+                medge.storage.unlink(medge);
+                edgeCollection.add(medge);
+            }
+        }
+    }
+
+    @Override
     public String toString() {
         return "Memory Document Storage with " + nodes.keySet().size() + " node layers and " + edges.keySet().size() + " edge layers.";
     }
